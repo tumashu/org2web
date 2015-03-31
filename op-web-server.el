@@ -63,6 +63,8 @@
                         ((and (file-exists-p path-expand)
                               (not (file-directory-p path-expand)))
                          (ws-send-file process path-expand))
+                        ((file-directory-p path-expand)
+                         (ws-send-directory-list process path-expand))
                         (t (ws-send-404 process)))
                      (ws-send-404 process)))))
              (op/get-config-option :web-server-port))))))
