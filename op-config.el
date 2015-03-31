@@ -41,7 +41,8 @@
 (defun op/get-repository-directory ()
   (let ((dir (op/get-config-option :repository-directory)))
     (when dir
-      (expand-file-name dir))))
+      (file-name-as-directory
+       (expand-file-name dir)))))
 
 (defun op/get-site-domain ()
   (let ((site-domain (op/get-config-option :site-domain)))
