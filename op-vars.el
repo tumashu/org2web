@@ -109,6 +109,10 @@ Personal google analytics id.
 
 Determine whether email addresses should be confounded or not.
 
+  `:default-category'
+
+If org fils don't set category, default category will be used.
+
   `:category-ignore-list'
 
 Ignore subdirs/categories for navigation
@@ -231,6 +235,7 @@ You can see fallback value of above option in `op/config-fallback'"
         :personal-disqus-shortname nil
         :personal-duoshuo-shortname nil
         :personal-google-analytics-id nil
+        :default-category "blog"
         :category-ignore-list ("themes" "assets")
         :confound-email t
         :get-title-function op/get-title

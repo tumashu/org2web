@@ -154,6 +154,7 @@ similar to `op/render-header'."
    (or param-table
        (let* ((filename (buffer-file-name))
               (title (funcall (op/get-config-option :get-title-function)))
+              (default-category (op/get-config-option :default-category))
               (date (op/fix-timestamp-string
                      (or (op/read-org-option "DATE")
                          (format-time-string "%Y-%m-%d"))))
@@ -168,7 +169,7 @@ similar to `op/render-header'."
                                      op/get-file-category)
                                  filename))
               (config (cdr (or (assoc category op/category-config-alist)
-                               (assoc "blog" op/category-config-alist))))
+                               (op/get-category-setting default-category))))
               (uri (funcall (plist-get config :uri-generator)
                             (plist-get config :uri-template) date title)))
          (ht ("show-meta" (plist-get config :show-meta))
@@ -209,7 +210,8 @@ similar to `op/render-header'."
 (defun op/update-default-template-parameters ()
   "Update the default template parameters. It is only needed when user did some
 customization to relevant variables."
-  (let ((site-domain (op/get-site-domain)))
+  (let ((site-domain (op/get-site-domain))
+        (default-category (op/get-config-option :default-category)))
     (ht-update
      op/default-template-parameters
      (ht ("site-main-title" (op/get-config-option :site-main-title))
@@ -239,7 +241,7 @@ ATTR-PLIST is the attribute plist of the buffer, retrieved by the combination of
          (author (org-element-interpret-data
                   (or (plist-get info :author) user-full-name)))
          (email (op/confound-email-address (or (plist-get info :email)
-                                    user-mail-address)))
+                                               user-mail-address)))
          (description (or (plist-get info :description) nil))
          (keywords (or (plist-get info :keywords) nil))
          (category (plist-get info :category))
@@ -259,7 +261,7 @@ ATTR-PLIST is the attribute plist of the buffer, retrieved by the combination of
                           (ht ("link" (op/generate-tag-uri tag-name))
                               ("name" tag-name))))
                      (plist-get info :tags) ", "))
-         (show-comment (eq category 'blog))
+         (show-comment (string= (symbol-name category) default-category))
          (disqus-id (plist-get info :uri))
          (disqus-url (op/get-full-url disqus-id))
          (param-table (ht-create)))

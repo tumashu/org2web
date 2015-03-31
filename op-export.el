@@ -112,7 +112,8 @@ content of the buffer will be converted into html."
                             filename))
     (plist-put attr-plist :category category)
     (setq cat-config (cdr (or (assoc category op/category-config-alist)
-                              (assoc "blog" op/category-config-alist))))
+                              (op/get-category-setting
+                               (op/get-config-option :default-category)))))
     (plist-put attr-plist :uri (funcall (plist-get cat-config :uri-generator)
                                         (plist-get cat-config :uri-template)
                                         (plist-get attr-plist :date)
@@ -209,15 +210,16 @@ ORG-FILE is nil. This is the default function used to get a file's category,
 see org-page config option 'retrieve-category-function. How to judge a
 file's category is based on its name and its root folder name."
   (let ((repo-dir (op/get-repository-directory))
+        (default-category (op/get-config-option :default-category))
         (category-ignore-list (op/get-config-option :category-ignore-list)))
     (cond ((not org-file)
-           (let ((cat-list '("index" "about" "blog"))) ;; 3 default categories
+           (let ((cat-list `("index" "about" ,(op/get-config-option :default-category)))) ;; 3 default categories
              (dolist (f (directory-files repo-dir))
                (when (and (not (equal f "."))
                           (not (equal f ".."))
                           (not (equal f ".git"))
                           (not (member f category-ignore-list))
-                          (not (equal f "blog"))
+                          (not (equal f default-category))
                           (file-directory-p
                            (expand-file-name f repo-dir)))
                  (setq cat-list (cons f cat-list))))
@@ -227,7 +229,7 @@ file's category is based on its name and its root folder name."
           ((string= (expand-file-name "about.org" repo-dir)
                     (expand-file-name org-file)) "about")
           ((string= (file-name-directory (expand-file-name org-file))
-                    repo-dir) "blog")
+                    repo-dir) default-category)
           (t (car (split-string (file-relative-name
                                  (expand-file-name org-file) repo-dir)
                                 "[/\\\\]+"))))))
@@ -256,8 +258,10 @@ If COMPONENT-TABLE is nil, the publication will be skipped."
   "Rearrange and sort attribute property lists from FILE-ATTR-LIST. Rearrange
 according to category, and sort according to :sort-by property defined in
 `op/category-config-alist', if category is not in `op/category-config-alist',
-the default 'blog' category will be used. For sorting, later lies headmost."
-  (let (cat-alist cat-list)
+by default, category which set by config option `:default-category' will be used.
+For sorting, later lies headmost."
+  (let ((default-category (op/get-config-option :default-category))
+        cat-alist cat-list)
     (mapc
      #'(lambda (plist)
          (setq cat-list (cdr (assoc (plist-get plist :category) cat-alist)))
@@ -280,8 +284,7 @@ the default 'blog' category will be used. For sorting, later lies headmost."
                            (plist-get
                             (cdr (or (assoc (plist-get plist1 :category)
                                             op/category-config-alist)
-                                     (assoc "blog"
-                                            op/category-config-alist)))
+                                     (op/get-category-setting default-category)))
                             :sort-by)))
                          (op/fix-timestamp-string
                           (plist-get
@@ -289,8 +292,7 @@ the default 'blog' category will be used. For sorting, later lies headmost."
                            (plist-get
                             (cdr (or (assoc (plist-get plist2 :category)
                                             op/category-config-alist)
-                                     (assoc "blog"
-                                            op/category-config-alist)))
+                                     (op/get-category-setting default-category)))
                             :sort-by))))
                         0)))))
      cat-alist)))
@@ -299,13 +301,13 @@ the default 'blog' category will be used. For sorting, later lies headmost."
   "Update index page of different categories. FILE-ATTR-LIST is the list of all
 file attribute property lists. PUB-BASE-DIR is the root publication directory."
   (let* ((sort-alist (op/rearrange-category-sorted file-attr-list))
+         (default-category (op/get-config-option :default-category))
          cat-dir)
     (mapc
      #'(lambda (cat-list)
          (unless (not (plist-get (cdr (or (assoc (car cat-list)
                                                  op/category-config-alist)
-                                          (assoc "blog"
-                                                 op/category-config-alist)))
+                                          (op/get-category-setting default-category)))
                                  :category-index))
            (setq cat-dir (file-name-as-directory
                           (concat (file-name-as-directory pub-base-dir)
@@ -339,9 +341,7 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                                     (cdr (or (assoc
                                               (plist-get attr-plist :category)
                                               op/category-config-alist)
-                                             (assoc
-                                              "blog"
-                                              op/category-config-alist)))
+                                             (op/get-category-setting default-category)))
                                     :sort-by)))
                                  ("post-uri" (plist-get attr-plist :uri))
                                  ("post-title" (plist-get attr-plist :title))))

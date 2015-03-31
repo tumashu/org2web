@@ -153,7 +153,7 @@ files, committed by org-page.")
     (when test-publish (op/web-server-browse))
     (setq op/current-project-name nil)))
 
-(defun op/new-repository (repo-dir)
+(defun op/new-repository (project-name repo-dir)
   "Generate a new git repository in directory REPO-DIR, which can be
 perfectly manipulated by org-page."
   (interactive
@@ -166,8 +166,7 @@ perfectly manipulated by org-page."
   (op/generate-index repo-dir)
   (op/git-commit-changes repo-dir "add source index.org")
   (op/generate-about repo-dir)
-  (op/git-commit-changes repo-dir "add source about.org")
-  (mkdir (expand-file-name "blog/" repo-dir) t))
+  (op/git-commit-changes repo-dir "add source about.org"))
 
 (defun op/verify-configuration ()
   "Ensure all required configuration fields are properly configured, include:
@@ -243,8 +242,9 @@ responsibility to guarantee these parameters are valid."
    (let* ((i (read-string "Title: "))
           (u (read-string "URI(%y, %m and %d can be used to represent year, \
 month and day): " (unless (string= i "")
-                    (format-spec "/blog/%y/%m/%d/%t"
-                                 `((?y . "%y")
+                    (format-spec "/%c/%y/%m/%d/%t"
+                                 `((?c . ,(op/get-config-option :default-category))
+                                   (?y . "%y")
                                    (?m . "%m")
                                    (?d . "%d")
                                    (?t . ,(op/encode-string-to-url i)))))))
@@ -300,15 +300,16 @@ FILENAME: the file name of this post
 Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive
-   (let* ((j (completing-read "Which project do you want post? "
+   (let* ((p (completing-read "Which project do you want post? "
                               (delete-dups
                                (mapcar 'car op/project-config-alist))))
-          (c (read-string "Category: " "blog"))
+          (c (read-string "Category: "
+                          (progn (setq op/current-project-name p)
+                                 (op/get-config-option :default-category))))
           (f (read-string "filename: " "new-post.org")))
-     (list j c f)))
-  (setq op/current-project-name project-name)
+     (list p c f)))
   (if (string= category "")
-      (setq category "blog"))
+      (setq category (op/get-config-option :default-category)))
   (if (string= filename "")
       (setq filename "new-post.org"))
   (unless (op/string-suffix-p ".org" filename)

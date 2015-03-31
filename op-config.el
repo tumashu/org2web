@@ -103,6 +103,17 @@ multi path."
                   (replace-regexp-in-string "\\..*" ".x" (org-version))
                 "Unknown Version"))))
 
+(defun op/get-category-setting (category)
+  "Return category config of `category'"
+  (or (assoc category op/category-config-alist)
+      `(,category
+        :show-meta t
+        :show-comment t
+        :uri-generator op/generate-uri
+        :uri-template ,(format "/%s/%%y/%%m/%%d/%%t/" category)
+        :sort-by :date
+        :category-index t)))
+
 (provide 'op-config)
 
 ;;; op-config.el ends here
