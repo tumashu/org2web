@@ -95,13 +95,7 @@ multi path."
     (reverse theme-dirs)))
 
 (defun op/get-html-creator-string ()
-  (or (op/get-config-option :html-creator-string)
-      (format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\
- (<a href=\"http://orgmode.org\">Org mode</a> %s)"
-              (format "%s.x" emacs-major-version)
-              (if (fboundp 'org-version)
-                  (replace-regexp-in-string "\\..*" ".x" (org-version))
-                "Unknown Version"))))
+  (or (op/get-config-option :html-creator-string) ""))
 
 (defun op/get-category-setting (category)
   "Return category config of `category'"
