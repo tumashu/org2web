@@ -71,16 +71,16 @@ org-page organizes its themes by directory:
 At this time, `op/get-theme-dirs' will find *all possible*
 <type> directorys by permutation way and return a list with
 multi path."
-  (let* ((fallback-theme '(default))
-         (fallback-theme-root (list (concat op/load-directory "themes/")))
-         (themes (delete-dups
-                  (or (op/join-to-list theme)
-                      (op/join-to-list (op/get-config-option :theme) fallback-theme))))
-         (theme-root-dirs
-          (delete-dups
-           (or (op/join-to-list root-dir)
-               (op/join-to-list (op/get-config-option :theme-root-directory)
-                                fallback-theme-root))))
+  (let* ((themes (delete-dups
+                  (if theme
+                      (list theme)
+                    `(,@(op/get-config-option :theme) default))))
+         (theme-root-dirs (delete-dups
+                           (if root-dir
+                               (list root-dir)
+                             `(,@(op/get-config-option :theme-root-directory)
+                               ,(concat (op/get-repository-directory) "themes/")
+                               ,(concat op/load-directory "themes/")))))
          theme-dir theme-dirs)
     (dolist (theme themes)
       (dolist (root-dir theme-root-dirs)

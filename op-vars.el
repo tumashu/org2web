@@ -228,7 +228,7 @@ You can see fallback value of above option in `op/config-fallback'"
         :site-sub-title "static site generator"
         :repository-org-branch "source"
         :repository-html-branch "master"
-        :theme-root-directory ,(list (concat op/load-directory "themes/"))
+        :theme-root-directory nil
         :theme (default)
         :personal-github-link "https://github.com/tumashu/org-page"
         :personal-avatar nil

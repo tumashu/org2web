@@ -218,12 +218,6 @@ alternative to `ht-from-plist'."
             (value (cadr pair)))
         (ht-set h key value)))))
 
-(defun op/join-to-list (a1 &optional a2)
-  "Conbine `a1' and `a2' to a list."
-  (let ((list1 (if (listp a1) a1 (list a1)))
-        (list2 (if (listp a2) a2 (list a2))))
-    (append list1 list2)))
-
 
 (provide 'op-util)
 
