@@ -57,7 +57,7 @@ presented by REPO-DIR, if optional BRANCH is offered, will check that branch
 instead of pointer HEAD."
   (let ((output (op/shell-command
                  repo-dir
-                 (concat "git ls-tree -r --name-only "
+                 (concat "env LC_ALL=C git ls-tree -r --name-only "
                          (or branch "HEAD"))
                  t)))
     (delq nil (mapcar #'(lambda (line)
@@ -94,7 +94,7 @@ instead of pointer HEAD."
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (op/shell-command
                  repo-dir
-                 "git rev-parse --abbrev-ref HEAD"
+                 "env LC_ALl=C git rev-parse --abbrev-ref HEAD"
                  t)))
     (replace-regexp-in-string "[\n\r]" "" output)))
 
@@ -104,7 +104,7 @@ TODO: verify if the branch exists."
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (op/shell-command
                  repo-dir
-                 (concat "git checkout -b " branch-name)
+                 (concat "env LC_ALL=C git checkout -b " branch-name)
                  t)))
     (unless (string-match "Switched to a new branch" output)
       (error "Fatal: Failed to create a new branch with name '%s'."
@@ -116,7 +116,7 @@ by REPO-DIR. Do nothing if it is current branch."
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (op/shell-command
                  repo-dir
-                 (concat "git checkout " branch-name)
+                 (concat "env LC_ALL=C git checkout " branch-name)
                  t)))
     (when (string-match "\\`error" output)
       (error "Failed to change branch to '%s' of repository '%s'."
@@ -128,17 +128,17 @@ directory where repository will be initialized."
   (unless (file-directory-p repo-dir)
     (mkdir repo-dir t))
   (unless (string-prefix-p "Initialized empty Git repository"
-                           (op/shell-command repo-dir "git init" nil))
+                           (op/shell-command repo-dir "env LC_ALL=C git init" nil))
     (error "Fatal: Failed to initialize new git repository '%s'." repo-dir)))
 
 (defun op/git-commit-changes (repo-dir message)
   "This function will commit uncommitted changes to git repository presented by
 REPO-DIR, MESSAGE is the commit message."
   (let ((repo-dir (file-name-as-directory repo-dir)) output)
-    (op/shell-command repo-dir "git add ." t)
+    (op/shell-command repo-dir "env LC_ALL=C git add ." t)
     (setq output
           (op/shell-command repo-dir
-                            (format "git commit -m \"%s\"" message)
+                            (format "env LC_ALL=C git commit -m \"%s\"" message)
                             t))
     (when (not (string-match "\\[.* .*\\]" output))
       (error "Failed to commit changes on current branch of repository '%s'."
@@ -156,7 +156,7 @@ only two types will work well: need to publish or need to delete.
         (repo-dir (file-name-as-directory repo-dir))
         (output (op/shell-command
                  repo-dir
-                 (concat "git diff --name-status "
+                 (concat "env LC_ALL=C git diff --name-status "
                          base-commit " HEAD")
                  t))
         upd-list del-list)
@@ -177,7 +177,7 @@ relative."
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (op/shell-command
                  repo-dir
-                 (concat "git log -1 --format=\"%ci\" -- \"" filepath "\"")
+                 (concat "env LC_ALL=C git log -1 --format=\"%ci\" -- \"" filepath "\"")
                  t)))
     (when (string-match "\\`\\([0-9]+-[0-9]+-[0-9]+\\) .*\n\\'" output)
       (match-string 1 output))))
@@ -188,7 +188,7 @@ presented by REPO-DIR, return nil if there is no remote repository."
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (op/shell-command
                  repo-dir
-                 "git remote"
+                 "env LC_ALL=C git remote"
                  t)))
     (delete "" (split-string output "\n"))))
 
@@ -201,7 +201,7 @@ it will be created."
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (op/shell-command
                  repo-dir
-                 (concat "git push " remote-repo " " branch ":" branch)
+                 (concat "env LC_ALL=C git push " remote-repo " " branch ":" branch)
                  t)))
     (when (or (string-match "fatal" output)
               (string-match "error" output))
