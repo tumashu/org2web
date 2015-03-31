@@ -153,7 +153,7 @@ files, committed by org-page.")
     (when test-publish (op/web-server-browse))
     (setq op/current-project-name nil)))
 
-(defun op/new-repository (project-name repo-dir)
+(defun op/new-repository (repo-dir)
   "Generate a new git repository in directory REPO-DIR, which can be
 perfectly manipulated by org-page."
   (interactive
