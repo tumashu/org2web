@@ -84,7 +84,7 @@ then the \"html-branch\"  will be pushed to remote repo."
           (f (y-or-n-p "Publish all org files? "))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
           (p (when (y-or-n-p
-                    "Publish to test directory? (to original repo if not) ")
+                    "Publish to:  [Yes] Test directory, [No] Original repo. ")
                (setq op/current-project-name j)
                (expand-file-name (op/get-config-option :web-server-docroot))))
           (a (when (and (not p))
