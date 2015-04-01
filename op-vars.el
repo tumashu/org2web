@@ -66,6 +66,12 @@ The main title of entire site.
 
 The subtitle of entire site.
 
+  `:preparation-function'
+
+Function to be called before publishing this project.  This may also
+be a list of functions.
+
+
   `:repository-org-branch'
 
 The branch where org files stored on, it is within repository presented by
@@ -242,6 +248,7 @@ You can see fallback value of above option in `op/config-fallback'"
         :default-category "blog"
         :category-ignore-list ("themes" "assets")
         :confound-email t
+        :preparation-function nil
         :get-title-function op/get-title
         :retrieve-category-function op/get-file-category
         :repo-files-function op/git-all-files

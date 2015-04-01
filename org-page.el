@@ -92,6 +92,12 @@ then the \"html-branch\"  will be pushed to remote repo."
           (u (when (and a (not p))
                (y-or-n-p "Auto push to remote repo? "))))
      (list j f b p a u)))
+
+  (let ((preparation-function
+         (op/get-config-option :preparation-function)))
+    (when preparation-function
+      (run-hooks 'preparation-function)))
+
   (op/verify-configuration)
   (setq op/item-cache nil)
   (let* ((repo-dir (op/get-repository-directory))
