@@ -127,6 +127,10 @@ run org file buffer.
 A function used to retrieve an org file's category, its parameter is the
 org file's path, if parameter is nil, it should return all categories.
 
+   `:org-export-function'
+
+Set the default function by which org-page export org file to html.
+
   `:html-creator-string'
 
 Information about the creator of the HTML document.
@@ -241,6 +245,7 @@ You can see fallback value of above option in `op/config-fallback'"
         :get-title-function op/get-title
         :retrieve-category-function op/get-file-category
         :repo-files-function op/git-all-files
+        :org-export-function op/default-org-export
         :web-server-docroot "~/.emacs.d/org-page-server/default"
         :web-server-port 9876
         :html-creator-string ,(format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\

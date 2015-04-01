@@ -135,13 +135,19 @@ similar to `op/render-header'."
       :post-template)
     (message (concat "Read " (or template "post.mustache") " from file"))
     (op/file-to-string (op/get-template-file
-                     (or template "post.mustache"))))
+                        (or template "post.mustache"))))
    (or param-table
        (ht ("title" (funcall (op/get-config-option :get-title-function)))
            ("content" (cl-flet ((org-html-fontify-code
                                  (code lang)
                                  (when code (org-html-encode-plain-text code))))
-                        (org-export-as 'html nil nil t nil)))))))
+                        (let ((org-export-function (op/get-config-option :org-export-function)))
+                          (when (functionp org-export-function)
+                            (funcall org-export-function)))))))))
+
+(defun op/default-org-export ()
+  "A function with can export org file to html."
+  (org-export-as 'html nil nil t nil))
 
 (defun op/render-footer (&optional param-table)
   "Render the footer on each page. PARAM-TABLE is similar to
