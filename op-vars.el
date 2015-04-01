@@ -34,6 +34,12 @@
   :tag "Org static page generator"
   :group 'org)
 
+(defcustom op/default-project-name nil
+  "If set, `op/do-publication' will directly publish this project
+and `op/new-post' will directly add new post to this project."
+  :group 'org-page
+  :type 'string)
+
 (defcustom op/project-config-alist nil
   "Association list to control org-page publishing behavior.
 

@@ -78,10 +78,11 @@ NOT recommended, and a manual commit is much better
 5) if PUB-BASE-DIR is nil, AUTO-COMMIT is non-nil, and AUTO-PUSH is non-nil,
 then the \"html-branch\"  will be pushed to remote repo."
   (interactive
-   (let* ((j (completing-read "Which project do you want to publish? "
-                              (delete-dups
-                               (mapcar 'car op/project-config-alist))))
-          (f (y-or-n-p "Publish all org files? "))
+   (let* ((j (or op/default-project-name
+                 (completing-read "Which project do you want to publish? "
+                                  (delete-dups
+                                   (mapcar 'car op/project-config-alist)))))
+          (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
           (p (when (y-or-n-p
                     "Publish to:  [Yes] Test directory, [No] Original repo. ")
@@ -298,13 +299,14 @@ FILENAME: the file name of this post
 Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive
-   (let* ((p (completing-read "Which project do you want post? "
-                              (delete-dups
-                               (mapcar 'car op/project-config-alist))))
-          (c (read-string "Category: "
+   (let* ((p (or op/default-project-name
+                 (completing-read "Which project do you want post? "
+                                  (delete-dups
+                                   (mapcar 'car op/project-config-alist)))))
+          (c (read-string (format "Category of \"%s\" project: " p)
                           (progn (setq op/current-project-name p)
                                  (op/get-config-option :default-category))))
-          (f (read-string "filename: " "new-post.org")))
+          (f (read-string (format "Filename of \"%s\" project: " p) "new-post.org" p)))
      (list p c f)))
   (if (string= category "")
       (setq category (op/get-config-option :default-category)))
