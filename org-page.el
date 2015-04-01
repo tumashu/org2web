@@ -146,10 +146,8 @@ files, committed by org-page.")
         (message "Publication finished: on branch '%s' of repository '%s'."
                  html-branch repo-dir)
       (message "Publication finished, output directory: %s." pub-base-dir)
-      (when (string= pub-base-dir (expand-file-name
-                                   (op/get-config-option :web-server-docroot)))
+      (when (called-interactively-p 'any)
         (op/web-server-browse)))
-
     (setq op/current-project-name nil)))
 
 (defun op/new-repository (repo-dir)
