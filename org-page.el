@@ -123,8 +123,8 @@ then the \"html-branch\"  will be pushed to remote repo."
       (copy-directory store-dir repo-dir t t t)
       (delete-directory store-dir t))
     (when (and to-repo auto-commit)
-      (op/git-commit-changes repo-dir "Update published html \
-files, committed by org-page.")
+      (op/git-commit-changes repo-dir (concat "Update published html files, "
+                                              "committed by org-page."))
       (when auto-push
         (setq remote-repos (op/git-remote-name repo-dir))
         (if (not remote-repos)
