@@ -1,5 +1,5 @@
 (define-package
-  "org-page" "0.5"
+  "org-webpage" "0.1"
   "a static site generator based on org mode"
   '((ht "1.5")
     (mustache "0.22")

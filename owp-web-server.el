@@ -1,10 +1,10 @@
-;;; op-web-server.el --- Test web server required by org-page
+;;; owp-web-server.el --- Test web server required by org-webpage
 
 ;; Copyright (C)  2015 Feng Shu
 
 ;; Author: Feng Shu <tumashu AT 163 DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-page
+;; Homepage: https://github.com/tumashu/org-webpage
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -21,31 +21,31 @@
 
 ;;; Commentary:
 
-;; op-web-server.el is a web server used to test org-page.
+;; owp-web-server.el is a web server used to test org-webpage.
 
 ;;; Code:
 (require 'url-util)
 (require 'web-server)
-(require 'op-vars)
-(require 'op-config)
+(require 'owp-vars)
+(require 'owp-config)
 
-(defvar op/web-server nil)
+(defvar owp/web-server nil)
 
-(defun op/web-server-get-url ()
+(defun owp/web-server-get-url ()
   (file-name-as-directory
    (format "http://localhost:%s"
            (number-to-string
-            (op/get-config-option :web-server-port)))))
+            (owp/get-config-option :web-server-port)))))
 
-(defun op/web-server-start ()
+(defun owp/web-server-start ()
   (interactive)
   (lexical-let ((docroot
                  (expand-file-name
-                  (op/get-config-option :web-server-docroot)))
-                (port (op/get-config-option :web-server-port)))
-    (when (and (not op/web-server)
+                  (owp/get-config-option :web-server-docroot)))
+                (port (owp/get-config-option :web-server-port)))
+    (when (and (not owp/web-server)
                docroot port)
-      (setq op/web-server
+      (setq owp/web-server
             (ws-start
              (lambda (request)
                (with-slots (process headers) request
@@ -67,22 +67,22 @@
                          (ws-send-directory-list process path-expand))
                         (t (ws-send-404 process)))
                      (ws-send-404 process)))))
-             (op/get-config-option :web-server-port))))))
+             (owp/get-config-option :web-server-port))))))
 
-(defun op/web-server-stop ()
+(defun owp/web-server-stop ()
   (interactive)
-  (when op/web-server
-    (ws-stop op/web-server)
-    (setq op/web-server nil)))
+  (when owp/web-server
+    (ws-stop owp/web-server)
+    (setq owp/web-server nil)))
 
-(defun op/web-server-browse ()
+(defun owp/web-server-browse ()
   (interactive)
-  (op/web-server-stop)
-  (op/web-server-start)
-  (when op/web-server
+  (owp/web-server-stop)
+  (owp/web-server-start)
+  (when owp/web-server
     (browse-url-default-browser
-     (op/web-server-get-url))))
+     (owp/web-server-get-url))))
 
-(provide 'op-web-server)
+(provide 'owp-web-server)
 
-;;; op-web-server.el ends here
+;;; owp-web-server.el ends here

@@ -1,4 +1,4 @@
-;;; op-resource.el --- Functions dealing with org-page theme resources
+;;; owp-resource.el --- Functions dealing with org-webpage theme resources
 
 ;; Copyright (C)  2005 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -6,7 +6,7 @@
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-page
+;; Homepage: https://github.com/tumashu/org-webpage
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,27 +23,27 @@
 
 ;;; Commentary:
 
-;; This file include functions which deal with org-page theme resources
+;; This file include functions which deal with org-webpage theme resources
 
 ;;; Code:
 
 (require 'format-spec)
 (require 'ox)
 (require 'ht)
-(require 'op-util)
-(require 'op-vars)
-(require 'op-config)
+(require 'owp-util)
+(require 'owp-vars)
+(require 'owp-config)
 
-(defun op/prepare-theme-resources (pub-root-dir)
+(defun owp/prepare-theme-resources (pub-root-dir)
   "Copy theme resources files to PUB-ROOT-DIR."
   (let ((pub-theme-dir (expand-file-name "media/" pub-root-dir))
-        (theme-dirs (reverse (op/get-theme-dirs nil nil 'resources))))
+        (theme-dirs (reverse (owp/get-theme-dirs nil nil 'resources))))
     (when (file-directory-p pub-theme-dir)
       (delete-directory pub-theme-dir t))
     (dolist (theme-dir theme-dirs)
       (copy-directory theme-dir pub-theme-dir t t t))))
 
 
-(provide 'op-resource)
+(provide 'owp-resource)
 
-;;; op-resource.el ends here
+;;; owp-resource.el ends here

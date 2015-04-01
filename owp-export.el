@@ -1,4 +1,4 @@
-;;; op-export.el --- Publication related functions required by org-page
+;;; owp-export.el --- Publication related functions required by org-webpage
 
 ;; Copyright (C)  2005 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -6,7 +6,7 @@
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-page
+;; Homepage: https://github.com/tumashu/org-webpage
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -31,14 +31,14 @@
 (require 'ox)
 (require 'ht)
 (require 'dash)
-(require 'op-util)
-(require 'op-vars)
-(require 'op-config)
-(require 'op-git)
-(require 'op-template)
+(require 'owp-util)
+(require 'owp-vars)
+(require 'owp-config)
+(require 'owp-git)
+(require 'owp-template)
 
 
-(defun op/publish-changes (all-list change-plist pub-root-dir)
+(defun owp/publish-changes (all-list change-plist pub-root-dir)
   "This function is for:
 1. publish changed org files to html
 2. delete html files which are relevant to deleted org files (NOT implemented)
@@ -47,7 +47,7 @@
 ALL-LIST contains paths of all org files, CHANGE-PLIST contains two properties,
 one is :update for files to be updated, another is :delete for files to be
 deleted. PUB-ROOT-DIR is the root publication directory."
-  (let* ((repo-dir (op/get-repository-directory))
+  (let* ((repo-dir (owp/get-repository-directory))
          (upd-list (plist-get change-plist :update))
          (del-list (plist-get change-plist :delete))
          visiting file-buffer attr-cell file-attr-list)
@@ -57,65 +57,65 @@ deleted. PUB-ROOT-DIR is the root publication directory."
            (setq visiting (find-buffer-visiting org-file))
            (with-current-buffer (setq file-buffer
                                       (or visiting (find-file org-file)))
-             (setq attr-cell (op/get-org-file-options
+             (setq attr-cell (owp/get-org-file-options
                               pub-root-dir
                               (member org-file upd-list)))
              (setq file-attr-list (cons (car attr-cell) file-attr-list))
              (when (member org-file upd-list)
-               (op/publish-modified-file (cdr attr-cell)
+               (owp/publish-modified-file (cdr attr-cell)
                                          (plist-get (car attr-cell) :pub-dir)))
              (when (member org-file del-list)
-               (op/handle-deleted-file org-file)))
+               (owp/handle-deleted-file org-file)))
            (or visiting (kill-buffer file-buffer)))
        all-list)
       (unless (member
                (expand-file-name "index.org" repo-dir)
                all-list)
-        (op/generate-default-index file-attr-list pub-root-dir))
+        (owp/generate-default-index file-attr-list pub-root-dir))
       (unless (member
                (expand-file-name "about.org" repo-dir)
                all-list)
-        (op/generate-default-about pub-root-dir))
-      (op/update-category-index file-attr-list pub-root-dir)
-      (op/update-rss file-attr-list pub-root-dir)
-      (op/update-tags file-attr-list pub-root-dir))))
+        (owp/generate-default-about pub-root-dir))
+      (owp/update-category-index file-attr-list pub-root-dir)
+      (owp/update-rss file-attr-list pub-root-dir)
+      (owp/update-tags file-attr-list pub-root-dir))))
 
-(defun op/get-org-file-options (pub-root-dir do-pub)
+(defun owp/get-org-file-options (pub-root-dir do-pub)
   "Retrieve all needed options for org file opened in current buffer.
 PUB-ROOT-DIR is the root directory of published files, if DO-PUB is t, the
 content of the buffer will be converted into html."
-  (let* ((repo-dir (op/get-repository-directory))
+  (let* ((repo-dir (owp/get-repository-directory))
          (filename (buffer-file-name))
-         (attr-plist `(:title ,(funcall (op/get-config-option :get-title-function))
-                              :date ,(op/fix-timestamp-string
-                                      (or (op/read-org-option "DATE")
+         (attr-plist `(:title ,(funcall (owp/get-config-option :get-title-function))
+                              :date ,(owp/fix-timestamp-string
+                                      (or (owp/read-org-option "DATE")
                                           (format-time-string "%Y-%m-%d")))
                               :mod-date ,(if (not filename)
                                              (format-time-string "%Y-%m-%d")
-                                           (or (op/git-last-change-date
+                                           (or (owp/git-last-change-date
                                                 repo-dir
                                                 filename)
                                                (format-time-string
                                                 "%Y-%m-%d"
                                                 (nth 5 (file-attributes filename)))))
-                              :description ,(or (op/read-org-option "DESCRIPTION")
+                              :description ,(or (owp/read-org-option "DESCRIPTION")
                                                 "No Description")
-                              :thumb ,(op/read-org-option "THUMBNAIL")))
+                              :thumb ,(owp/read-org-option "THUMBNAIL")))
          assets-dir post-content
          asset-path asset-abs-path pub-abs-path converted-path
          component-table tags category cat-config)
-    (setq tags (op/read-org-option "TAGS"))
+    (setq tags (owp/read-org-option "TAGS"))
     (when tags
       (plist-put
-       attr-plist :tags (delete "" (mapcar 'op/trim-string
+       attr-plist :tags (delete "" (mapcar 'owp/trim-string
                                            (split-string tags "[:,]+" t)))))
-    (setq category (funcall (or (op/get-config-option :retrieve-category-function)
-                                op/get-file-category)
+    (setq category (funcall (or (owp/get-config-option :retrieve-category-function)
+                                owp/get-file-category)
                             filename))
     (plist-put attr-plist :category category)
-    (setq cat-config (cdr (or (assoc category op/category-config-alist)
-                              (op/get-category-setting
-                               (op/get-config-option :default-category)))))
+    (setq cat-config (cdr (or (assoc category owp/category-config-alist)
+                              (owp/get-category-setting
+                               (owp/get-config-option :default-category)))))
     (plist-put attr-plist :uri (funcall (plist-get cat-config :uri-generator)
                                         (plist-get cat-config :uri-template)
                                         (plist-get attr-plist :date)
@@ -128,7 +128,7 @@ content of the buffer will be converted into html."
                                       (plist-get attr-plist :uri)))))
     (when do-pub
       (princ attr-plist)
-      (setq post-content (op/render-content))
+      (setq post-content (owp/render-content))
       (setq assets-dir (file-name-as-directory
                         (concat (file-name-as-directory pub-root-dir)
                                 "assets/"
@@ -168,13 +168,13 @@ ancestor directory of assets directory %s." pub-root-dir assets-dir))
               (setq post-content
                     (replace-regexp-in-string
                      (regexp-quote asset-path) converted-path post-content))))))
-      (setq component-table (ht ("header" (op/render-header))
-                                ("nav" (op/render-navigation-bar))
+      (setq component-table (ht ("header" (owp/render-header))
+                                ("nav" (owp/render-navigation-bar))
                                 ("content" post-content)
-                                ("footer" (op/render-footer)))))
+                                ("footer" (owp/render-footer)))))
     (cons attr-plist component-table)))
 
-(defun op/read-org-option (option)
+(defun owp/read-org-option (option)
   "Read option value of org file opened in current buffer.
 e.g:
 #+TITLE: this is title
@@ -185,7 +185,7 @@ will return \"this is title\" if OPTION is \"TITLE\""
       (when (re-search-forward match-regexp nil t)
         (match-string-no-properties 2 nil)))))
 
-(defun op/generate-uri (default-uri-template creation-date title)
+(defun owp/generate-uri (default-uri-template creation-date title)
   "Generate URI of org file opened in current buffer. It will be firstly created
 by #+URI option, if it is nil, DEFAULT-URI-TEMPLATE will be used to generate the
 uri. If CREATION-DATE is nil, current date will be used. The uri template option
@@ -194,28 +194,28 @@ can contain following parameters:
 %m: month of creation date
 %d: day of creation date
 %t: title of current buffer"
-  (let ((uri-template (or (op/read-org-option "URI")
+  (let ((uri-template (or (owp/read-org-option "URI")
                           default-uri-template))
         (date-list (split-string (if creation-date
-                                     (op/fix-timestamp-string creation-date)
+                                     (owp/fix-timestamp-string creation-date)
                                    (format-time-string "%Y-%m-%d"))
                                  "-"))
-        (encoded-title (op/encode-string-to-url title)))
+        (encoded-title (owp/encode-string-to-url title)))
     (format-spec uri-template `((?y . ,(car date-list))
                                 (?m . ,(cadr date-list))
                                 (?d . ,(caddr date-list))
                                 (?t . ,encoded-title)))))
 
-(defun op/get-file-category (org-file)
+(defun owp/get-file-category (org-file)
   "Get org file category presented by ORG-FILE, return all categories if
 ORG-FILE is nil. This is the default function used to get a file's category,
-see org-page config option 'retrieve-category-function. How to judge a
+see org-webpage config option 'retrieve-category-function. How to judge a
 file's category is based on its name and its root folder name."
-  (let ((repo-dir (op/get-repository-directory))
-        (default-category (op/get-config-option :default-category))
-        (category-ignore-list (op/get-config-option :category-ignore-list)))
+  (let ((repo-dir (owp/get-repository-directory))
+        (default-category (owp/get-config-option :default-category))
+        (category-ignore-list (owp/get-config-option :category-ignore-list)))
     (cond ((not org-file)
-           (let ((cat-list `("index" "about" ,(op/get-config-option :default-category)))) ;; 3 default categories
+           (let ((cat-list `("index" "about" ,(owp/get-config-option :default-category)))) ;; 3 default categories
              (dolist (f (directory-files repo-dir))
                (when (and (not (equal f "."))
                           (not (equal f ".."))
@@ -236,33 +236,33 @@ file's category is based on its name and its root folder name."
                                  (expand-file-name org-file) repo-dir)
                                 "[/\\\\]+"))))))
 
-(defun op/publish-modified-file (component-table pub-dir)
+(defun owp/publish-modified-file (component-table pub-dir)
   "Publish org file opened in current buffer. COMPONENT-TABLE is the hash table
 used to render the template, PUB-DIR is the directory for published html file.
 If COMPONENT-TABLE is nil, the publication will be skipped."
   (when component-table
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
-    (op/string-to-file (mustache-render
-                     (op/get-cache-create
+    (owp/string-to-file (mustache-render
+                     (owp/get-cache-create
                       :container-template
                       (message "Read container.mustache from file")
-                      (op/file-to-string (op/get-template-file "container.mustache")))
+                      (owp/file-to-string (owp/get-template-file "container.mustache")))
                      component-table)
                     (concat pub-dir "index.html") ;; 'html-mode ;; do NOT indent the code
                     )))
 
-(defun op/handle-deleted-file (org-file-path)
+(defun owp/handle-deleted-file (org-file-path)
   "TODO: add logic for this function, maybe a little complex."
   )
 
-(defun op/rearrange-category-sorted (file-attr-list)
+(defun owp/rearrange-category-sorted (file-attr-list)
   "Rearrange and sort attribute property lists from FILE-ATTR-LIST. Rearrange
 according to category, and sort according to :sort-by property defined in
-`op/category-config-alist', if category is not in `op/category-config-alist',
+`owp/category-config-alist', if category is not in `owp/category-config-alist',
 by default, category which set by config option `:default-category' will be used.
 For sorting, later lies headmost."
-  (let ((default-category (op/get-config-option :default-category))
+  (let ((default-category (owp/get-config-option :default-category))
         cat-alist cat-list)
     (mapc
      #'(lambda (plist)
@@ -279,58 +279,58 @@ For sorting, later lies headmost."
           cell
           (sort (cdr cell)
                 #'(lambda (plist1 plist2)
-                    (<= (op/compare-standard-date
-                         (op/fix-timestamp-string
+                    (<= (owp/compare-standard-date
+                         (owp/fix-timestamp-string
                           (plist-get
                            plist1
                            (plist-get
                             (cdr (or (assoc (plist-get plist1 :category)
-                                            op/category-config-alist)
-                                     (op/get-category-setting default-category)))
+                                            owp/category-config-alist)
+                                     (owp/get-category-setting default-category)))
                             :sort-by)))
-                         (op/fix-timestamp-string
+                         (owp/fix-timestamp-string
                           (plist-get
                            plist2
                            (plist-get
                             (cdr (or (assoc (plist-get plist2 :category)
-                                            op/category-config-alist)
-                                     (op/get-category-setting default-category)))
+                                            owp/category-config-alist)
+                                     (owp/get-category-setting default-category)))
                             :sort-by))))
                         0)))))
      cat-alist)))
 
-(defun op/update-category-index (file-attr-list pub-base-dir)
+(defun owp/update-category-index (file-attr-list pub-base-dir)
   "Update index page of different categories. FILE-ATTR-LIST is the list of all
 file attribute property lists. PUB-BASE-DIR is the root publication directory."
-  (let* ((sort-alist (op/rearrange-category-sorted file-attr-list))
-         (default-category (op/get-config-option :default-category))
+  (let* ((sort-alist (owp/rearrange-category-sorted file-attr-list))
+         (default-category (owp/get-config-option :default-category))
          cat-dir)
     (mapc
      #'(lambda (cat-list)
          (unless (not (plist-get (cdr (or (assoc (car cat-list)
-                                                 op/category-config-alist)
-                                          (op/get-category-setting default-category)))
+                                                 owp/category-config-alist)
+                                          (owp/get-category-setting default-category)))
                                  :category-index))
            (setq cat-dir (file-name-as-directory
                           (concat (file-name-as-directory pub-base-dir)
-                                  (op/encode-string-to-url (car cat-list)))))
+                                  (owp/encode-string-to-url (car cat-list)))))
            (unless (file-directory-p cat-dir)
              (mkdir cat-dir t))
-           (op/string-to-file
+           (owp/string-to-file
             (mustache-render
-             (op/get-cache-create
+             (owp/get-cache-create
               :container-template
               (message "Read container.mustache from file")
-              (op/file-to-string (op/get-template-file "container.mustache")))
+              (owp/file-to-string (owp/get-template-file "container.mustache")))
              (ht ("header"
-                  (op/render-header
+                  (owp/render-header
                    (ht ("page-title" (concat (capitalize (car cat-list))
                                              " Index - "
-                                             (op/get-config-option :site-main-title)))
+                                             (owp/get-config-option :site-main-title)))
                        ("author" (or user-full-name "Unknown Author")))))
-                 ("nav" (op/render-navigation-bar))
+                 ("nav" (owp/render-navigation-bar))
                  ("content"
-                  (op/render-content
+                  (owp/render-content
                    "category-index.mustache"
                    (ht ("cat-name" (capitalize (car cat-list)))
                        ("posts"
@@ -342,44 +342,44 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                                    (plist-get
                                     (cdr (or (assoc
                                               (plist-get attr-plist :category)
-                                              op/category-config-alist)
-                                             (op/get-category-setting default-category)))
+                                              owp/category-config-alist)
+                                             (owp/get-category-setting default-category)))
                                     :sort-by)))
                                  ("post-uri" (plist-get attr-plist :uri))
                                  ("post-title" (plist-get attr-plist :title))))
                          (cdr cat-list))))))
                  ("footer"
-                  (op/render-footer
+                  (owp/render-footer
                    (ht ("show-meta" nil)
                        ("show-comment" nil)
                        ("author" (or user-full-name "Unknown Author"))
-                       ("google-analytics" (op/get-config-option :personal-google-analytics-id))
-                       ("google-analytics-id" (op/get-config-option :personal-google-analytics-id))
-                       ("creator-info" (op/get-html-creator-string))
-                       ("email" (op/confound-email-address (or user-mail-address
+                       ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                       ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                       ("creator-info" (owp/get-html-creator-string))
+                       ("email" (owp/confound-email-address (or user-mail-address
                                                                "Unknown Email"))))))))
             (concat cat-dir "index.html") 'html-mode)))
      sort-alist)))
 
-(defun op/generate-default-index (file-attr-list pub-base-dir)
+(defun owp/generate-default-index (file-attr-list pub-base-dir)
   "Generate default index page, only if index.org does not exist. FILE-ATTR-LIST
 is the list of all file attribute property lists. PUB-BASE-DIR is the root
 publication directory."
-  (let ((sort-alist (op/rearrange-category-sorted file-attr-list))
+  (let ((sort-alist (owp/rearrange-category-sorted file-attr-list))
         (id 0))
-    (op/string-to-file
+    (owp/string-to-file
      (mustache-render
-      (op/get-cache-create
+      (owp/get-cache-create
        :container-template
        (message "Read container.mustache from file")
-       (op/file-to-string (op/get-template-file "container.mustache")))
+       (owp/file-to-string (owp/get-template-file "container.mustache")))
       (ht ("header"
-           (op/render-header
-            (ht ("page-title" (concat "Index - " (op/get-config-option :site-main-title)))
+           (owp/render-header
+            (ht ("page-title" (concat "Index - " (owp/get-config-option :site-main-title)))
                 ("author" (or user-full-name "Unknown Author")))))
-          ("nav" (op/render-navigation-bar))
+          ("nav" (owp/render-navigation-bar))
           ("content"
-           (op/render-content
+           (owp/render-content
             "index.mustache"
             (ht ("categories"
                  (mapcar
@@ -401,56 +401,56 @@ publication directory."
                                     (cdr cell)))))
                   sort-alist)))))
           ("footer"
-           (op/render-footer
+           (owp/render-footer
             (ht ("show-meta" nil)
                 ("show-comment" nil)
                 ("author" (or user-full-name "Unknown Author"))
-                ("google-analytics" (op/get-config-option :personal-google-analytics-id))
-                ("google-analytics-id" (op/get-config-option :personal-google-analytics-id))
-                ("creator-info" (op/get-html-creator-string))
-                ("email" (op/confound-email-address (or user-mail-address
+                ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                ("creator-info" (owp/get-html-creator-string))
+                ("email" (owp/confound-email-address (or user-mail-address
                                                         "Unknown Email"))))))))
      (concat (file-name-as-directory pub-base-dir) "index.html") 'html-mode)))
 
-(defun op/generate-default-about (pub-base-dir)
+(defun owp/generate-default-about (pub-base-dir)
   "Generate default about page, only if about.org does not exist. PUB-BASE-DIR
 is the root publication directory."
   (let ((pub-dir (file-name-as-directory
                   (expand-file-name "about/" pub-base-dir))))
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
-    (op/string-to-file
+    (owp/string-to-file
      (mustache-render
-      (op/get-cache-create
+      (owp/get-cache-create
        :container-template
        (message "Read container.mustache from file")
-       (op/file-to-string (op/get-template-file "container.mustache")))
+       (owp/file-to-string (owp/get-template-file "container.mustache")))
       (ht ("header"
-           (op/render-header
-            (ht ("page-title" (concat "About - " (op/get-config-option :site-main-title)))
+           (owp/render-header
+            (ht ("page-title" (concat "About - " (owp/get-config-option :site-main-title)))
                 ("author" (or user-full-name "Unknown Author")))))
-          ("nav" (op/render-navigation-bar))
+          ("nav" (owp/render-navigation-bar))
           ("content"
-           (op/render-content
+           (owp/render-content
             "about.mustache"
             (ht ("author" (or user-full-name "Unknown Author")))))
           ("footer"
-           (op/render-footer
+           (owp/render-footer
             (ht ("show-meta" nil)
                 ("show-comment" nil)
                 ("author" (or user-full-name "Unknown Author"))
-                ("google-analytics" (op/get-config-option :personal-google-analytics-id))
-                ("google-analytics-id" (op/get-config-option :personal-google-analytics-id))
-                ("creator-info" (op/get-html-creator-string))
-                ("email" (op/confound-email-address (or user-mail-address
+                ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                ("creator-info" (owp/get-html-creator-string))
+                ("email" (owp/confound-email-address (or user-mail-address
                                                         "Unknown Email"))))))))
      (concat pub-dir "index.html") 'html-mode)))
 
-(defun op/generate-tag-uri (tag-name)
+(defun owp/generate-tag-uri (tag-name)
   "Generate tag uri based on TAG-NAME."
-  (concat "/tags/" (op/encode-string-to-url tag-name) "/"))
+  (concat "/tags/" (owp/encode-string-to-url tag-name) "/"))
 
-(defun op/update-tags (file-attr-list pub-base-dir)
+(defun owp/update-tags (file-attr-list pub-base-dir)
   "Update tag pages. FILE-ATTR-LIST is the list of all file attribute property
 lists. PUB-BASE-DIR is the root publication directory.
 TODO: improve this function."
@@ -468,59 +468,59 @@ TODO: improve this function."
      file-attr-list)
     (unless (file-directory-p tag-base-dir)
       (mkdir tag-base-dir t))
-    (op/string-to-file
+    (owp/string-to-file
      (mustache-render
-      (op/get-cache-create
+      (owp/get-cache-create
        :container-template
        (message "Read container.mustache from file")
-       (op/file-to-string (op/get-template-file "container.mustache")))
+       (owp/file-to-string (owp/get-template-file "container.mustache")))
       (ht ("header"
-           (op/render-header
-            (ht ("page-title" (concat "Tag Index - " (op/get-config-option :site-main-title)))
+           (owp/render-header
+            (ht ("page-title" (concat "Tag Index - " (owp/get-config-option :site-main-title)))
                 ("author" (or user-full-name "Unknown Author")))))
-          ("nav" (op/render-navigation-bar))
+          ("nav" (owp/render-navigation-bar))
           ("content"
-           (op/render-content
+           (owp/render-content
             "tag-index.mustache"
             (ht ("tags"
                  (mapcar
                   #'(lambda (tag-list)
                       (ht ("tag-name" (car tag-list))
-                          ("tag-uri" (op/generate-tag-uri (car tag-list)))
+                          ("tag-uri" (owp/generate-tag-uri (car tag-list)))
                           ("count" (number-to-string (length (cdr tag-list))))))
                   tag-alist)))))
           ("footer"
-           (op/render-footer
+           (owp/render-footer
             (ht ("show-meta" nil)
                 ("show-comment" nil)
                 ("author" (or user-full-name "Unknown Author"))
-                ("google-analytics" (op/get-config-option :personal-google-analytics-id))
-                ("google-analytics-id" (op/get-config-option :personal-google-analytics-id))
-                ("creator-info" (op/get-html-creator-string))
-                ("email" (op/confound-email-address (or user-mail-address
+                ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                ("creator-info" (owp/get-html-creator-string))
+                ("email" (owp/confound-email-address (or user-mail-address
                                                         "Unknown Email"))))))))
      (concat tag-base-dir "index.html") 'html-mode)
     (mapc
      #'(lambda (tag-list)
          (setq tag-dir (file-name-as-directory
                         (concat tag-base-dir
-                                (op/encode-string-to-url (car tag-list)))))
+                                (owp/encode-string-to-url (car tag-list)))))
          (unless (file-directory-p tag-dir)
            (mkdir tag-dir t))
-         (op/string-to-file
+         (owp/string-to-file
           (mustache-render
-           (op/get-cache-create
+           (owp/get-cache-create
             :container-template
             (message "Read container.mustache from file")
-            (op/file-to-string (op/get-template-file "container.mustache")))
+            (owp/file-to-string (owp/get-template-file "container.mustache")))
            (ht ("header"
-                (op/render-header
+                (owp/render-header
                  (ht ("page-title" (concat "Tag: " (car tag-list)
-                                           " - " (op/get-config-option :site-main-title)))
+                                           " - " (owp/get-config-option :site-main-title)))
                      ("author" (or user-full-name "Unknown Author")))))
-               ("nav" (op/render-navigation-bar))
+               ("nav" (owp/render-navigation-bar))
                ("content"
-                (op/render-content
+                (owp/render-content
                  "tag.mustache"
                  (ht ("tag-name" (car tag-list))
                      ("posts"
@@ -530,26 +530,26 @@ TODO: improve this function."
                                ("post-title" (plist-get attr-plist :title))))
                        (cdr tag-list))))))
                ("footer"
-                (op/render-footer
+                (owp/render-footer
                  (ht ("show-meta" nil)
                      ("show-comment" nil)
                      ("author" (or user-full-name "Unknown Author"))
-                     ("google-analytics" (op/get-config-option :personal-google-analytics-id))
-                     ("google-analytics-id" (op/get-config-option :personal-google-analytics-id))
-                     ("creator-info" (op/get-html-creator-string))
-                     ("email" (op/confound-email-address (or user-mail-address
+                     ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                     ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                     ("creator-info" (owp/get-html-creator-string))
+                     ("email" (owp/confound-email-address (or user-mail-address
                                                              "Unknown Email"))))))))
           (concat tag-dir "index.html") 'html-mode))
      tag-alist)))
 
-(defun op/update-rss (file-attr-list pub-base-dir)
+(defun owp/update-rss (file-attr-list pub-base-dir)
   "Update RSS. FILE-ATTR-LIST is the list of all file attribute property lists.
 PUB-BASE-DIR is the root publication directory."
   (let ((last-10-posts
-         (-take 10 (--sort (>= 0 (op/compare-standard-date
-                                  (op/fix-timestamp-string
+         (-take 10 (--sort (>= 0 (owp/compare-standard-date
+                                  (owp/fix-timestamp-string
                                    (plist-get it :mod-date))
-                                  (op/fix-timestamp-string
+                                  (owp/fix-timestamp-string
                                    (plist-get other :mod-date))))
                            (--filter (not (or
                                            (string= (plist-get it :category)
@@ -557,21 +557,21 @@ PUB-BASE-DIR is the root publication directory."
                                            (string= (plist-get it :category)
                                                     "about")))
                                      file-attr-list)))))
-    (op/string-to-file
+    (owp/string-to-file
      (mustache-render
-      op/rss-template
-      (ht ("title" (op/get-config-option :site-main-title))
-          ("link" (op/get-site-domain))
-          ("description" (op/get-config-option :site-sub-title))
+      owp/rss-template
+      (ht ("title" (owp/get-config-option :site-main-title))
+          ("link" (owp/get-site-domain))
+          ("description" (owp/get-config-option :site-sub-title))
           ("date" (format-time-string "%a, %d %b %Y %T %Z"))
           ("items" (--map (ht ("item-title" (plist-get it :title))
-                              ("item-link" (op/get-full-url (plist-get it :uri)))
+                              ("item-link" (owp/get-full-url (plist-get it :uri)))
                               ("item-description" (plist-get it :description))
                               ("item-update-date" (plist-get it :mod-date)))
                           last-10-posts))))
      (concat (file-name-as-directory pub-base-dir) "rss.xml"))))
 
 
-(provide 'op-export)
+(provide 'owp-export)
 
-;;; op-export.el ends here
+;;; owp-export.el ends here

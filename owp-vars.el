@@ -1,4 +1,4 @@
-;;; op-vars.el --- Variable configurations required by org-page
+;;; owp-vars.el --- Variable configurations required by org-webpage
 
 ;; Copyright (C)  2005 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -6,7 +6,7 @@
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-page
+;; Homepage: https://github.com/tumashu/org-webpage
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 ;;; Commentary:
 
-;; op-vars.el contains almost all variable definitions and configurations.
+;; owp-vars.el contains almost all variable definitions and configurations.
 
 ;;; Code:
 
@@ -31,21 +31,21 @@
 (require 'ht)
 
 
-(defgroup org-page nil
-  "Options for generating static pages using org-page."
+(defgroup org-webpage nil
+  "Options for generating static pages using org-webpage."
   :tag "Org static page generator"
   :group 'org)
 
-(defcustom op/default-project-name nil
-  "If set, `op/do-publication' will directly publish this project
-and `op/new-post' will directly add new post to this project."
-  :group 'org-page
+(defcustom owp/default-project-name nil
+  "If set, `owp/do-publication' will directly publish this project
+and `owp/new-post' will directly add new post to this project."
+  :group 'org-webpage
   :type 'string)
 
-(defcustom op/project-config-alist nil
-  "Association list to control org-page publishing behavior.
+(defcustom owp/project-config-alist nil
+  "Association list to control org-webpage publishing behavior.
 
-Each element of the alist is a org-page 'project.'  The CAR of
+Each element of the alist is a org-webpage 'project.'  The CAR of
 each element is a string, uniquely identifying the project.  The
 CDR of each element is a well-formed property list with an even
 number of elements, alternating keys and values, specifying
@@ -93,7 +93,7 @@ presented by `:repository-directory'.
   `:theme-root-directory'
 
 The root directory list that stores themes for page rendering. By default, it
-points to the directory `themes' in org-page installation directory.
+points to the directory `themes' in org-webpage installation directory.
 
   `:theme'
 
@@ -143,7 +143,7 @@ org file's path, if parameter is nil, it should return all categories.
 
    `:org-export-function'
 
-Set the default function by which org-page export org file to html.
+Set the default function by which org-webpage export org file to html.
 
   `:html-creator-string'
 
@@ -155,67 +155,67 @@ The function used to get all org files exported.
 
   `:web-server-docroot'
 
-org-page can start a web server to test publish, this
+org-webpage can start a web server to test publish, this
 set the server document root.
 
   `:web-server-port'
 
-org-page can start a web server to test publish, this
+org-webpage can start a web server to test publish, this
 set the server port.
 
-You can see fallback value of above option in `op/config-fallback'"
-  :group 'org-page
+You can see fallback value of above option in `owp/config-fallback'"
+  :group 'org-webpage
   :type 'alist)
 
-(defcustom op/get-config-option-function
-  'op/get-config-option-from-alist
+(defcustom owp/get-config-option-function
+  'owp/get-config-option-from-alist
   "The function used to get config option."
-  :group 'org-page
+  :group 'org-webpage
   :type 'function)
 
-(defconst op/temp-buffer-name "*Org Page Output*"
-  "Name of the temporary buffer used by org-page.")
+(defconst owp/temp-buffer-name "*Org Page Output*"
+  "Name of the temporary buffer used by org-webpage.")
 
-(defconst op/load-directory
+(defconst owp/load-directory
   (cond
    (load-file-name (file-name-directory load-file-name))
-   ((symbol-file 'op/temp-buffer-name)
-    (file-name-directory (symbol-file 'op/temp-buffer-name)))
-   ((string= (file-name-nondirectory buffer-file-name) "op-vars.el")
+   ((symbol-file 'owp/temp-buffer-name)
+    (file-name-directory (symbol-file 'owp/temp-buffer-name)))
+   ((string= (file-name-nondirectory buffer-file-name) "owp-vars.el")
     (file-name-directory buffer-file-name))
    (t nil))
-  "The directory where org-page is loaded from.")
+  "The directory where org-webpage is loaded from.")
 
-(defvar op/category-config-alist
+(defvar owp/category-config-alist
   '(("blog" ;; this is the default configuration
      :show-meta t
      :show-comment t
-     :uri-generator op/generate-uri
+     :uri-generator owp/generate-uri
      :uri-template "/blog/%y/%m/%d/%t/"
      :sort-by :date     ;; how to sort the posts
      :category-index t) ;; generate category index or not
     ("index"
      :show-meta nil
      :show-comment nil
-     :uri-generator op/generate-uri
+     :uri-generator owp/generate-uri
      :uri-template "/"
      :sort-by :date
      :category-index nil)
     ("about"
      :show-meta nil
      :show-comment nil
-     :uri-generator op/generate-uri
+     :uri-generator owp/generate-uri
      :uri-template "/about/"
      :sort-by :date
      :category-index nil))
   "Configurations for different categories, can and should be customized.")
 
-(defvar op/current-project-name nil)
+(defvar owp/current-project-name nil)
 
-(defvar op/item-cache nil
+(defvar owp/item-cache nil
   "The cache for general purpose.")
 
-(defconst op/rss-template "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+(defconst owp/rss-template "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <rss version=\"2.0\">
   <channel>
     <title>{{title}}</title>
@@ -224,8 +224,8 @@ You can see fallback value of above option in `op/config-fallback'"
     <pubDate>{{date}}</pubDate>
     <lastBuildDate>{{date}}</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
-    <generator>Org-page static site generator \
-(https://github.com/kelvinh/org-page)</generator>
+    <generator>org-webpage static site generator \
+(https://github.com/tumashu/org-webpage)</generator>
 {{#items}}
 <item>
 <title>{{item-title}}</title>
@@ -239,16 +239,16 @@ You can see fallback value of above option in `op/config-fallback'"
 </rss>"
   "Template for RSS rendering.")
 
-(defvar op/config-fallback
+(defvar owp/config-fallback
       `(:repository-directory nil
         :site-domain nil
-        :site-main-title "org-page"
+        :site-main-title "org-webpage"
         :site-sub-title "static site generator"
         :repository-org-branch "source"
         :repository-html-branch "master"
         :theme-root-directory nil
         :theme (default)
-        :personal-github-link "https://github.com/tumashu/org-page"
+        :personal-github-link "https://github.com/tumashu/org-webpage"
         :personal-avatar nil
         :personal-disqus-shortname nil
         :personal-duoshuo-shortname nil
@@ -257,11 +257,11 @@ You can see fallback value of above option in `op/config-fallback'"
         :category-ignore-list ("themes" "assets")
         :confound-email t
         :preparation-function nil
-        :get-title-function op/get-title
-        :retrieve-category-function op/get-file-category
-        :repo-files-function op/git-all-files
-        :org-export-function op/default-org-export
-        :web-server-docroot "~/.emacs.d/org-page-server/default"
+        :get-title-function owp/get-title
+        :retrieve-category-function owp/get-file-category
+        :repo-files-function owp/git-all-files
+        :org-export-function owp/default-org-export
+        :web-server-docroot "~/.emacs.d/org-webpage-server/default"
         :web-server-port 9876
         :html-creator-string ,(format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\
 (<a href=\"http://orgmode.org\">Org mode</a> %s)"
@@ -269,9 +269,9 @@ You can see fallback value of above option in `op/config-fallback'"
 (if (fboundp 'org-version)
     (replace-regexp-in-string "\\..*" ".x" (org-version))
   "Unknown Version"))
-"If User don't set an option, org-page will use fallback value of this option."))
+"If User don't set an option, org-webpage will use fallback value of this option."))
 
 
-(provide 'op-vars)
+(provide 'owp-vars)
 
-;;; op-vars.el ends here
+;;; owp-vars.el ends here

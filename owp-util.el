@@ -1,4 +1,4 @@
-;;; op-util.el --- Common utility functions required by org-page
+;;; owp-util.el --- Common utility functions required by org-webpage
 
 ;; Copyright (C)  2005 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -6,7 +6,7 @@
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-page
+;; Homepage: https://github.com/tumashu/org-webpage
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -28,11 +28,11 @@
 ;;; Code:
 
 (require 'ht)
-(require 'op-vars)
-(require 'op-config)
+(require 'owp-vars)
+(require 'owp-config)
 
 
-(defun op/compare-standard-date (date1 date2)
+(defun owp/compare-standard-date (date1 date2)
   "Compare two standard ISO 8601 format dates, format is as below:
 2012-08-17
 1. if date1 is earlier than date2, returns 1
@@ -54,7 +54,7 @@
                             ((> day1 day2) -1)
                             (t 0))))))))
 
-(defun op/fix-timestamp-string (date-string)
+(defun owp/fix-timestamp-string (date-string)
   "This is a piece of code copied from Xah Lee (I modified a little):
 Returns yyyy-mm-dd format of date-string
 For examples:
@@ -144,16 +144,16 @@ T[0-9][0-9]:[0-9][0-9]" date-str)
           (setq dd (if date (format "%02d" date) ""))
           (concat yyyy "-" mm "-" dd))))))
 
-(defun op/confound-email-address (email)
+(defun owp/confound-email-address (email)
   "Confound email to prevent spams using simple rule:
 replace . with <dot>, @ with <at>, e.g.
 name@domain.com => name <at> domain <dot> com"
-  (if (not (op/get-config-option :confound-email)) email
+  (if (not (owp/get-config-option :confound-email)) email
     (replace-regexp-in-string
      " +" " " (replace-regexp-in-string
                "@" " <at> " (replace-regexp-in-string "\\." " <dot> " email)))))
 
-(defun op/string-suffix-p (str1 str2 &optional ignore-case)
+(defun owp/string-suffix-p (str1 str2 &optional ignore-case)
   "Return non-nil if STR1 is a suffix of STR2.
 If IGNORE-CASE is non-nil, the comparison is done without paying attention
 to case differences."
@@ -161,42 +161,42 @@ to case differences."
     (if (< pos 0) nil (eq t (compare-strings str1 nil nil
                                              str2 pos nil ignore-case)))))
 
-(defun op/trim-string-left (str)
+(defun owp/trim-string-left (str)
   "Remove whitespace at the beginning of STR."
   (if (string-match "\\`[ \t\n\r]+" str)
       (replace-match "" t t str)
     str))
 
-(defun op/trim-string-right (str)
+(defun owp/trim-string-right (str)
   "Remove whitespace at the end of STR."
   (if (string-match "[ \t\n\r]+\\'" str)
       (replace-match "" t t str)
     str))
 
-(defun op/trim-string (str)
+(defun owp/trim-string (str)
   "Remove whitespace at the beginning and end of STR.
 The function is copied from https://github.com/magnars/s.el, because I do not
-want to make org-page depend on other libraries, so I copied the function here,
-so do `op/trim-string-left' and `op/trim-string-right'."
-  (op/trim-string-left (op/trim-string-right str)))
+want to make org-webpage depend on other libraries, so I copied the function here,
+so do `owp/trim-string-left' and `owp/trim-string-right'."
+  (owp/trim-string-left (owp/trim-string-right str)))
 
-(defun op/encode-string-to-url (string)
+(defun owp/encode-string-to-url (string)
   "Encode STRING to legal URL. Why we do not use `url-encode-url' to encode the
 string, is that `url-encode-url' will convert all not allowed characters into
 encoded ones, like %3E, but we do NOT want this kind of url."
   (downcase (replace-regexp-in-string "[ :/\\]+" "-" string)))
 
-(defun op/get-full-url (uri)
+(defun owp/get-full-url (uri)
   "Get the full url of URI, by joining site-domain with URI."
-  (concat (replace-regexp-in-string "/?$" "" (op/get-site-domain)) uri))
+  (concat (replace-regexp-in-string "/?$" "" (owp/get-site-domain)) uri))
 
-(defun op/file-to-string (file)
+(defun owp/file-to-string (file)
   "Read the content of FILE and return it as a string."
   (with-temp-buffer
     (insert-file-contents file)
     (buffer-string)))
 
-(defun op/string-to-file (string file &optional mode)
+(defun owp/string-to-file (string file &optional mode)
   "Write STRING into FILE, only when FILE is writable. If MODE is a valid major
 mode, format the string with MODE's format settings."
   (with-temp-buffer
@@ -210,7 +210,7 @@ mode, format the string with MODE's format settings."
     (when (file-writable-p file)
       (write-region (point-min) (point-max) file))))
 
-(defun op/convert-plist-to-hashtable (plist)
+(defun owp/convert-plist-to-hashtable (plist)
   "Convert normal property list PLIST into hash table, keys of PLIST should be
 in format :key, and it will be converted into \"key\" in hash table. This is an
 alternative to `ht-from-plist'."
@@ -221,6 +221,6 @@ alternative to `ht-from-plist'."
         (ht-set h key value)))))
 
 
-(provide 'op-util)
+(provide 'owp-util)
 
-;;; op-util.el ends here
+;;; owp-util.el ends here

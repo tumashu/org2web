@@ -1,4 +1,4 @@
-;;; op-template.el --- templating system based on mustache, required by org-page
+;;; owp-template.el --- templating system based on mustache, required by org-webpage
 
 ;; Copyright (C)  2005 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -6,7 +6,7 @@
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-page
+;; Homepage: https://github.com/tumashu/org-webpage
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -30,13 +30,13 @@
 (require 'ox)
 ;; (require 'mustache)
 (autoload 'mustache-render "mustache")
-(require 'op-util)
-(require 'op-vars)
-(require 'op-config)
-(require 'op-git)
+(require 'owp-util)
+(require 'owp-vars)
+(require 'owp-config)
+(require 'owp-git)
 
 
-(defun op/get-template-file (template-file-name)
+(defun owp/get-template-file (template-file-name)
   "Get path of template file which name is `template-file-name'."
   (car (remove nil (mapcar
                     #'(lambda (dir)
@@ -44,140 +44,140 @@
                                             template-file-name)))
                           (when (file-exists-p file)
                             file)))
-                    (op/get-theme-dirs nil nil 'templates)))))
+                    (owp/get-theme-dirs nil nil 'templates)))))
 
-(defun op/get-title ()
+(defun owp/get-title ()
   "Get the title of org file."
-  (or (op/read-org-option "TITLE")
+  (or (owp/read-org-option "TITLE")
       (file-name-sans-extension (buffer-name))))
 
-(defun op/get-cache-item (key)
-  "Get the item associated with KEY in `op/item-cache', if `op/item-cache' is
+(defun owp/get-cache-item (key)
+  "Get the item associated with KEY in `owp/item-cache', if `owp/item-cache' is
 nil or there is no item associated with KEY in it, return nil."
-  (and op/item-cache
-       (plist-get op/item-cache key)))
+  (and owp/item-cache
+       (plist-get owp/item-cache key)))
 
-(defun op/update-cache-item (key value)
-  "Update the item associated with KEY in `op/item-cache', if `op/item-cache' is
+(defun owp/update-cache-item (key value)
+  "Update the item associated with KEY in `owp/item-cache', if `owp/item-cache' is
 nil, initialize it."
-  (if op/item-cache
-      (plist-put op/item-cache key value)
-    (setq op/item-cache `(,key ,value)))
+  (if owp/item-cache
+      (plist-put owp/item-cache key value)
+    (setq owp/item-cache `(,key ,value)))
   value)
 
-(defmacro op/get-cache-create (key &rest body)
-  "Firstly get item from `op/item-cache' with KEY, if item not found, evaluate
+(defmacro owp/get-cache-create (key &rest body)
+  "Firstly get item from `owp/item-cache' with KEY, if item not found, evaluate
 BODY and push the result into cache and return it."
-  `(or (op/get-cache-item ,key)
-       (op/update-cache-item ,key (funcall (lambda () ,@body)))))
+  `(or (owp/get-cache-item ,key)
+       (owp/update-cache-item ,key (funcall (lambda () ,@body)))))
 
-(defun op/render-header (&optional param-table)
+(defun owp/render-header (&optional param-table)
   "Render the header on each page. PARAM-TABLE is the hash table from mustache
 to render the template. If it is not set or nil, this function will try to build
 a hash table accordint to current buffer."
   (mustache-render
-   (op/get-cache-create
+   (owp/get-cache-create
     :header-template
     (message "Read header.mustache from file")
-    (op/file-to-string (op/get-template-file "header.mustache")))
+    (owp/file-to-string (owp/get-template-file "header.mustache")))
    (or param-table
-       (ht ("page-title" (concat (funcall (op/get-config-option :get-title-function))
-                                 " - " (op/get-config-option :site-main-title)))
-           ("author" (or (op/read-org-option "AUTHOR")
+       (ht ("page-title" (concat (funcall (owp/get-config-option :get-title-function))
+                                 " - " (owp/get-config-option :site-main-title)))
+           ("author" (or (owp/read-org-option "AUTHOR")
                          user-full-name "Unknown Author"))
-           ("description" (op/read-org-option "DESCRIPTION"))
-           ("keywords" (op/read-org-option "KEYWORDS"))))))
+           ("description" (owp/read-org-option "DESCRIPTION"))
+           ("keywords" (owp/read-org-option "KEYWORDS"))))))
 
-(defun op/render-navigation-bar (&optional param-table)
+(defun owp/render-navigation-bar (&optional param-table)
   "Render the navigation bar on each page. it will be read firstly from
-`op/item-cache', if there is no cached content, it will be rendered
+`owp/item-cache', if there is no cached content, it will be rendered
 and pushed into cache from template. PARAM-TABLE is the hash table for mustache
 to render the template. If it is not set or nil, this function will try to
 render from a default hash table."
-  (let ((site-domain (op/get-site-domain)))
-    (op/get-cache-create
+  (let ((site-domain (owp/get-site-domain)))
+    (owp/get-cache-create
      :nav-bar-html
      (message "Render navigation bar from template")
      (mustache-render
-      (op/get-cache-create
+      (owp/get-cache-create
        :nav-bar-template
        (message "Read nav.mustache from file")
-       (op/file-to-string (op/get-template-file "nav.mustache")))
+       (owp/file-to-string (owp/get-template-file "nav.mustache")))
       (or param-table
-          (ht ("site-main-title" (op/get-config-option :site-main-title))
-              ("site-sub-title" (op/get-config-option :site-sub-title))
+          (ht ("site-main-title" (owp/get-config-option :site-main-title))
+              ("site-sub-title" (owp/get-config-option :site-sub-title))
               ("nav-categories"
                (mapcar
                 #'(lambda (cat)
                     (ht ("category-uri"
-                         (concat "/" (op/encode-string-to-url cat) "/"))
+                         (concat "/" (owp/encode-string-to-url cat) "/"))
                         ("category-name" (capitalize cat))))
                 (sort (remove-if
                        #'(lambda (cat)
                            (or (string= cat "index")
                                (string= cat "about")))
-                       (op/get-file-category nil))
+                       (owp/get-file-category nil))
                       'string-lessp)))
-              ("github" (op/get-config-option :personal-github-link))
-              ("avatar" (op/get-config-option :personal-avatar))
+              ("github" (owp/get-config-option :personal-github-link))
+              ("avatar" (owp/get-config-option :personal-avatar))
               ("site-domain" (if (string-match
                                   "\\`https?://\\(.*[a-zA-Z]\\)/?\\'"
                                   site-domain)
                                  (match-string 1 site-domain)
                                site-domain))))))))
 
-(defun op/render-content (&optional template param-table)
+(defun owp/render-content (&optional template param-table)
   "Render the content on each page. TEMPLATE is the template name for rendering,
 if it is not set of nil, will use default post.mustache instead. PARAM-TABLE is
-similar to `op/render-header'."
+similar to `owp/render-header'."
   (mustache-render
-   (op/get-cache-create
+   (owp/get-cache-create
     (if template
         (intern (replace-regexp-in-string "\\.mustache$" "-template" template))
       :post-template)
     (message (concat "Read " (or template "post.mustache") " from file"))
-    (op/file-to-string (op/get-template-file
+    (owp/file-to-string (owp/get-template-file
                         (or template "post.mustache"))))
    (or param-table
-       (ht ("title" (funcall (op/get-config-option :get-title-function)))
+       (ht ("title" (funcall (owp/get-config-option :get-title-function)))
            ("content" (cl-flet ((org-html-fontify-code
                                  (code lang)
                                  (when code (org-html-encode-plain-text code))))
-                        (let ((org-export-function (op/get-config-option :org-export-function)))
+                        (let ((org-export-function (owp/get-config-option :org-export-function)))
                           (when (functionp org-export-function)
                             (funcall org-export-function)))))))))
 
-(defun op/default-org-export ()
+(defun owp/default-org-export ()
   "A function with can export org file to html."
   (org-export-as 'html nil nil t nil))
 
-(defun op/render-footer (&optional param-table)
+(defun owp/render-footer (&optional param-table)
   "Render the footer on each page. PARAM-TABLE is similar to
-`op/render-header'."
+`owp/render-header'."
   (mustache-render
-   (op/get-cache-create
+   (owp/get-cache-create
     :footer-template
     (message "Read footer.mustache from file")
-    (op/file-to-string (op/get-template-file "footer.mustache")))
+    (owp/file-to-string (owp/get-template-file "footer.mustache")))
    (or param-table
        (let* ((filename (buffer-file-name))
-              (title (funcall (op/get-config-option :get-title-function)))
-              (default-category (op/get-config-option :default-category))
-              (date (op/fix-timestamp-string
-                     (or (op/read-org-option "DATE")
+              (title (funcall (owp/get-config-option :get-title-function)))
+              (default-category (owp/get-config-option :default-category))
+              (date (owp/fix-timestamp-string
+                     (or (owp/read-org-option "DATE")
                          (format-time-string "%Y-%m-%d"))))
-              (tags (op/read-org-option "TAGS"))
+              (tags (owp/read-org-option "TAGS"))
               (tags (if tags
                         (mapcar
                          #'(lambda (tag-name)
-                             (ht ("link" (op/generate-tag-uri tag-name))
+                             (ht ("link" (owp/generate-tag-uri tag-name))
                                  ("name" tag-name)))
-                         (delete "" (mapcar 'op/trim-string (split-string tags "[:,]+" t))))))
-              (category (funcall (or (op/get-config-option :retrieve-category-function)
-                                     op/get-file-category)
+                         (delete "" (mapcar 'owp/trim-string (split-string tags "[:,]+" t))))))
+              (category (funcall (or (owp/get-config-option :retrieve-category-function)
+                                     owp/get-file-category)
                                  filename))
-              (config (cdr (or (assoc category op/category-config-alist)
-                               (op/get-category-setting default-category))))
+              (config (cdr (or (assoc category owp/category-config-alist)
+                               (owp/get-category-setting default-category))))
               (uri (funcall (plist-get config :uri-generator)
                             (plist-get config :uri-template) date title)))
          (ht ("show-meta" (plist-get config :show-meta))
@@ -185,8 +185,8 @@ similar to `op/render-header'."
              ("date" date)
              ("mod-date" (if (not filename)
                              (format-time-string "%Y-%m-%d")
-                           (or (op/git-last-change-date
-                                (op/get-repository-directory)
+                           (or (owp/git-last-change-date
+                                (owp/get-repository-directory)
                                 filename)
                                (format-time-string
                                 "%Y-%m-%d"
@@ -198,49 +198,49 @@ similar to `op/render-header'."
                                  (mustache-render
                                   "<a href=\"{{link}}\">{{name}}</a>" tag))
                              tags " ")))
-             ("author" (or (op/read-org-option "AUTHOR")
+             ("author" (or (owp/read-org-option "AUTHOR")
                            user-full-name
                            "Unknown Author"))
              ("disqus-id" uri)
-             ("disqus-url" (op/get-full-url uri))
-             ("disqus-comment" (op/get-config-option :personal-disqus-shortname))
-             ("disqus-shortname" (op/get-config-option :personal-disqus-shortname))
-             ("duoshuo-comment" (op/get-config-option :personal-duoshuo-shortname))
-             ("duoshuo-shortname" (op/get-config-option :personal-duoshuo-shortname))
-             ("google-analytics" (op/get-config-option :personal-google-analytics-id))
-             ("google-analytics-id" (op/get-config-option :personal-google-analytics-id))
-             ("creator-info" (op/get-html-creator-string))
-             ("email" (op/confound-email-address (or (op/read-org-option "EMAIL")
+             ("disqus-url" (owp/get-full-url uri))
+             ("disqus-comment" (owp/get-config-option :personal-disqus-shortname))
+             ("disqus-shortname" (owp/get-config-option :personal-disqus-shortname))
+             ("duoshuo-comment" (owp/get-config-option :personal-duoshuo-shortname))
+             ("duoshuo-shortname" (owp/get-config-option :personal-duoshuo-shortname))
+             ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+             ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+             ("creator-info" (owp/get-html-creator-string))
+             ("email" (owp/confound-email-address (or (owp/read-org-option "EMAIL")
                                                      user-mail-address
                                                      "Unknown Email"))))))))
 
 ;;; this function is deprecated
-(defun op/update-default-template-parameters ()
+(defun owp/update-default-template-parameters ()
   "Update the default template parameters. It is only needed when user did some
 customization to relevant variables."
-  (let ((site-domain (op/get-site-domain))
-        (default-category (op/get-config-option :default-category)))
+  (let ((site-domain (owp/get-site-domain))
+        (default-category (owp/get-config-option :default-category)))
     (ht-update
-     op/default-template-parameters
-     (ht ("site-main-title" (op/get-config-option :site-main-title))
-         ("site-sub-title" (op/get-config-option :site-sub-title))
-         ("github" (op/get-config-option :personal-github-link))
+     owp/default-template-parameters
+     (ht ("site-main-title" (owp/get-config-option :site-main-title))
+         ("site-sub-title" (owp/get-config-option :site-sub-title))
+         ("github" (owp/get-config-option :personal-github-link))
          ("site-domain" (if (string-match "\\`https?://\\(.*[a-zA-Z]\\)/?\\'"
                                           site-domain)
                             (match-string 1 site-domain)
                           site-domain))
-         ("disqus-shortname" (op/get-config-option :personal-disqus-shortname))
-         ("disqus-comment" (if (op/get-config-option :personal-disqus-shortname) t nil))
-         ("duoshuo-shortname" (op/get-config-option :personal-duoshuo-shortname))
-         ("duoshuo-comment" (if (op/get-config-option :personal-duoshuo-shortname) t nil))
-         ("google-analytics-id" (op/get-config-option :personal-google-analytics-id))
-         ("google-analytics" (if (op/get-config-option :personal-google-analytics-id) t nil))))))
+         ("disqus-shortname" (owp/get-config-option :personal-disqus-shortname))
+         ("disqus-comment" (if (owp/get-config-option :personal-disqus-shortname) t nil))
+         ("duoshuo-shortname" (owp/get-config-option :personal-duoshuo-shortname))
+         ("duoshuo-comment" (if (owp/get-config-option :personal-duoshuo-shortname) t nil))
+         ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+         ("google-analytics" (if (owp/get-config-option :personal-google-analytics-id) t nil))))))
 
 ;;; this function is deprecated
-(defun op/compose-template-parameters (attr-plist content)
+(defun owp/compose-template-parameters (attr-plist content)
   "Compose parameters for org file represented in current buffer.
 ATTR-PLIST is the attribute plist of the buffer, retrieved by the combination of
-`org-export--get-inbuffer-options' and `op/get-inbuffer-extra-options'."
+`org-export--get-inbuffer-options' and `owp/get-inbuffer-extra-options'."
   (let* ((info
           (org-combine-plists
            (org-export--get-global-options 'html)
@@ -248,7 +248,7 @@ ATTR-PLIST is the attribute plist of the buffer, retrieved by the combination of
          (title (org-element-interpret-data (plist-get info :title)))
          (author (org-element-interpret-data
                   (or (plist-get info :author) user-full-name)))
-         (email (op/confound-email-address (or (plist-get info :email)
+         (email (owp/confound-email-address (or (plist-get info :email)
                                                user-mail-address)))
          (description (or (plist-get info :description) nil))
          (keywords (or (plist-get info :keywords) nil))
@@ -257,7 +257,7 @@ ATTR-PLIST is the attribute plist of the buffer, retrieved by the combination of
                               (not (eq category 'about))
                               (not (eq category 'none))))
          (creation-date (if (plist-get info :date)
-                            (op/fix-timestamp-string
+                            (owp/fix-timestamp-string
                              (org-element-interpret-data
                               (plist-get info :date)))
                           "N/A"))
@@ -266,17 +266,17 @@ ATTR-PLIST is the attribute plist of the buffer, retrieved by the combination of
                      #'(lambda (tag-name)
                          (mustache-render
                           "<a href=\"{{link}}\">{{name}}</a>"
-                          (ht ("link" (op/generate-tag-uri tag-name))
+                          (ht ("link" (owp/generate-tag-uri tag-name))
                               ("name" tag-name))))
                      (plist-get info :tags) ", "))
          (show-comment (string= (symbol-name category) default-category))
          (disqus-id (plist-get info :uri))
-         (disqus-url (op/get-full-url disqus-id))
+         (disqus-url (owp/get-full-url disqus-id))
          (param-table (ht-create)))
-    (ht-update param-table op/default-template-parameters)
+    (ht-update param-table owp/default-template-parameters)
     (ht-update
      param-table
-     (ht ("page-title"        (concat title " - " (op/get-config-option :site-main-title)))
+     (ht ("page-title"        (concat title " - " (owp/get-config-option :site-main-title)))
          ("author"            author)
          ("description"       description)
          ("keywords"          keywords)
@@ -293,6 +293,6 @@ ATTR-PLIST is the attribute plist of the buffer, retrieved by the combination of
     param-table))
 
 
-(provide 'op-template)
+(provide 'owp-template)
 
-;;; op-template.el ends here
+;;; owp-template.el ends here
