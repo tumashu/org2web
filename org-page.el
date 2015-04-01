@@ -56,7 +56,6 @@
 (defconst org-page-version "0.5")
 
 (defun op/do-publication (&optional project-name
-                                    test-publish
                                     force-all
                                     base-git-commit pub-base-dir
                                     auto-commit auto-push)
@@ -82,26 +81,17 @@ then the \"html-branch\"  will be pushed to remote repo."
    (let* ((j (completing-read "Which project do you want to publish? "
                               (delete-dups
                                (mapcar 'car op/project-config-alist))))
-          (test (y-or-n-p "Test publish? "))
           (f (y-or-n-p "Publish all org files? "))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
-          (p (when (and (not test)
-                        (y-or-n-p
-                         "Publish to a directory? (to original repo if not) "))
-               (read-directory-name "Publication directory: ")))
-          (a (when (and (not p) (not test))
+          (p (when (y-or-n-p
+                    "Publish to test directory? (to original repo if not) ")
+               (setq op/current-project-name j)
+               (expand-file-name (op/get-config-option :web-server-docroot))))
+          (a (when (and (not p))
                (y-or-n-p "Auto commit to repo? ")))
-          (u (when (and a (not p) (not test))
+          (u (when (and a (not p))
                (y-or-n-p "Auto push to remote repo? "))))
-     (list j test f b p a u)))
-
-  (setq op/current-project-name project-name)
-
-  (when test-publish
-    (setq pub-base-dir (op/get-config-option :web-server-docroot)
-          auto-commit nil
-          auto-push  nil))
-
+     (list j f b p a u)))
   (op/verify-configuration)
   (setq op/item-cache nil)
   (let* ((repo-dir (op/get-repository-directory))
@@ -148,9 +138,11 @@ files, committed by org-page.")
     (if to-repo
         (message "Publication finished: on branch '%s' of repository '%s'."
                  html-branch repo-dir)
-      (message "Publication finished, output directory: %s." pub-base-dir))
+      (message "Publication finished, output directory: %s." pub-base-dir)
+      (when (string= pub-base-dir (expand-file-name
+                                   (op/get-config-option :web-server-docroot)))
+        (op/web-server-browse)))
 
-    (when test-publish (op/web-server-browse))
     (setq op/current-project-name nil)))
 
 (defun op/new-repository (repo-dir)
