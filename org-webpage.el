@@ -86,10 +86,10 @@ then the \"html-branch\"  will be pushed to remote repo."
                                    (mapcar 'car owp/project-config-alist)))))
           (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
-          (p (when (y-or-n-p
-                    "Publish to:  [Yes] Web server docroot, [No] Original repo. ")
-               (setq owp/current-project-name j)
-               (expand-file-name (owp/get-config-option :web-server-docroot))))
+          (p (progn (setq owp/current-project-name j)
+                    (when (y-or-n-p
+                           "Publish to:  [Yes] Web server docroot, [No] Original repo. ")
+                      (expand-file-name (owp/get-config-option :web-server-docroot)))))
           (a (when (and (not p))
                (y-or-n-p "Auto commit to repo? ")))
           (u (when (and a (not p))
