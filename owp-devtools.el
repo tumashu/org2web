@@ -34,11 +34,11 @@
         :repository-directory ,owp/load-directory
         :site-domain "http://tumashu.github.com/org-webpage"
         :site-main-title "Org-webpage"
-        :site-sub-title "(static site generator based on org mode)"
+        :site-sub-title "(Static site senerator based on org mode)"
         :repository-org-branch "master"
         :repository-html-branch "gh-pages"
         :default-category "documents"
-        :theme (default)
+        :theme (worg)
         :personal-github-link "https://github.com/tumashu/org-webpage"
         :personal-avatar "/media/img/horse.jpg"
         :personal-duoshuo-shortname "tumashu-website"

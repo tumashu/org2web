@@ -76,7 +76,7 @@ Add the follow line to you config alist.
 #+END_EXAMPLE
 
 Image URL example:
-1. http:/XXXXX.com/XXXX.jpg
+1. =http:/XXXXX.com/XXXX.jpg=
 2. /media/img/XXXXX.jpg
 3. /assets/XXX/XXX.jpg
 
@@ -98,7 +98,7 @@ Add the follow line to you config alist.
 Add the follow line to you config alist.
 
 #+BEGIN_EXAMPLE
-:personal-github-link "https:/github.io/<username>/<project-name>"
+:personal-github-link "https://github.io/<username>/<project-name>"
 #+END_EXAMPLE
 
 * How to do site traffic analytics with Google Analytics?
