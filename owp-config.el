@@ -49,8 +49,11 @@
     (when site-domain
       (if (or (string-prefix-p "http://"  site-domain)
               (string-prefix-p "https://" site-domain))
-          site-domain
-        (concat "http://" site-domain)))))
+          (directory-file-name
+           (file-name-as-directory site-domain))
+        (directory-file-name
+         (file-name-as-directory
+          (concat "http://" site-domain)))))))
 
 (defun owp/get-theme-dirs (&optional root-dir theme type)
   "Get org-webpage theme type path.
