@@ -38,7 +38,7 @@
         :repository-org-branch "master"
         :repository-html-branch "gh-pages"
         :default-category "documents"
-        :theme (worg)
+        :theme (worg killjs)
         :personal-github-link "https://github.com/tumashu/org-webpage"
         :personal-avatar "/media/img/horse.jpg"
         :personal-duoshuo-shortname "tumashu-website"
