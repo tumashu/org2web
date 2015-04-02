@@ -123,6 +123,10 @@ Personal google analytics id.
 
 Determine whether email addresses should be confounded or not.
 
+  `:force-absolute-url'
+
+Force convert relative url to absolute url in html files by append site domain.
+
   `:default-category'
 
 If org fils don't set category, default category will be used.
@@ -256,6 +260,7 @@ You can see fallback value of above option in `owp/config-fallback'"
         :default-category "blog"
         :category-ignore-list ("themes" "assets")
         :confound-email t
+        :force-absolute-url t
         :preparation-function nil
         :get-title-function owp/get-title
         :retrieve-category-function owp/get-file-category

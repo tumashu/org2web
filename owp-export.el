@@ -63,7 +63,7 @@ deleted. PUB-ROOT-DIR is the root publication directory."
              (setq file-attr-list (cons (car attr-cell) file-attr-list))
              (when (member org-file upd-list)
                (owp/publish-modified-file (cdr attr-cell)
-                                         (plist-get (car attr-cell) :pub-dir)))
+                                          (plist-get (car attr-cell) :pub-dir)))
              (when (member org-file del-list)
                (owp/handle-deleted-file org-file)))
            (or visiting (kill-buffer file-buffer)))
@@ -236,6 +236,30 @@ file's category is based on its name and its root folder name."
                                  (expand-file-name org-file) repo-dir)
                                 "[/\\\\]+"))))))
 
+(defun owp/relative-url-to-absolute (html-content)
+  "Force convert relative url of `html-content' to absolute url."
+  (let ((site-domain (owp/get-site-domain))
+        url)
+    (with-temp-buffer
+      (insert html-content)
+      (beginning-of-buffer)
+      (when (owp/get-config-option :force-absolute-url)
+        (while (re-search-forward
+                ;;; TODO: not only links need to convert, but also inline
+                ;;; images, may add others later
+                ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+                "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
+          (setq url (match-string 4))
+          (when (string-prefix-p "/" url)
+            (setq url (concat
+                       (match-string 1)
+                       (match-string 2)
+                       (match-string 3)
+                       site-domain url
+                       (match-string 5)))
+            (replace-match url)))
+        (buffer-string)))))
+
 (defun owp/publish-modified-file (component-table pub-dir)
   "Publish org file opened in current buffer. COMPONENT-TABLE is the hash table
 used to render the template, PUB-DIR is the directory for published html file.
@@ -243,14 +267,16 @@ If COMPONENT-TABLE is nil, the publication will be skipped."
   (when component-table
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
-    (owp/string-to-file (mustache-render
-                     (owp/get-cache-create
-                      :container-template
-                      (message "Read container.mustache from file")
-                      (owp/file-to-string (owp/get-template-file "container.mustache")))
-                     component-table)
-                    (concat pub-dir "index.html") ;; 'html-mode ;; do NOT indent the code
-                    )))
+    (owp/string-to-file
+     (owp/relative-url-to-absolute
+      (mustache-render
+       (owp/get-cache-create
+        :container-template
+        (message "Read container.mustache from file")
+        (owp/file-to-string (owp/get-template-file "container.mustache")))
+       component-table))
+     (concat (file-name-as-directory pub-dir) "index.html") ;; 'html-mode ;; do NOT indent the code
+     )))
 
 (defun owp/handle-deleted-file (org-file-path)
   "TODO: add logic for this function, maybe a little complex."
@@ -317,47 +343,48 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
            (unless (file-directory-p cat-dir)
              (mkdir cat-dir t))
            (owp/string-to-file
-            (mustache-render
-             (owp/get-cache-create
-              :container-template
-              (message "Read container.mustache from file")
-              (owp/file-to-string (owp/get-template-file "container.mustache")))
-             (ht ("header"
-                  (owp/render-header
-                   (ht ("page-title" (concat (capitalize (car cat-list))
-                                             " Index - "
-                                             (owp/get-config-option :site-main-title)))
-                       ("author" (or user-full-name "Unknown Author")))))
-                 ("nav" (owp/render-navigation-bar))
-                 ("content"
-                  (owp/render-content
-                   "category-index.mustache"
-                   (ht ("cat-name" (capitalize (car cat-list)))
-                       ("posts"
-                        (mapcar
-                         #'(lambda (attr-plist)
-                             (ht ("date"
-                                  (plist-get
-                                   attr-plist
+            (owp/relative-url-to-absolute
+             (mustache-render
+              (owp/get-cache-create
+               :container-template
+               (message "Read container.mustache from file")
+               (owp/file-to-string (owp/get-template-file "container.mustache")))
+              (ht ("header"
+                   (owp/render-header
+                    (ht ("page-title" (concat (capitalize (car cat-list))
+                                              " Index - "
+                                              (owp/get-config-option :site-main-title)))
+                        ("author" (or user-full-name "Unknown Author")))))
+                  ("nav" (owp/render-navigation-bar))
+                  ("content"
+                   (owp/render-content
+                    "category-index.mustache"
+                    (ht ("cat-name" (capitalize (car cat-list)))
+                        ("posts"
+                         (mapcar
+                          #'(lambda (attr-plist)
+                              (ht ("date"
                                    (plist-get
-                                    (cdr (or (assoc
-                                              (plist-get attr-plist :category)
-                                              owp/category-config-alist)
-                                             (owp/get-category-setting default-category)))
-                                    :sort-by)))
-                                 ("post-uri" (plist-get attr-plist :uri))
-                                 ("post-title" (plist-get attr-plist :title))))
-                         (cdr cat-list))))))
-                 ("footer"
-                  (owp/render-footer
-                   (ht ("show-meta" nil)
-                       ("show-comment" nil)
-                       ("author" (or user-full-name "Unknown Author"))
-                       ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
-                       ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
-                       ("creator-info" (owp/get-html-creator-string))
-                       ("email" (owp/confound-email-address (or user-mail-address
-                                                               "Unknown Email"))))))))
+                                    attr-plist
+                                    (plist-get
+                                     (cdr (or (assoc
+                                               (plist-get attr-plist :category)
+                                               owp/category-config-alist)
+                                              (owp/get-category-setting default-category)))
+                                     :sort-by)))
+                                  ("post-uri" (plist-get attr-plist :uri))
+                                  ("post-title" (plist-get attr-plist :title))))
+                          (cdr cat-list))))))
+                  ("footer"
+                   (owp/render-footer
+                    (ht ("show-meta" nil)
+                        ("show-comment" nil)
+                        ("author" (or user-full-name "Unknown Author"))
+                        ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                        ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                        ("creator-info" (owp/get-html-creator-string))
+                        ("email" (owp/confound-email-address (or user-mail-address
+                                                                 "Unknown Email")))))))))
             (concat cat-dir "index.html") 'html-mode)))
      sort-alist)))
 
@@ -368,48 +395,49 @@ publication directory."
   (let ((sort-alist (owp/rearrange-category-sorted file-attr-list))
         (id 0))
     (owp/string-to-file
-     (mustache-render
-      (owp/get-cache-create
-       :container-template
-       (message "Read container.mustache from file")
-       (owp/file-to-string (owp/get-template-file "container.mustache")))
-      (ht ("header"
-           (owp/render-header
-            (ht ("page-title" (concat "Index - " (owp/get-config-option :site-main-title)))
-                ("author" (or user-full-name "Unknown Author")))))
-          ("nav" (owp/render-navigation-bar))
-          ("content"
-           (owp/render-content
-            "index.mustache"
-            (ht ("categories"
-                 (mapcar
-                  #'(lambda (cell)
-                      (ht ("id" (setq id (+ id 1)))
-                          ("category" (car cell))
-                          ("posts" (mapcar
-                                    #'(lambda (plist)
-                                        (ht ("post-uri"
-                                             (plist-get plist :uri))
-                                            ("post-title"
-                                             (plist-get plist :title))
-                                            ("post-desc"
-                                             (plist-get plist :description))
-                                            ("post-date"
-                                             (plist-get plist :date))
-                                            ("post-thumb"
-                                             (or (plist-get plist :thumb) ""))))
-                                    (cdr cell)))))
-                  sort-alist)))))
-          ("footer"
-           (owp/render-footer
-            (ht ("show-meta" nil)
-                ("show-comment" nil)
-                ("author" (or user-full-name "Unknown Author"))
-                ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
-                ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
-                ("creator-info" (owp/get-html-creator-string))
-                ("email" (owp/confound-email-address (or user-mail-address
-                                                        "Unknown Email"))))))))
+     (owp/relative-url-to-absolute
+      (mustache-render
+       (owp/get-cache-create
+        :container-template
+        (message "Read container.mustache from file")
+        (owp/file-to-string (owp/get-template-file "container.mustache")))
+       (ht ("header"
+            (owp/render-header
+             (ht ("page-title" (concat "Index - " (owp/get-config-option :site-main-title)))
+                 ("author" (or user-full-name "Unknown Author")))))
+           ("nav" (owp/render-navigation-bar))
+           ("content"
+            (owp/render-content
+             "index.mustache"
+             (ht ("categories"
+                  (mapcar
+                   #'(lambda (cell)
+                       (ht ("id" (setq id (+ id 1)))
+                           ("category" (car cell))
+                           ("posts" (mapcar
+                                     #'(lambda (plist)
+                                         (ht ("post-uri"
+                                              (plist-get plist :uri))
+                                             ("post-title"
+                                              (plist-get plist :title))
+                                             ("post-desc"
+                                              (plist-get plist :description))
+                                             ("post-date"
+                                              (plist-get plist :date))
+                                             ("post-thumb"
+                                              (or (plist-get plist :thumb) ""))))
+                                     (cdr cell)))))
+                   sort-alist)))))
+           ("footer"
+            (owp/render-footer
+             (ht ("show-meta" nil)
+                 ("show-comment" nil)
+                 ("author" (or user-full-name "Unknown Author"))
+                 ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                 ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                 ("creator-info" (owp/get-html-creator-string))
+                 ("email" (owp/confound-email-address (or user-mail-address
+                                                          "Unknown Email")))))))))
      (concat (file-name-as-directory pub-base-dir) "index.html") 'html-mode)))
 
 (defun owp/generate-default-about (pub-base-dir)
@@ -420,30 +448,31 @@ is the root publication directory."
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
     (owp/string-to-file
-     (mustache-render
-      (owp/get-cache-create
-       :container-template
-       (message "Read container.mustache from file")
-       (owp/file-to-string (owp/get-template-file "container.mustache")))
-      (ht ("header"
-           (owp/render-header
-            (ht ("page-title" (concat "About - " (owp/get-config-option :site-main-title)))
-                ("author" (or user-full-name "Unknown Author")))))
-          ("nav" (owp/render-navigation-bar))
-          ("content"
-           (owp/render-content
-            "about.mustache"
-            (ht ("author" (or user-full-name "Unknown Author")))))
-          ("footer"
-           (owp/render-footer
-            (ht ("show-meta" nil)
-                ("show-comment" nil)
-                ("author" (or user-full-name "Unknown Author"))
-                ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
-                ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
-                ("creator-info" (owp/get-html-creator-string))
-                ("email" (owp/confound-email-address (or user-mail-address
-                                                        "Unknown Email"))))))))
+     (owp/relative-url-to-absolute
+      (mustache-render
+       (owp/get-cache-create
+        :container-template
+        (message "Read container.mustache from file")
+        (owp/file-to-string (owp/get-template-file "container.mustache")))
+       (ht ("header"
+            (owp/render-header
+             (ht ("page-title" (concat "About - " (owp/get-config-option :site-main-title)))
+                 ("author" (or user-full-name "Unknown Author")))))
+           ("nav" (owp/render-navigation-bar))
+           ("content"
+            (owp/render-content
+             "about.mustache"
+             (ht ("author" (or user-full-name "Unknown Author")))))
+           ("footer"
+            (owp/render-footer
+             (ht ("show-meta" nil)
+                 ("show-comment" nil)
+                 ("author" (or user-full-name "Unknown Author"))
+                 ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                 ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                 ("creator-info" (owp/get-html-creator-string))
+                 ("email" (owp/confound-email-address (or user-mail-address
+                                                          "Unknown Email")))))))))
      (concat pub-dir "index.html") 'html-mode)))
 
 (defun owp/generate-tag-uri (tag-name)
@@ -469,36 +498,37 @@ TODO: improve this function."
     (unless (file-directory-p tag-base-dir)
       (mkdir tag-base-dir t))
     (owp/string-to-file
-     (mustache-render
-      (owp/get-cache-create
-       :container-template
-       (message "Read container.mustache from file")
-       (owp/file-to-string (owp/get-template-file "container.mustache")))
-      (ht ("header"
-           (owp/render-header
-            (ht ("page-title" (concat "Tag Index - " (owp/get-config-option :site-main-title)))
-                ("author" (or user-full-name "Unknown Author")))))
-          ("nav" (owp/render-navigation-bar))
-          ("content"
-           (owp/render-content
-            "tag-index.mustache"
-            (ht ("tags"
-                 (mapcar
-                  #'(lambda (tag-list)
-                      (ht ("tag-name" (car tag-list))
-                          ("tag-uri" (owp/generate-tag-uri (car tag-list)))
-                          ("count" (number-to-string (length (cdr tag-list))))))
-                  tag-alist)))))
-          ("footer"
-           (owp/render-footer
-            (ht ("show-meta" nil)
-                ("show-comment" nil)
-                ("author" (or user-full-name "Unknown Author"))
-                ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
-                ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
-                ("creator-info" (owp/get-html-creator-string))
-                ("email" (owp/confound-email-address (or user-mail-address
-                                                        "Unknown Email"))))))))
+     (owp/relative-url-to-absolute
+      (mustache-render
+       (owp/get-cache-create
+        :container-template
+        (message "Read container.mustache from file")
+        (owp/file-to-string (owp/get-template-file "container.mustache")))
+       (ht ("header"
+            (owp/render-header
+             (ht ("page-title" (concat "Tag Index - " (owp/get-config-option :site-main-title)))
+                 ("author" (or user-full-name "Unknown Author")))))
+           ("nav" (owp/render-navigation-bar))
+           ("content"
+            (owp/render-content
+             "tag-index.mustache"
+             (ht ("tags"
+                  (mapcar
+                   #'(lambda (tag-list)
+                       (ht ("tag-name" (car tag-list))
+                           ("tag-uri" (owp/generate-tag-uri (car tag-list)))
+                           ("count" (number-to-string (length (cdr tag-list))))))
+                   tag-alist)))))
+           ("footer"
+            (owp/render-footer
+             (ht ("show-meta" nil)
+                 ("show-comment" nil)
+                 ("author" (or user-full-name "Unknown Author"))
+                 ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                 ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                 ("creator-info" (owp/get-html-creator-string))
+                 ("email" (owp/confound-email-address (or user-mail-address
+                                                          "Unknown Email")))))))))
      (concat tag-base-dir "index.html") 'html-mode)
     (mapc
      #'(lambda (tag-list)
@@ -508,37 +538,38 @@ TODO: improve this function."
          (unless (file-directory-p tag-dir)
            (mkdir tag-dir t))
          (owp/string-to-file
-          (mustache-render
-           (owp/get-cache-create
-            :container-template
-            (message "Read container.mustache from file")
-            (owp/file-to-string (owp/get-template-file "container.mustache")))
-           (ht ("header"
-                (owp/render-header
-                 (ht ("page-title" (concat "Tag: " (car tag-list)
-                                           " - " (owp/get-config-option :site-main-title)))
-                     ("author" (or user-full-name "Unknown Author")))))
-               ("nav" (owp/render-navigation-bar))
-               ("content"
-                (owp/render-content
-                 "tag.mustache"
-                 (ht ("tag-name" (car tag-list))
-                     ("posts"
-                      (mapcar
-                       #'(lambda (attr-plist)
-                           (ht ("post-uri" (plist-get attr-plist :uri))
-                               ("post-title" (plist-get attr-plist :title))))
-                       (cdr tag-list))))))
-               ("footer"
-                (owp/render-footer
-                 (ht ("show-meta" nil)
-                     ("show-comment" nil)
-                     ("author" (or user-full-name "Unknown Author"))
-                     ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
-                     ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
-                     ("creator-info" (owp/get-html-creator-string))
-                     ("email" (owp/confound-email-address (or user-mail-address
-                                                             "Unknown Email"))))))))
+          (owp/relative-url-to-absolute
+           (mustache-render
+            (owp/get-cache-create
+             :container-template
+             (message "Read container.mustache from file")
+             (owp/file-to-string (owp/get-template-file "container.mustache")))
+            (ht ("header"
+                 (owp/render-header
+                  (ht ("page-title" (concat "Tag: " (car tag-list)
+                                            " - " (owp/get-config-option :site-main-title)))
+                      ("author" (or user-full-name "Unknown Author")))))
+                ("nav" (owp/render-navigation-bar))
+                ("content"
+                 (owp/render-content
+                  "tag.mustache"
+                  (ht ("tag-name" (car tag-list))
+                      ("posts"
+                       (mapcar
+                        #'(lambda (attr-plist)
+                            (ht ("post-uri" (plist-get attr-plist :uri))
+                                ("post-title" (plist-get attr-plist :title))))
+                        (cdr tag-list))))))
+                ("footer"
+                 (owp/render-footer
+                  (ht ("show-meta" nil)
+                      ("show-comment" nil)
+                      ("author" (or user-full-name "Unknown Author"))
+                      ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                      ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                      ("creator-info" (owp/get-html-creator-string))
+                      ("email" (owp/confound-email-address (or user-mail-address
+                                                               "Unknown Email")))))))))
           (concat tag-dir "index.html") 'html-mode))
      tag-alist)))
 
@@ -558,17 +589,18 @@ PUB-BASE-DIR is the root publication directory."
                                                     "about")))
                                      file-attr-list)))))
     (owp/string-to-file
-     (mustache-render
-      owp/rss-template
-      (ht ("title" (owp/get-config-option :site-main-title))
-          ("link" (owp/get-site-domain))
-          ("description" (owp/get-config-option :site-sub-title))
-          ("date" (format-time-string "%a, %d %b %Y %T %Z"))
-          ("items" (--map (ht ("item-title" (plist-get it :title))
-                              ("item-link" (owp/get-full-url (plist-get it :uri)))
-                              ("item-description" (plist-get it :description))
-                              ("item-update-date" (plist-get it :mod-date)))
-                          last-10-posts))))
+     (owp/relative-url-to-absolute
+      (mustache-render
+       owp/rss-template
+       (ht ("title" (owp/get-config-option :site-main-title))
+           ("link" (owp/get-site-domain))
+           ("description" (owp/get-config-option :site-sub-title))
+           ("date" (format-time-string "%a, %d %b %Y %T %Z"))
+           ("items" (--map (ht ("item-title" (plist-get it :title))
+                               ("item-link" (owp/get-full-url (plist-get it :uri)))
+                               ("item-description" (plist-get it :description))
+                               ("item-update-date" (plist-get it :mod-date)))
+                           last-10-posts)))))
      (concat (file-name-as-directory pub-base-dir) "rss.xml"))))
 
 
