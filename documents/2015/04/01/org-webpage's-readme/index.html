@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>org-webpage&#39;s README - Org-webpage</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Feng Shu" />
+    <link rel="stylesheet" href="http://tumashu.github.com/org-webpage/media/css/main.css" type="text/css">
+  </head>
+<body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="http://tumashu.github.com/org-webpage/">Org-webpage</a> <span class="subtitle">(Static site senerator based on org mode)</span></h1>
+        <ul>
+          <li><a href="http://tumashu.github.com/org-webpage/changelog/">Changelog</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/documents/">Documents</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/tags/">Tags</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/about/">About</a></li>
+          <li><a href="https://github.com/tumashu/org-webpage">GitHub</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="http://www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="tumashu.github.com/org-webpage">
+        </form>
+        <img class="avatar" src="http://tumashu.github.com/org-webpage/media/img/horse.jpg" />
+      </header>
+    </div>
+
+<div class="content-and-footer">
+<div>
+<div class="post">
+<h1 class="post-title">org-webpage&#39;s README</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Introduction</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Workflow</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Usage</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Installation</a></li>
+<li><a href="#sec-2-2">2.2. Configuration</a></li>
+<li><a href="#sec-2-3">2.3. Publication</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Dependencies</a></li>
+<li><a href="#sec-4">4. Known issues</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+org-webpage is a static site generator based on <a href="http://orgmode.org/">org-mode</a>, which is a fork of Kelvin H's <a href="https://github.com/kelvinh/org-page">org-page</a>.
+</p>
+
+<p>
+org-webpage provides similar features with org-page:
+</p>
+
+<pre class="example">
+1) Org sources and html files managed by git
+2) Incremental publication (according to =git diff= command)
+3) Category support
+4) Tags support (auto generated)
+5) RSS support (auto generated)
+6) Search engine support (auto generated)
+7) A beautiful theme
+8) Theme customization support
+9) Commenting (implemented using disqus/duoshuo)
+10) Website traffic analytics (implemented using google analytics)
+11) Index/about page support (auto generated if no default is provided)
+12) Highly customizable
+</pre>
+
+<p>
+The main differents of two projects are as follow:
+</p>
+
+<ol class="org-ol">
+<li>org-page focus on personal blog while org-webpage is main used to
+generate small project website.
+</li>
+<li>org-page use many customizable variables to configure org-page
+while org-website use an `org-publish-project-alist' style
+alist to adjust org-website's behaver.
+
+<p>
+Managing multi-site configs in an emacs session with org-website is more
+simple than with org-page.
+</p>
+</li>
+<li>org-website can deal with "increment" or "inherit" themes.
+
+<p>
+A "increment" theme is a mod theme which only include changed template,
+css and other files, the files same with base theme doesn't include.
+</p>
+
+<p>
+org-webpage autosearch the same files from base theme when use "increment"
+theme.
+</p>
+</li>
+<li>org-website include a tiny emacs web server, which can be used to test publish.
+</li>
+<li>&#x2026;
+</li>
+</ol>
+</div>
+
+
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Workflow</h3>
+<div class="outline-text-3" id="text-1-1">
+<ol class="org-ol">
+<li>Specify a git repo where the org source
+files will be on the "source" branch and the generated html files
+will be on the "master" branch (the branch names can be
+customized). Repos may be created manually or by
+org-webpage's <code>owp/new-repository</code> command.
+</li>
+<li>Specify a "base commit" (the most recent prior commit will be used if
+omitted). org-webpage will read changes between the latest commit
+and the specified base commit on branch "source". The changes
+will then be marked for publication.
+</li>
+<li>org-webpage does preparation jobs.
+</li>
+<li>Publish the changes read in step 2. A change can be an addition,
+a modification, or a deletion.  <b>org-webpage is designed to handle all of</b>
+<b>these kinds of changes but since deletion does not happen often, *
+*org-webpage has not implemented it yet.</b>
+</li>
+<li>Update the index page for each category and tag.
+</li>
+<li>Publication finished.
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Usage</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Here is a general introduction about how to use org-webpage, for more detailed introduction and configuration, please see
+"tips.org" in the "documents" folder.</b>
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Installation</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+org-webpage is now available from the famous emacs package repo <a href="http://melpa.milkbox.net/">melpa</a>
+so the recommended way is to install it through emacs' package
+management system. For more info about installation, please see
+<b>tips.org</b> in the "doc" folder.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Configuration</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+The follow code is my website's config, you can adjust and paste it to your <code>.emacs</code> file:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">the following is only needed if you install org-page manually</span>
+(add-to-list 'load-path <span style="color: #61CE3C;">"path/to/org-webpage"</span>)
+
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">org-webpage</span>)
+
+(setq eh-website-op-config
+      `(<span style="color: #61CE3C;">"tumashu.github.com"</span>
+        <span style="color: #FF6400;">:repository-directory</span> <span style="color: #61CE3C;">"~/project/emacs-packages/tumashu.github.com"</span>
+        <span style="color: #FF6400;">:site-domain</span> <span style="color: #61CE3C;">"http://tumashu.github.com/"</span>
+        <span style="color: #FF6400;">:site-main-title</span> <span style="color: #61CE3C;">"Tumashu &#30340;&#20010;&#20154;&#23567;&#31449;"</span>
+        <span style="color: #FF6400;">:site-sub-title</span> <span style="color: #61CE3C;">"(&#20061;&#22825;&#21313;&#22320;&#65292;&#22826;&#19978;&#24536;&#24773;&#65281;&#65281;&#65281;)"</span>
+        <span style="color: #FF6400;">:theme</span> (worg)
+        <span style="color: #FF6400;">:personal-github-link</span> <span style="color: #61CE3C;">"https://github.com/tumashu/tumashu.github.com"</span>
+        <span style="color: #FF6400;">:personal-avatar</span> <span style="color: #61CE3C;">"/media/img/horse.jpg"</span>
+        <span style="color: #FF6400;">:personal-duoshuo-shortname</span> <span style="color: #61CE3C;">"tumashu-website"</span>
+        <span style="color: #FF6400;">:web-server-docroot</span> <span style="color: #61CE3C;">"~/.emacs.d/org-webpage-server/tumashu.github.com"</span>
+        <span style="color: #FF6400;">:web-server-port</span> 7654))
+
+(add-to-list 'owp/project-config-alist
+             eh-website-op-config)
+</pre>
+</div>
+
+<p>
+The below is a more complex example, which is use by chinese-pyim package:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">pyim-path</span> (<span style="color: #D8FA3C;">&amp;optional</span> filename)
+  (concat (file-name-directory
+           (locate-library <span style="color: #61CE3C;">"chinese-pyim"</span>)) (or filename <span style="color: #61CE3C;">""</span>)))
+
+(setq pyim-website-org-webpage-config
+      `(<span style="color: #61CE3C;">"chinese-pyim"</span>
+        <span style="color: #FF6400;">:repository-directory</span> ,(pyim-path)
+        <span style="color: #FF6400;">:site-domain</span> <span style="color: #61CE3C;">"http://tumashu.github.com/chinese-pyim"</span>
+        <span style="color: #FF6400;">:site-main-title</span> <span style="color: #61CE3C;">"Chinese-pyim"</span>
+        <span style="color: #FF6400;">:site-sub-title</span> <span style="color: #61CE3C;">"(&#19968;&#20010; emacs &#29615;&#22659;&#19979;&#30340;&#20013;&#25991;&#25340;&#38899;&#36755;&#20837;&#27861;)"</span>
+        <span style="color: #FF6400;">:repository-org-branch</span> <span style="color: #61CE3C;">"master"</span>
+        <span style="color: #FF6400;">:repository-html-branch</span> <span style="color: #61CE3C;">"gh-pages"</span>
+        <span style="color: #FF6400;">:default-category</span> <span style="color: #61CE3C;">"documents"</span>
+        <span style="color: #FF6400;">:theme</span> (worg)
+        <span style="color: #FF6400;">:personal-github-link</span> <span style="color: #61CE3C;">"https://github.com/tumashu/chinese-pyim"</span>
+        <span style="color: #FF6400;">:personal-avatar</span> <span style="color: #61CE3C;">"/media/img/horse.jpg"</span>
+        <span style="color: #FF6400;">:personal-duoshuo-shortname</span> <span style="color: #61CE3C;">"tumashu-website"</span>
+        <span style="color: #FF6400;">:preparation-function</span> pyim-preparation-org-files
+        <span style="color: #FF6400;">:repo-files-function</span> owp/repo-all-files
+        <span style="color: #FF6400;">:org-export-function</span> pyim-org-export-function
+        <span style="color: #FF6400;">:web-server-docroot</span> <span style="color: #61CE3C;">"~/.emacs.d/org-webpage-server/chinese-pyim"</span>
+        <span style="color: #FF6400;">:web-server-port</span> 9876
+        ))
+
+(add-to-list 'owp/project-config-alist
+             pyim-website-org-webpage-config)
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">pyim-devtools-generate-readme-and-index</span> ()
+  (interactive)
+  (<span style="color: #FBDE2D;">let*</span> ((el-file (concat (f-parent (locate-library (symbol-name 'chinese-pyim)))
+                          <span style="color: #61CE3C;">"/chinese-pyim.el"</span>))
+         (org-file (concat (file-name-sans-extension el-file) <span style="color: #61CE3C;">".org"</span>)))
+    (lentic-doc-orgify-if-necessary el-file)
+    (<span style="color: #FBDE2D;">if</span> (file-exists-p org-file)
+        (<span style="color: #FBDE2D;">with-current-buffer</span> (find-file-noselect org-file)
+          (<span style="color: #FBDE2D;">let</span> ((org-export-filter-paragraph-functions '(pyim-devtools-org-clean-space))
+                (org-export-select-tags '(<span style="color: #61CE3C;">"README"</span>))
+                (indent-tabs-mode nil)
+                (tab-width 4))
+            (org-export-to-file 'gfm <span style="color: #61CE3C;">"README.md"</span>)
+            (org-export-to-file 'org <span style="color: #61CE3C;">"index.org"</span>)))
+      (message <span style="color: #61CE3C;">"Generate README fail!!!"</span>))))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">pyim-org-export-function</span> ()
+  <span style="color: #61CE3C;">"A function with can export org file to html."</span>
+  (<span style="color: #FBDE2D;">let</span> ((org-export-filter-paragraph-functions
+         '(pyim-devtools-org-clean-space))
+        (org-export-select-tags '(<span style="color: #61CE3C;">"README"</span> <span style="color: #61CE3C;">"devel"</span>))
+        (indent-tabs-mode nil)
+        (tab-width 4))
+    (org-export-as 'html nil nil t nil)))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">pyim-preparation-org-files</span> ()
+  <span style="color: #61CE3C;">"Generate org files by lentic."</span>
+  (message <span style="color: #61CE3C;">"Generating org files by lentic ..."</span>)
+  (lentic-doc-orgify-package 'chinese-pyim)
+  (pyim-devtools-generate-readme-and-index))
+</pre>
+</div>
+
+
+<p>
+You can find more config options and theirs default values by commands:
+</p>
+
+<pre class="example">
+C-h v owp/project-config-alist
+C-h v owp/config-fallback
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Publication</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+The simplest way is run:
+</p>
+
+<pre class="example">
+M-x owp/do-publication
+</pre>
+
+<p>
+This command will ask you some questions:
+</p>
+
+<ol class="org-ol">
+<li>Which project do you want to publish?
+</li>
+<li>Publish all org files of "XXXXX" project?
+</li>
+<li>Publish to:  [Yes] Web server docroot, [No] Original repo.
+</li>
+<li>Auto commit to repo?
+</li>
+<li>Auto push to remote repo?
+</li>
+</ol>
+
+<p>
+You can use `owp/do-publication' in elisp, which let you code
+your own quickly publication command:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(owp/do-publication <span style="color: #61CE3C;">"project-name"</span> nil <span style="color: #61CE3C;">"HEAD^1"</span> <span style="color: #61CE3C;">"~/org-pub/"</span> nil)
+</pre>
+</div>
+
+<p>
+or:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(call-interactively 'owp/do-publication)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Dependencies</h2>
+<div class="outline-text-2" id="text-3">
+<ol class="org-ol">
+<li><a href="http://www.gnu.org/software/emacs/">emacs</a>: this is an "of-course" dependency
+</li>
+<li><a href="http://orgmode.org/">org mode</a>: v8.0 is required, please use <code>M-x org-version &lt;RET&gt;</code> to make sure you org mode version is not less than 8.0
+</li>
+<li><a href="http://git-scm.com">git</a>: a free and open source version control system
+</li>
+<li><a href="https://github.com/Wilfred/mustache.el">mustache.el</a>: a mustache templating library for Emacs
+</li>
+<li><a href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi">htmlize.el</a>: a library for syntax highlighting (usually this library is shipped with emacs)
+</li>
+<li><a href="https://github.com/magnars/dash.el">dash.el</a>: a modern list library for Emacs
+</li>
+<li><a href="https://github.com/Wilfred/ht.el">ht.el</a>: a modern hash-table library for Emacs
+</li>
+<li>web-server: a web server library for Emacs
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Known issues</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>Currently the deletion change handler has not been implemented so
+if you deleted some org sources, you may have to manually delete
+corresponding generated html files.
+</li>
+<li>URI path change detection is not available. That is, if you make a
+post with the URI "/blog/2013/03/25/the-old-post-name" and then
+change this value in your org source, org-webpage would be unable to
+detect that this has happened. it will only publish a new html
+file for you so you need to delete the old html file related to
+the old URI manually.
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2015-04-01</span>
+        <span title="last modification date" class="post-info">2015-04-02</span>
+        <span title="tags" class="post-info">N/A</span>
+        <span title="author" class="post-info">Feng Shu</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div class="ds-thread"></div>
+        <script type="text/javascript">
+          var duoshuoQuery = {short_name:'tumashu-website'};
+          (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = 'http://static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0]
+          || document.getElementsByTagName('body')[0]).appendChild(ds);
+          })();
+        </script>
+      </section>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; <span id="footerYear"></span> <a href="mailto:tumashu &lt;at&gt; 163 &lt;dot&gt; com">Feng Shu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/tumashu/org-webpage" target="_blank">org-webpage</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+</div>
+</body>
+</html>
