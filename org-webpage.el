@@ -107,20 +107,24 @@ then the \"html-branch\"  will be pushed to remote repo."
          (org-branch (owp/get-config-option :repository-org-branch))
          (html-branch (owp/get-config-option :repository-html-branch))
          (repo-files-function (owp/get-config-option :repo-files-function))
+         (addition-files-function (owp/get-config-option :addition-files-function))
          (orig-branch (owp/git-branch-name repo-dir))
          (to-repo (not (stringp pub-base-dir)))
          (store-dir (if to-repo "~/.owp-tmp/" pub-base-dir)) ; TODO customization
          (owp/publish-to-repository to-repo)
-         changed-files all-files remote-repos)
+         repo-files addition-files changed-files remote-repos)
     (owp/git-change-branch repo-dir org-branch)
     (owp/prepare-theme-resources store-dir)
-    (setq all-files
+    (setq repo-files
           (when (functionp repo-files-function)
             (funcall repo-files-function repo-dir)))
+    (setq addition-files
+          (when (functionp addition-files-function)
+            (funcall addition-files-function repo-dir)))
     (setq changed-files (if force-all
-                            `(:update ,all-files :delete nil)
+                            `(:update ,repo-files :delete nil)
                           (owp/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
-    (owp/publish-changes all-files changed-files store-dir)
+    (owp/publish-changes repo-files addition-files changed-files store-dir)
     (when to-repo
       (owp/git-change-branch repo-dir html-branch)
       (copy-directory store-dir repo-dir t t t)

@@ -38,17 +38,20 @@
 (require 'owp-template)
 
 
-(defun owp/publish-changes (all-list change-plist pub-root-dir)
+(defun owp/publish-changes (files-list addition-list change-plist pub-root-dir)
   "This function is for:
 1. publish changed org files to html
 2. delete html files which are relevant to deleted org files (NOT implemented)
 3. update index pages
 4. regenerate tag pages
-ALL-LIST contains paths of all org files, CHANGE-PLIST contains two properties,
-one is :update for files to be updated, another is :delete for files to be
-deleted. PUB-ROOT-DIR is the root publication directory."
+`files-list' and `addition-list' contain paths of org files, `change-plist'
+contains two properties, one is :update for files to be updated, another is :delete
+for files to be deleted. `pub-root-dir' is the root publication directory."
   (let* ((repo-dir (owp/get-repository-directory))
-         (upd-list (plist-get change-plist :update))
+         (files-list (delete-dups (append files-list addition-list)))
+         (upd-list (delete-dups
+                    (append (plist-get change-plist :update)
+                            addition-list)))
          (del-list (plist-get change-plist :delete))
          visiting file-buffer attr-cell file-attr-list)
     (when (or upd-list del-list)
@@ -67,14 +70,14 @@ deleted. PUB-ROOT-DIR is the root publication directory."
              (when (member org-file del-list)
                (owp/handle-deleted-file org-file)))
            (or visiting (kill-buffer file-buffer)))
-       all-list)
+       files-list)
       (unless (member
                (expand-file-name "index.org" repo-dir)
-               all-list)
+               files-list)
         (owp/generate-default-index file-attr-list pub-root-dir))
       (unless (member
                (expand-file-name "about.org" repo-dir)
-               all-list)
+               files-list)
         (owp/generate-default-about pub-root-dir))
       (owp/update-category-index file-attr-list pub-root-dir)
       (owp/update-rss file-attr-list pub-root-dir)

@@ -67,29 +67,17 @@ instead of pointer HEAD."
                             (expand-file-name line repo-dir)))
                       (split-string output "\n")))))
 
-(defun owp/repo-all-files (repos-dir)
-  (owp/directory-files repo-dir 'file "\\.org$"))
-
-(defun owp/directory-files (directory &optional type regexp)
-  "recursively list all the files in a directory"
-  (let* ((directory (or directory default-directory))
-         (regexp  (if regexp regexp ".*"))
-         (predfunc (case type
-                     (dir 'file-directory-p)
-                     (file 'file-regular-p)
-                     (otherwise 'identity)))
-         (files (cl-delete-if
-                 (lambda (s)
-                   (string-match (rx bol (repeat 1 2 ".") eol)
-                                 (file-name-nondirectory s)))
-                 (directory-files directory t nil t))))
-    (cl-loop for file in files
-             when (and (funcall predfunc file)
-                       (string-match regexp (file-name-nondirectory file)))
-             collect file into ret
-             when (file-directory-p file)
-             nconc (eh-directory-files-recursively file type regexp) into ret
-             finally return ret)))
+(defun owp/git-ignored-files (repo-dir)
+  "This function will return a list of ignored org files in git repository
+presented by REPO-DIR."
+  (let ((output (owp/shell-command
+                 repo-dir
+                 (concat "env LC_ALL=C git ls-files --others --ignored --exclude-standard --directory")
+                 t)))
+    (delq nil (mapcar #'(lambda (line)
+                          (when (owp/string-suffix-p ".org" line t)
+                            (expand-file-name line repo-dir)))
+                      (split-string output "\n")))))
 
 (defun owp/git-branch-name (repo-dir)
   "Return name of current branch of git repository presented by REPO-DIR."

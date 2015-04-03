@@ -43,7 +43,7 @@
         :personal-github-link "https://github.com/tumashu/org-webpage"
         :personal-avatar "/media/img/horse.jpg"
         :personal-duoshuo-shortname "tumashu-website"
-        :repo-files-function owp/repo-all-files
+        :addition-files-function owp/git-ignored-files
         :preparation-function owp/devtools-generate-index-file
         :web-server-docroot "~/.emacs.d/org-webpage-server/org-webpage"
         :web-server-port 6789

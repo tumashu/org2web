@@ -157,6 +157,11 @@ Information about the creator of the HTML document.
 
 The function used to get all org files exported.
 
+  `:addition-files-function'
+
+The function used to get addition org files exported, for example:
+org files ignored by git, which are generated from other files.
+
   `:web-server-docroot'
 
 org-webpage can start a web server to test publish, this
@@ -267,6 +272,7 @@ You can see fallback value of above option in `owp/config-fallback'"
         :get-title-function owp/get-title
         :retrieve-category-function owp/get-file-category
         :repo-files-function owp/git-all-files
+        :addition-files-function nil
         :org-export-function owp/default-org-export
         :web-server-docroot "~/.emacs.d/org-webpage-server/default"
         :web-server-port 9876
