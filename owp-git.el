@@ -140,8 +140,8 @@ REPO-DIR, MESSAGE is the commit message."
     (owp/shell-command repo-dir "env LC_ALL=C git add ." t)
     (setq output
           (owp/shell-command repo-dir
-                            (format "env LC_ALL=C git commit -m \"%s\"" message)
-                            t))
+                             (format "env LC_ALL=C git commit -m \"%s\"" message)
+                             t))
     (when (not (string-match "\\[.* .*\\]" output))
       (error "Failed to commit changes on current branch of repository '%s'."
              repo-dir))))

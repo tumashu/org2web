@@ -58,9 +58,9 @@
 (defconst org-webpage-version "0.1")
 
 (defun owp/do-publication (&optional project-name
-                                    force-all
-                                    base-git-commit pub-base-dir
-                                    auto-commit auto-push)
+                                     force-all
+                                     base-git-commit pub-base-dir
+                                     auto-commit auto-push)
   "The main entrance of org-webpage. The entire procedure is:
 1) verify configuration
 2) read changed files on \"org branch\" of \"repository directory\",
@@ -127,7 +127,7 @@ then the \"html-branch\"  will be pushed to remote repo."
       (delete-directory store-dir t))
     (when (and to-repo auto-commit)
       (owp/git-commit-changes repo-dir (concat "Update published html files, "
-                                              "committed by org-webpage."))
+                                               "committed by org-webpage."))
       (when auto-push
         (setq remote-repos (owp/git-remote-name repo-dir))
         (if (not remote-repos)
@@ -142,8 +142,8 @@ then the \"html-branch\"  will be pushed to remote repo."
             (if (not (member repo remote-repos))
                 (message "Invalid remote repository '%s'." repo)
               (owp/git-push-remote repo-dir
-                                  repo
-                                  html-branch)))))
+                                   repo
+                                   html-branch)))))
       (owp/git-change-branch repo-dir orig-branch))
     (if to-repo
         (message "Publication finished: on branch '%s' of repository '%s'."
@@ -223,7 +223,7 @@ to save generated about.org."
    (expand-file-name "about.org" save-dir)))
 
 (defun owp/insert-options-template (&optional title uri
-                                             keywords tags description)
+                                              keywords tags description)
   "Insert a template into current buffer with information for exporting.
 
 TITLE: the title of this post

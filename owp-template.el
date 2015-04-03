@@ -137,7 +137,7 @@ similar to `owp/render-header'."
       :post-template)
     (message (concat "Read " (or template "post.mustache") " from file"))
     (owp/file-to-string (owp/get-template-file
-                        (or template "post.mustache"))))
+                         (or template "post.mustache"))))
    (or param-table
        (ht ("title" (funcall (owp/get-config-option :get-title-function)))
            ("content" (cl-flet ((org-html-fontify-code
@@ -211,8 +211,8 @@ similar to `owp/render-header'."
              ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
              ("creator-info" (owp/get-html-creator-string))
              ("email" (owp/confound-email-address (or (owp/read-org-option "EMAIL")
-                                                     user-mail-address
-                                                     "Unknown Email"))))))))
+                                                      user-mail-address
+                                                      "Unknown Email"))))))))
 
 ;;; this function is deprecated
 (defun owp/update-default-template-parameters ()
@@ -249,7 +249,7 @@ ATTR-PLIST is the attribute plist of the buffer, retrieved by the combination of
          (author (org-element-interpret-data
                   (or (plist-get info :author) user-full-name)))
          (email (owp/confound-email-address (or (plist-get info :email)
-                                               user-mail-address)))
+                                                user-mail-address)))
          (description (or (plist-get info :description) nil))
          (keywords (or (plist-get info :keywords) nil))
          (category (plist-get info :category))
