@@ -243,7 +243,8 @@ file's category is based on its name and its root folder name."
     (with-temp-buffer
       (insert html-content)
       (beginning-of-buffer)
-      (when (owp/get-config-option :force-absolute-url)
+      (when (and owp/publish-to-repository
+                 (owp/get-config-option :force-absolute-url))
         (while (re-search-forward
                 ;;; TODO: not only links need to convert, but also inline
                 ;;; images, may add others later
@@ -257,8 +258,8 @@ file's category is based on its name and its root folder name."
                        (match-string 3)
                        site-domain url
                        (match-string 5)))
-            (replace-match url)))
-        (buffer-string)))))
+            (replace-match url))))
+      (buffer-string))))
 
 (defun owp/publish-modified-file (component-table pub-dir)
   "Publish org file opened in current buffer. COMPONENT-TABLE is the hash table

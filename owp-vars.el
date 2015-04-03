@@ -216,6 +216,8 @@ You can see fallback value of above option in `owp/config-fallback'"
 
 (defvar owp/current-project-name nil)
 
+(defvar owp/publish-to-repository nil)
+
 (defvar owp/item-cache nil
   "The cache for general purpose.")
 

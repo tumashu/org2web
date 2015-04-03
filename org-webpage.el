@@ -110,6 +110,7 @@ then the \"html-branch\"  will be pushed to remote repo."
          (orig-branch (owp/git-branch-name repo-dir))
          (to-repo (not (stringp pub-base-dir)))
          (store-dir (if to-repo "~/.owp-tmp/" pub-base-dir)) ; TODO customization
+         (owp/publish-to-repository to-repo)
          changed-files all-files remote-repos)
     (owp/git-change-branch repo-dir org-branch)
     (owp/prepare-theme-resources store-dir)
