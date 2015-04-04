@@ -112,7 +112,7 @@ render from a default hash table."
                     (ht ("category-uri"
                          (concat "/" (owp/encode-string-to-url cat) "/"))
                         ("category-name" (capitalize cat))))
-                (sort (remove-if
+                (sort (cl-remove-if
                        #'(lambda (cat)
                            (or (string= cat "index")
                                (string= cat "about")))
