@@ -55,126 +55,225 @@ parameters for the publishing process.
 
 Most properties are optional, but some should always be set:
 
+
   `:repository-directory'
 
 The git repository directory, where org files stored on branch
 `:repository-org-branch', and generated html files stored on branch
 `:repository-html-branch'.
+1. Type: string
+2. Example1: \"~/.emacs.d/projects/tumashu.github.com/\"
+
 
   `:site-domain'
 
 The domain name of entire site, it is recommended to assign with prefix
 http:// or https://, http will be considered if not assigned.
+1. Type: string
+2. Example1: \"http://tumashu.github.com\"
+
 
   `:site-main-title'
 
 The main title of entire site.
+1. Type: string
+2. Example1: \"Tumashu's website\"
+
 
   `:site-sub-title'
 
 The subtitle of entire site.
+1. Type: string
+2. Example1: \"======> My personal blog site.\"
+
 
   `:preparation-function'
 
 Function to be called before publishing this project.  This may also
 be a list of functions.
+1. Type: function
+2. Example: eh-convert-el-to-org
 
 
   `:repository-org-branch'
 
 The branch where org files stored on, it is within repository presented by
 `:repository-directory'.
+1. Type: string
+2. Example1: \"source\"
+3. Example2: \"master\"
+
 
   `:repository-html-branch'
 
 The branch where generated html files stored on, it is within repository
 presented by `:repository-directory'.
+1. Type: string
+2. Example1: \"master\"
+3. Example2: \"gh-pages\"
+
 
   `:theme-root-directory'
 
 The root directory list that stores themes for page rendering. By default, it
 points to the directory `themes' in org-webpage installation directory.
+1. Type: list
+2. Example1: (\"/path/to/dir1\" \"/path/to/dir2\" \"/path/to/dir3\" ...)
+3. Example2: nil
+
+When set this option to `nil', org-webpage will find two paths as fallback:
+1. <Directory which contain org-webpage.el>/themes
+2. <Your project repository directory>/themes
+
 
   `:theme'
 
 The theme used for page generation.
+1. Type: list
+2. Example1: (worg killjs)
+3. Example2: nil
+
+When set this option to `nil', default theme will be used.
+
 
   `:personal-github-link'
 
 The personal github link.
+1. Type: string
+2. Example1: \"https://github.com/tumashu/org-webpage\"
+
 
   `:personal-avatar'
 
 The link to an avatar image.
+1. Type: string
+2. Example1: \"/media/img/horse.jpg\"
+2. Example2: \"http://tumashu.github.com/org-webpage/media/img/horse.jpg\"
+
 
   `:personal-disqus-shortname'
 
 The personal disqus shortname.
+1. Type: string
+2. Example1: \"my-disqus-name\"
+
 
   `:personal-duoshuo-shortname'
 
 The personal duoshuo shortname.
+1. Type: string
+2. Example1: \"my-duoshuo-name\"
+
 
   `:personal-google-analytics-id'
 
 Personal google analytics id.
+The personal duoshuo shortname.
+1. Type: string
+2. Example1: \"my-google-analytics-id\"
+
 
   `:confound-email'
 
 Determine whether email addresses should be confounded or not.
+1. Type: boolern
+2. Example1: t
+
+When set this option to `t', \"myname@163.com\" will be converted to \"myname <at> 163 <dot> com\"
+
 
   `:force-absolute-url'
 
 Force convert relative url to absolute url in html files by append site domain.
+1. Type: boolern
+2. Example1: t
+
+When set this option to `t', all url like \"/path/to/file.html\" will be
+converted to \"http://yourdomain.com/path/to/file.html\".
+
 
   `:default-category'
 
 If org fils don't set category, default category will be used.
+1. Type: string
+2. Example1: \"blog\"
+3. Example2: \"wiki\"
+4. Example3: \"documents\"
+
 
   `:category-ignore-list'
 
-Ignore subdirs/categories for navigation
+Ignore subdirs/categories for navigation.
+1. Type: list
+2. Example1: (\"themes\" \"assets\")
+
+Names in this list will not showed in webpage navbar.
+
 
   `:get-title-function'
 
 A function used to retrieve an org file's Title, it has no parameter and
 run org file buffer.
+1. Type: function
+2. Example1: owp/get-title
+
 
   `:retrieve-category-function'
 
 A function used to retrieve an org file's category, its parameter is the
 org file's path, if parameter is nil, it should return all categories.
+1. Type: function
+2. Example1: owp/get-file-category
+
 
    `:org-export-function'
 
 Set the default function by which org-webpage export org file to html.
+1. Type: function
+2. Example1: owp/default-org-export
+
 
   `:html-creator-string'
 
 Information about the creator of the HTML document.
+1. Type: string
+2. Example1: \"This is an example creator string\"
+
 
   `:repo-files-function'
 
 The function used to get all org files exported.
+1. Type: function
+2. Example1: owp/git-all-files
+
 
   `:addition-files-function'
 
 The function used to get addition org files exported, for example:
 org files ignored by git, which are generated from other files.
+1. Type: function
+2. Example1: owp/addition-all-files
+
 
   `:web-server-docroot'
 
 org-webpage can start a web server to test publish, this
 set the server document root.
+1. Type: string
+2. Example1: \"~/.emacs.d/org-website-server/org-webpage/\"
+
 
   `:web-server-port'
 
 org-webpage can start a web server to test publish, this
 set the server port.
+1. Type: number
+2. Example1: 9876
+
 
 You can see fallback value of above option in `owp/config-fallback'"
-  :group 'org-webpage
-  :type 'alist)
+:group 'org-webpage
+:type 'alist)
 
 (defcustom owp/get-config-option-function
   'owp/get-config-option-from-alist
