@@ -51,6 +51,14 @@
   (or (owp/read-org-option "TITLE")
       (file-name-sans-extension (buffer-name))))
 
+(defun owp/get-category (org-file)
+  "Get org file category presented by ORG-FILE, return all categories if
+ORG-FILE is nil. "
+  (let ((func (owp/get-config-option :retrieve-category-function)))
+    (if (functionp func)
+        (funcall func org-file)
+      (funcall 'owp/get-file-category org-file))))
+
 (defun owp/get-cache-item (key)
   "Get the item associated with KEY in `owp/item-cache', if `owp/item-cache' is
 nil or there is no item associated with KEY in it, return nil."
@@ -116,7 +124,7 @@ render from a default hash table."
                        #'(lambda (cat)
                            (or (string= cat "index")
                                (string= cat "about")))
-                       (owp/get-file-category nil))
+                       (owp/get-category nil))
                       'string-lessp)))
               ("github" (owp/get-config-option :personal-github-link))
               ("avatar" (owp/get-config-option :personal-avatar))
@@ -173,9 +181,7 @@ similar to `owp/render-header'."
                              (ht ("link" (owp/generate-tag-uri tag-name))
                                  ("name" tag-name)))
                          (delete "" (mapcar 'owp/trim-string (split-string tags "[:,]+" t))))))
-              (category (funcall (or (owp/get-config-option :retrieve-category-function)
-                                     owp/get-file-category)
-                                 filename))
+              (category (owp/get-category filename))
               (config (cdr (or (assoc category owp/category-config-alist)
                                (owp/get-category-setting default-category))))
               (uri (funcall (plist-get config :uri-generator)

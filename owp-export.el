@@ -112,9 +112,7 @@ content of the buffer will be converted into html."
       (plist-put
        attr-plist :tags (delete "" (mapcar 'owp/trim-string
                                            (split-string tags "[:,]+" t)))))
-    (setq category (funcall (or (owp/get-config-option :retrieve-category-function)
-                                owp/get-file-category)
-                            filename))
+    (setq category (owp/get-category filename))
     (plist-put attr-plist :category category)
     (setq cat-config (cdr (or (assoc category owp/category-config-alist)
                               (owp/get-category-setting
@@ -209,9 +207,9 @@ can contain following parameters:
                                 (?d . ,(caddr date-list))
                                 (?t . ,encoded-title)))))
 
+
 (defun owp/get-file-category (org-file)
-  "Get org file category presented by ORG-FILE, return all categories if
-ORG-FILE is nil. This is the default function used to get a file's category,
+  "This is the default function used to get a file's category,
 see org-webpage config option 'retrieve-category-function. How to judge a
 file's category is based on its name and its root folder name."
   (let ((repo-dir (owp/get-repository-directory))
