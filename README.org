@@ -78,7 +78,7 @@ management system. For more info about installation, please see
 *tips.org* in the "doc" folder.
 
 ** Configuration
-The follow code is my website's config, you can adjust and paste it to your =.emacs= file:
+The follow code is [[http://tumashu.github.com][my website]]'s [[https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el][config]], you can adjust and paste it to your =.emacs= file:
 
 #+BEGIN_SRC emacs-lisp :eval no
 ;; the following is only needed if you install org-page manually
@@ -103,7 +103,7 @@ The follow code is my website's config, you can adjust and paste it to your =.em
              eh-website-op-config)
 #+END_SRC
 
-The below is a more complex example, which is use by chinese-pyim package:
+The below is a more complex example, which is use by [[http://tumashu.github.io/chinese-pyim/][chinese-pyim]] package's [[https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el][config]]:
 
 #+BEGIN_SRC emacs-lisp :eval no
 (defun pyim-path (&optional filename)
