@@ -23,24 +23,31 @@
 
 ;;; Commentary:
 
-;; See documentation at https://github.com/tumashu/org-webpage
-
 ;; org-webpage is a static site generator based on org mode.
 
-;; org-webpage provides following features:
+;; 1. Sources:   https://github.com/tumashu/org-webpage
+;; 2. Documents: http://tumashu.github.io/org-webpage
 
-;; 1) org sources and html files managed by git
-;; 2) incremental publication (according to =git diff= command)
-;; 3) category support
-;; 4) tags support (auto generated)
-;; 5) RSS support (auto generated)
-;; 6) search engine support (auto generated)
-;; 7) a beautiful theme
-;; 8) theme customization support
-;; 9) commenting (implemented using disqus)
-;; 10) site visiting tracking (implemented using google analytics)
-;; 11) index/about page support (auto generated if no default provided)
-;; 12) highly customizable
+;; org-webpage is a fork of Kelvin H's org-page (https://github.com/kelvinh/org-page),
+;; and provides similar features as org-page, the main differents is as follow:
+
+;; 1. org-page focus on personal blog while org-webpage is main used to
+;;    generate small project website.
+;; 2. org-page use many customizable variables to configure org-page
+;;    while org-website use an `org-publish-project-alist' style
+;;    alist to adjust org-website's behaver.
+
+;;    Managing multi-site configs in an emacs session with org-website is more
+;;    simple than with org-page.
+;; 3. org-website can deal with "increment" or "inherit" themes.
+;;
+;;    A "increment" theme is a mod theme which only include changed template,
+;;    css and other files, the files same with base theme doesn't include.
+
+;;    org-webpage autosearch the same files from base theme when use "increment"
+;;    theme.
+;; 4. org-website include a tiny emacs web server, which can be used to test publish.
+
 
 ;;; Code:
 
