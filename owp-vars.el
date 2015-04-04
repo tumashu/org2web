@@ -319,6 +319,7 @@ You can see fallback value of above option in `owp/config-fallback'"
   "Configurations for different categories, can and should be customized.")
 
 (defvar owp/current-project-name nil)
+(defvar owp/last-project-name nil)
 
 (defvar owp/publish-to-repository nil)
 

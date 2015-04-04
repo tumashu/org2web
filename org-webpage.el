@@ -84,10 +84,12 @@ then the \"html-branch\"  will be pushed to remote repo."
    (let* ((j (or owp/default-project-name
                  (completing-read "Which project do you want to publish? "
                                   (delete-dups
-                                   (mapcar 'car owp/project-config-alist)))))
+                                   (mapcar 'car owp/project-config-alist))
+                                  nil t nil nil owp/last-project-name)))
           (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
           (p (progn (setq owp/current-project-name j)
+                    (setq owp/last-project-name j)
                     (when (y-or-n-p
                            "Publish to:  [Yes] Web server docroot, [No] Original repo. ")
                       (expand-file-name (owp/get-config-option :web-server-docroot)))))
@@ -308,9 +310,11 @@ responsibility to guarantee the two parameters are valid."
    (let* ((p (or owp/default-project-name
                  (completing-read "Which project do you want post? "
                                   (delete-dups
-                                   (mapcar 'car owp/project-config-alist)))))
+                                   (mapcar 'car owp/project-config-alist))
+                                  nil t nil nil owp/last-project-name)))
           (c (read-string (format "Category of \"%s\" project: " p)
                           (progn (setq owp/current-project-name p)
+                                 (setq owp/last-project-name p)
                                  (owp/get-config-option :default-category))))
           (f (read-string (format "Filename of \"%s\" project: " p) "new-post.org" p)))
      (list p c f)))
@@ -336,7 +340,8 @@ responsibility to guarantee the two parameters are valid."
                                    "add, keywords, here"
                                    "add, tags, here"
                                    "add description here"))
-    (save-buffer)))
+    (save-buffer))
+  (setq owp/current-project-name nil))
 
 
 (provide 'org-webpage)
