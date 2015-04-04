@@ -66,18 +66,18 @@
 1) verify configuration
 2) read changed files on \"org branch\" of \"repository directory\",
    the definition of 'changed files' is:
-1. if FORCE-ALL is non-nil, then all files will be published
-will be published.
-2. if FORCE-ALL is nil, the changed files will be obtained based on
-BASE-GIT-COMMIT
-3. if BASE-GIT-COMMIT is nil or omitted, the changed files will be obtained
-based on previous commit
+   1. if FORCE-ALL is non-nil, then all files will be published
+      will be published.
+   2. if FORCE-ALL is nil, the changed files will be obtained based on
+      BASE-GIT-COMMIT
+   3. if BASE-GIT-COMMIT is nil or omitted, the changed files will be obtained
+      based on previous commit
 3) publish org files to html, if PUB-BASE-DIR is specified, use that directory
-to store the generated html files, otherwise html files will be stored on \"html-branch\"
-of \"repository directory\".
+   to store the generated html files, otherwise html files will be stored on \"html-branch\"
+   of \"repository directory\".
 4) if PUB-BASE-DIR is nil, and AUTO-COMMIT is non-nil, then the changes stored
-on \"html-branch\" will be automatically committed, but be careful, this feature is
-NOT recommended, and a manual commit is much better
+   on \"html-branch\" will be automatically committed, but be careful, this feature is
+   NOT recommended, and a manual commit is much better
 5) if PUB-BASE-DIR is nil, AUTO-COMMIT is non-nil, and AUTO-PUSH is non-nil,
 then the \"html-branch\"  will be pushed to remote repo."
   (interactive
@@ -301,8 +301,9 @@ month and day): " (unless (string= i "")
 (defun owp/new-post (&optional project-name category filename)
   "Setup a new post.
 
-CATEGORY: this post belongs to
-FILENAME: the file name of this post
+PROJECT-NAME: which project do you want to export
+CATEGORY:     this post belongs to
+FILENAME:     the file name of this post
 
 Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
