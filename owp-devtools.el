@@ -29,25 +29,25 @@
 (require 'owp-vars)
 (require 'owp-config)
 
-(setq owp/devtools-webpage-config
-      `("org-webpage"
-        :repository-directory ,owp/load-directory
-        :site-domain "http://tumashu.github.com/org-webpage"
-        :site-main-title "Org-webpage"
-        :site-sub-title "(Static site senerator based on org mode)"
-        :repository-org-branch "master"
-        :repository-html-branch "gh-pages"
-        :default-category "documents"
-        :theme (worg killjs)
-        :force-absolute-url t
-        :personal-github-link "https://github.com/tumashu/org-webpage"
-        :personal-avatar "/media/img/horse.jpg"
-        :personal-duoshuo-shortname "tumashu-website"
-        :addition-files-function owp/git-ignored-files
-        :preparation-function owp/devtools-generate-index-file
-        :web-server-docroot "~/.emacs.d/org-webpage-server/org-webpage"
-        :web-server-port 6789
-        ))
+(defvar owp/devtools-webpage-config
+  `("org-webpage"
+    :repository-directory ,owp/load-directory
+    :site-domain "http://tumashu.github.com/org-webpage"
+    :site-main-title "Org-webpage"
+    :site-sub-title "(Static site senerator based on org mode)"
+    :repository-org-branch "master"
+    :repository-html-branch "gh-pages"
+    :default-category "documents"
+    :theme (worg killjs)
+    :force-absolute-url t
+    :personal-github-link "https://github.com/tumashu/org-webpage"
+    :personal-avatar "/media/img/horse.jpg"
+    :personal-duoshuo-shortname "tumashu-website"
+    :addition-files-function owp/git-ignored-files
+    :preparation-function owp/devtools-generate-index-file
+    :web-server-docroot "~/.emacs.d/org-webpage-server/org-webpage"
+    :web-server-port 6789
+    ))
 
 (add-to-list 'owp/project-config-alist
              owp/devtools-webpage-config)

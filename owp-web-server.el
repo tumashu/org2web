@@ -25,6 +25,7 @@
 
 ;;; Code:
 (require 'url-util)
+(require 'browse-url)
 (require 'web-server)
 (require 'owp-vars)
 (require 'owp-config)
