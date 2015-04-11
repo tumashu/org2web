@@ -116,7 +116,7 @@ multi path."
         :show-meta t
         :show-comment t
         :uri-generator owp/generate-uri
-        :uri-template ,(format "/%s/%%y/%%m/%%d/%%t/" category)
+        :uri-template ,(format "/%s/%%t/" category)
         :sort-by :date
         :category-index t)))
 

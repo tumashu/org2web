@@ -272,12 +272,14 @@ month and day): " (unless (string= i "")
 #+AUTHOR:      %s
 #+EMAIL:       %s
 #+DATE:        %s
-#+URI:         %s
-#+KEYWORDS:    %s
-#+TAGS:        %s
+
+# #+URI:         %s
+# #+KEYWORDS:    %s
+# #+TAGS:        %s
+# #+DESCRIPTION: %s
+
 #+LANGUAGE:    %s
 #+OPTIONS:     H:%d num:%s toc:%s \\n:%s ::%s |:%s ^:%s -:%s f:%s *:%s <:%s
-#+DESCRIPTION: %s
 "
            (if (string= title "") (buffer-name) title)
            (user-full-name)
@@ -288,6 +290,9 @@ month and day): " (unless (string= i "")
                "<TODO: insert your keywords here>"
              keywords)
            (if (string= tags "") "<TODO: insert your tags here>" tags)
+           (if (string= description "")
+               "<TODO: insert your description here>"
+             description)
            org-export-default-language
            org-export-headline-levels
            nil ;; org-export-with-section-numbers
@@ -300,12 +305,9 @@ month and day): " (unless (string= i "")
            nil ;; org-export-with-special-strings
            org-export-with-footnotes
            org-export-with-emphasize
-           org-export-with-timestamps
-           (if (string= description "")
-               "<TODO: insert your description here>"
-             description))))
+           org-export-with-timestamps)))
 
-(defun owp/new-post (&optional project-name category filename)
+(defun owp/new-post (&optional project-name category filename insert-fallback-template)
   "Setup a new post.
 
 PROJECT-NAME: which project do you want to export
@@ -324,8 +326,9 @@ responsibility to guarantee the two parameters are valid."
                           (progn (setq owp/current-project-name p)
                                  (setq owp/last-project-name p)
                                  (owp/get-config-option :default-category))))
-          (f (read-string (format "Filename of \"%s\" project: " p) "new-post.org" p)))
-     (list p c f)))
+          (f (read-string (format "Filename of \"%s\" project: " p) "new-post.org" p))
+          (d (yes-or-no-p "Insert fallback template? ")))
+     (list p c f d)))
   (if (string= category "")
       (setq category (owp/get-config-option :default-category)))
   (if (string= filename "")
@@ -341,13 +344,15 @@ responsibility to guarantee the two parameters are valid."
     (unless (file-directory-p dir)
       (mkdir dir t))
     (switch-to-buffer (find-file path))
-    (if (called-interactively-p 'any)
+    (if (and (not insert-fallback-template)
+             (called-interactively-p 'any))
         (call-interactively 'owp/insert-options-template)
       (owp/insert-options-template "<Insert Your Title Here>"
-                                   "/%y/%m/%d/%t/"
-                                   "add, keywords, here"
-                                   "add, tags, here"
-                                   "add description here"))
+                                   (format "/%s/%%y/%%m/%%d/%%t/ Or /%s/%%t/"
+                                           category category)
+                                   "keyword1, keyword2, keyword3"
+                                   "tag1, tag2, tag3"
+                                   "<Add description here>"))
     (save-buffer))
   (setq owp/current-project-name nil))
 
