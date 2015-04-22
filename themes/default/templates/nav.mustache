@@ -6,7 +6,9 @@
           {{#nav-categories}}
           <li><a href="{{category-uri}}">{{category-name}}</a></li>
           {{/nav-categories}}
-          <li><a href="/tags/">Tags</a></li>
+          {{#nav-summary}}
+          <li><a href="{{summary-item-uri}}">{{summary-item-name}}</a></li>
+          {{/nav-summary}}
           <li><a href="/about/">About</a></li>
           <li><a href="{{github}}">GitHub</a></li>
           <li><a href="/rss.xml">RSS</a></li>

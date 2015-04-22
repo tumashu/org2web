@@ -126,6 +126,13 @@ render from a default hash table."
                                (string= cat "about")))
                        (owp/get-category nil))
                       'string-lessp)))
+              ("nav-summary"
+               (mapcar
+                #'(lambda (cat)
+                    (ht ("summary-item-uri"
+                         (concat "/" (owp/encode-string-to-url cat) "/"))
+                        ("summary-item-name" (capitalize cat))))
+                (mapcar #'car (owp/get-config-option :summary))))
               ("github" (owp/get-config-option :personal-github-link))
               ("avatar" (owp/get-config-option :personal-avatar))
               ("site-domain" (if (string-match
@@ -178,7 +185,7 @@ similar to `owp/render-header'."
               (tags (if tags
                         (mapcar
                          #'(lambda (tag-name)
-                             (ht ("link" (owp/generate-tag-uri tag-name))
+                             (ht ("link" (owp/generate-summary-uri "Tags" tag-name))
                                  ("name" tag-name)))
                          (delete "" (mapcar 'owp/trim-string (split-string tags "[:,]+" t))))))
               (category (owp/get-category filename))

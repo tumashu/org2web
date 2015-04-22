@@ -210,6 +210,16 @@ Ignore subdirs/categories for navigation.
 Names in this list will not showed in webpage navbar.
 
 
+  `:summary'
+
+A summary is a statistic page, Which can be used show pages
+based on \"tags\" , \"data\" , \"author\" and so on.
+it is similar Micorsoft Excel pivot table feature.
+1. Type: alist
+2. Example1: ((\"tags\" :tags) (\"date\" :date) (\"authors\" :authors))
+2. Example2: ((\"按标签分类\" :tags) (\"按时间分类\" :date) (\"按作者分类\" :authors))
+
+
   `:get-title-function'
 
 A function used to retrieve an org file's Title, it has no parameter and
@@ -272,8 +282,8 @@ set the server port.
 
 
 You can see fallback value of above option in `owp/config-fallback'"
-:group 'org-webpage
-:type 'alist)
+    :group 'org-webpage
+    :type 'alist)
 
 (defcustom owp/get-config-option-function
   'owp/get-config-option-from-alist
@@ -366,6 +376,7 @@ You can see fallback value of above option in `owp/config-fallback'"
         :personal-google-analytics-id nil
         :default-category "blog"
         :category-ignore-list ("themes" "assets")
+        :summary (("tags" :tags))
         :confound-email t
         :force-absolute-url t
         :preparation-function nil
