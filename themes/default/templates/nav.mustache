@@ -10,7 +10,9 @@
           <li><a href="{{summary-item-uri}}">{{summary-item-name}}</a></li>
           {{/nav-summary}}
           <li><a href="/about/">About</a></li>
-          <li><a href="{{github}}">GitHub</a></li>
+          {{#nav-source-browse}}
+          <li><a href="{{source-browse-url}}">{{source-browse-name}}</a></li>
+          {{/nav-source-browse}}
           <li><a href="/rss.xml">RSS</a></li>
         </ul>
         <form method="get" id="searchform" action="http://www.google.com/search">

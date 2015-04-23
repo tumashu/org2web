@@ -136,11 +136,11 @@ The theme used for page generation.
 When set this option to `nil', default theme will be used.
 
 
-  `:personal-github-link'
+  `:source-browse-url'
 
 The personal github link.
-1. Type: string
-2. Example1: \"https://github.com/tumashu/org-webpage\"
+1. Type: list
+2. Example1: (\"GitHub\" \"https://github.com/tumashu/org-webpage\")
 
 
   `:personal-avatar'
@@ -282,8 +282,8 @@ set the server port.
 
 
 You can see fallback value of above option in `owp/config-fallback'"
-    :group 'org-webpage
-    :type 'alist)
+:group 'org-webpage
+:type 'alist)
 
 (defcustom owp/get-config-option-function
   'owp/get-config-option-from-alist
@@ -369,7 +369,7 @@ You can see fallback value of above option in `owp/config-fallback'"
         :repository-html-branch "master"
         :theme-root-directory nil
         :theme (default)
-        :personal-github-link "https://github.com/tumashu/org-webpage"
+        :source-browse-url nil
         :personal-avatar nil
         :personal-disqus-shortname nil
         :personal-duoshuo-shortname nil

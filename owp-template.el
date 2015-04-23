@@ -133,7 +133,11 @@ render from a default hash table."
                          (concat "/" (owp/encode-string-to-url cat) "/"))
                         ("summary-item-name" (capitalize cat))))
                 (mapcar #'car (owp/get-config-option :summary))))
-              ("github" (owp/get-config-option :personal-github-link))
+              ("nav-source-browse"
+               (let ((list (owp/get-config-option :source-browse-url)))
+                 (when list
+                   (ht ("source-browse-name" (car list))
+                       ("source-browse-url" (car (cdr list)))))))
               ("avatar" (owp/get-config-option :personal-avatar))
               ("site-domain" (if (string-match
                                   "\\`https?://\\(.*[a-zA-Z]\\)/?\\'"
