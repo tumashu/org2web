@@ -75,12 +75,14 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
                (expand-file-name "index.org" repo-dir)
                files-list)
         (owp/generate-default-index file-attr-list pub-root-dir))
-      (unless (member
-               (expand-file-name "about.org" repo-dir)
-               files-list)
+      (when (and (owp/get-config-option :about)
+                 (not (member
+                       (expand-file-name "about.org" repo-dir)
+                       files-list)))
         (owp/generate-default-about pub-root-dir))
       (owp/update-category-index file-attr-list pub-root-dir)
-      (owp/update-rss file-attr-list pub-root-dir)
+      (when (owp/get-config-option :rss)
+        (owp/update-rss file-attr-list pub-root-dir))
       (mapc
        #'(lambda (name)
            (owp/update-summary file-attr-list pub-root-dir name))
@@ -453,8 +455,12 @@ publication directory."
 (defun owp/generate-default-about (pub-base-dir)
   "Generate default about page, only if about.org does not exist. PUB-BASE-DIR
 is the root publication directory."
-  (let ((pub-dir (file-name-as-directory
-                  (expand-file-name "about/" pub-base-dir))))
+  (let* ((about-sub-dir
+          (replace-regexp-in-string
+           "^/" ""
+           (car cdr (owp/get-config-option about))))
+         (pub-dir (file-name-as-directory
+                   (expand-file-name about-sub-dir pub-base-dir))))
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
     (owp/string-to-file
@@ -596,18 +602,28 @@ TODO: improve this function."
 (defun owp/update-rss (file-attr-list pub-base-dir)
   "Update RSS. FILE-ATTR-LIST is the list of all file attribute property lists.
 PUB-BASE-DIR is the root publication directory."
-  (let ((last-10-posts
-         (-take 10 (--sort (>= 0 (owp/compare-standard-date
-                                  (owp/fix-timestamp-string
-                                   (plist-get it :mod-date))
-                                  (owp/fix-timestamp-string
-                                   (plist-get other :mod-date))))
-                           (--filter (not (or
-                                           (string= (plist-get it :category)
-                                                    "index")
-                                           (string= (plist-get it :category)
-                                                    "about")))
-                                     file-attr-list)))))
+  (let* ((rss-file-name
+          (replace-regexp-in-string
+           "^/" ""
+           (car (cdr (owp/get-config-option :rss)))))
+         (rss-file
+          (concat (file-name-as-directory pub-base-dir) rss-file-name))
+         (rss-base-dir
+          (file-name-directory rss-file))
+         (last-10-posts
+          (-take 10 (--sort (>= 0 (owp/compare-standard-date
+                                   (owp/fix-timestamp-string
+                                    (plist-get it :mod-date))
+                                   (owp/fix-timestamp-string
+                                    (plist-get other :mod-date))))
+                            (--filter (not (or
+                                            (string= (plist-get it :category)
+                                                     "index")
+                                            (string= (plist-get it :category)
+                                                     "about")))
+                                      file-attr-list)))))
+    (unless (file-directory-p rss-base-dir)
+      (mkdir rss-base-dir t))
     (owp/string-to-file
      (owp/relative-url-to-absolute
       (mustache-render
@@ -621,7 +637,7 @@ PUB-BASE-DIR is the root publication directory."
                                ("item-description" (plist-get it :description))
                                ("item-update-date" (plist-get it :mod-date)))
                            last-10-posts)))))
-     (concat (file-name-as-directory pub-base-dir) "rss.xml"))))
+     rss-file)))
 
 
 (provide 'owp-export)

@@ -9,11 +9,15 @@
           {{#nav-summary}}
           <li><a href="{{summary-item-uri}}">{{summary-item-name}}</a></li>
           {{/nav-summary}}
-          <li><a href="/about/">About</a></li>
+          {{#nav-about}}
+          <li><a href="{{about-uri}}">{{about-name}}</a></li>
+          {{/nav-about}}
           {{#nav-source-browse}}
-          <li><a href="{{source-browse-url}}">{{source-browse-name}}</a></li>
+          <li><a href="{{source-browse-uri}}">{{source-browse-name}}</a></li>
           {{/nav-source-browse}}
-          <li><a href="/rss.xml">RSS</a></li>
+          {{#nav-rss}}
+          <li><a href="{{rss-uri}}">{{rss-name}}</a></li>
+          {{/nav-rss}}
         </ul>
         <form method="get" id="searchform" action="http://www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">

@@ -200,6 +200,19 @@ If org fils don't set category, default category will be used.
 3. Example2: \"wiki\"
 4. Example3: \"documents\"
 
+  `:about'
+
+About page of org-website.
+1. Type: list
+2. Example1: (\"About\" \"/about/\")
+
+
+  `:rss'
+
+RSS page of org-website.
+1. Type: list
+2. Example1: (\"RSS\" \"/rss.xml\")
+
 
   `:category-ignore-list'
 
@@ -375,6 +388,8 @@ You can see fallback value of above option in `owp/config-fallback'"
         :personal-duoshuo-shortname nil
         :personal-google-analytics-id nil
         :default-category "blog"
+        :about ("About" "/about/")
+        :rss ("RSS" "/rss.xml")
         :category-ignore-list ("themes" "assets")
         :summary (("tags" :tags))
         :confound-email t
