@@ -318,7 +318,7 @@ You can see fallback value of above option in `owp/config-fallback'"
   "The directory where org-webpage is loaded from.")
 
 (defvar owp/category-config-alist
-  '(("blog" ;; this is the default configuration
+  '(("blog"
      :show-meta t
      :show-comment t
      :uri-generator owp/generate-uri
