@@ -81,7 +81,9 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
         (owp/generate-default-about pub-root-dir))
       (owp/update-category-index file-attr-list pub-root-dir)
       (owp/update-rss file-attr-list pub-root-dir)
-      (owp/update-tags file-attr-list pub-root-dir))))
+      (owp/update-tags file-attr-list pub-root-dir)
+      (when (owp/get-config-option :organizationp)
+        (owp/update-authors file-attr-list pub-root-dir)))))
 
 (defun owp/get-org-file-options (pub-root-dir do-pub)
   "Retrieve all needed options for org file opened in current buffer.
@@ -112,6 +114,12 @@ content of the buffer will be converted into html."
       (plist-put
        attr-plist :tags (delete "" (mapcar 'owp/trim-string
                                            (split-string tags "[:,]+" t)))))
+    (when (owp/get-config-option :organizationp)
+      (plist-put
+       attr-plist :authororg (delete "" (mapcar 'owp/trim-string (split-string (or (owp/read-org-option "AUTHOR")
+                                                                                   user-full-name
+                                                                                   "anonymous"
+                                                                                   ) "[:,]+" t)))))
     (setq category (owp/get-category filename))
     (plist-put attr-plist :category category)
     (setq cat-config (cdr (or (assoc category owp/category-config-alist)
@@ -574,6 +582,105 @@ TODO: improve this function."
                                                                "Unknown Email")))))))))
           (concat tag-dir "index.html") 'html-mode))
      tag-alist)))
+
+(defun owp/generate-author-uri (author-name)
+  "Generate author uri based on AUTHOR-NAME."
+  (concat "/authors/" (encode-string-to-url author-name) "/"))
+
+(defun owp/update-authors (file-attr-list pub-base-dir)
+  "Update author pages. FILE-ATTR-LIST is the list of all file attribute property
+lists. PUB-BASE-DIR is the root publication directory.
+TODO: improve this function."
+  (let ((author-base-dir (expand-file-name "authors/" pub-base-dir))
+        author-alist author-list author-dir)
+    (mapc
+     #'(lambda (attr-plist)
+         (mapc
+          #'(lambda (author-name)
+              (setq author-list (assoc author-name author-alist))
+              (unless author-list
+                (add-to-list 'author-alist (setq author-list `(,author-name))))
+              (nconc author-list (list attr-plist)))
+          (plist-get attr-plist :authororg)))
+     file-attr-list)
+    (unless (file-directory-p author-base-dir)
+      (mkdir author-base-dir t))
+    (string-to-file
+     (mustache-render
+      (owp/get-cache-create
+       :container-template
+       (message "Read container.mustache from file")
+       (file-to-string (concat (owp/get-template-dir) "container.mustache")))
+      (ht ("header"
+           (owp/render-header
+            (ht ("page-title" (concat "Author Index - " (owp/get-config-option :site-main-title)))
+                ("author" (or user-full-name "Unknown Author")))))
+          ("nav" (owp/render-navigation-bar))
+          ("content"
+           (owp/render-content
+            "author-index.mustache"
+            (ht ("authors"
+                 (mapcar
+                  #'(lambda (author-list)
+                      (ht ("author-name" (car author-list))
+                          ("author-uri" (owp/generate-author-uri (car author-list)))
+                          ("count" (number-to-string (length (cdr author-list))))))
+                  author-alist)))))
+          ("footer"
+           (owp/render-footer
+            (ht ("show-meta" nil)
+                ("show-comment" nil)
+                ("author" (or user-full-name "Unknown Author"))
+                ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                ("creator-info" (owp/get-html-creator-string))
+                ("email" (owp/confound-email-address (or user-mail-address
+                                                         "Unknown Email"))))))))
+     (concat author-base-dir "index.html") 'html-mode)
+    (mapc
+     #'(lambda (author-list)
+         (setq author-dir (file-name-as-directory
+                           (concat author-base-dir
+                                   (owp/encode-string-to-url (car author-list)))))
+         (unless (file-directory-p author-dir)
+           (mkdir author-dir t))
+         (owp/string-to-file
+          (owp/relative-url-to-absolute
+           (mustache-render
+            (owp/get-cache-create
+             :container-template
+             (message "Read container.mustache from file")
+             (file-to-string (concat (owp/get-template-dir)
+                                     "container.mustache")))
+            (ht ("header"
+                 (owp/render-header
+                  (ht ("page-title" (concat "Author: " (car author-list)
+                                            " - " (owp/get-config-option :site-main-title)))
+                      ("author" (or user-full-name "Unknown Author")))))
+                ("nav" (owp/render-navigation-bar))
+                ("content"
+                 (owp/render-content
+                  "author.mustache"
+                  (ht ("author-name" (car author-list))
+                      ("posts"
+                       (mapcar
+                        #'(lambda (attr-plist)
+                            (ht ("post-uri" (plist-get attr-plist :uri))
+                                ("post-title" (plist-get attr-plist :title))
+                                ("post-date" (plist-get attr-plist :date))))
+                        (cdr author-list))))))
+                ("footer"
+                 (owp/render-footer
+                  (ht ("show-meta" nil)
+                      ("show-comment" nil)
+                      ("author" (or user-full-name "Unknown Author"))
+                      ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+                      ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+                      ("creator-info" owp/html-creator-string)
+                      ("email" (owp/confound-email (or user-mail-address
+                                                   "Unknown Email")))))))))
+          (concat author-dir "index.html") 'html-mode))
+     author-alist)))
 
 (defun owp/update-rss (file-attr-list pub-base-dir)
   "Update RSS. FILE-ATTR-LIST is the list of all file attribute property lists.
