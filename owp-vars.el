@@ -214,15 +214,6 @@ RSS page of org-website.
 2. Example1: (\"RSS\" \"/rss.xml\")
 
 
-  `:category-ignore-list'
-
-Ignore subdirs/categories for navigation.
-1. Type: list
-2. Example1: (\"themes\" \"assets\")
-
-Names in this list will not showed in webpage navbar.
-
-
   `:summary'
 
 A summary is a statistic page, Which can be used show pages
@@ -231,6 +222,15 @@ it is similar Micorsoft Excel pivot table feature.
 1. Type: alist
 2. Example1: ((\"tags\" :tags) (\"date\" :date) (\"authors\" :authors))
 2. Example2: ((\"按标签分类\" :tags) (\"按时间分类\" :date) (\"按作者分类\" :authors))
+
+
+  `:category-ignore-list'
+
+Ignore subdirs/categories for navigation.
+1. Type: list
+2. Example1: (\"themes\" \"assets\")
+
+Names in this list will not showed in webpage navbar.
 
 
   `:get-title-function'
