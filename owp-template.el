@@ -132,7 +132,8 @@ render from a default hash table."
                                   "\\`https?://\\(.*[a-zA-Z]\\)/?\\'"
                                   site-domain)
                                  (match-string 1 site-domain)
-                               site-domain))))))))
+                               site-domain)))
+          (if (owp/get-config-option :organizationp) (ht ("authors-li" t)) (ht ("avatar" (owp/get-config-option :personal-avatar)))))))))
 
 (defun owp/render-content (&optional template param-table)
   "Render the content on each page. TEMPLATE is the template name for rendering,

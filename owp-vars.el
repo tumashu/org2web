@@ -182,6 +182,11 @@ Determine whether email addresses should be confounded or not.
 When set this option to `t', \"myname@163.com\" will be converted to \"myname <at> 163 <dot> com\"
 
 
+  `:organizationp'
+
+This variable is used to determine whether the site is used by organization or not
+
+
   `:force-absolute-url'
 
 Force convert relative url to absolute url in html files by append site domain.
@@ -367,6 +372,7 @@ You can see fallback value of above option in `owp/config-fallback'"
         :default-category "blog"
         :category-ignore-list ("themes" "assets")
         :confound-email t
+        :organizationp nil
         :force-absolute-url t
         :preparation-function nil
         :get-title-function owp/get-title
