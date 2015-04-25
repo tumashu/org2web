@@ -458,7 +458,7 @@ is the root publication directory."
   (let* ((about-sub-dir
           (replace-regexp-in-string
            "^/" ""
-           (car cdr (owp/get-config-option about))))
+           (car (cdr (owp/get-config-option :about)))))
          (pub-dir (file-name-as-directory
                    (expand-file-name about-sub-dir pub-base-dir))))
     (unless (file-directory-p pub-dir)
