@@ -4,30 +4,30 @@
     <title>Org-webpage</title>
     <link>http://tumashu.github.com/org-webpage</link>
     <description>(Static site senerator based on org mode)</description>
-    <pubDate>六, 04  4月 2015 19:38:05 CST</pubDate>
-    <lastBuildDate>六, 04  4月 2015 19:38:05 CST</lastBuildDate>
+    <pubDate>一, 27  4月 2015 18:03:18 CST</pubDate>
+    <lastBuildDate>一, 27  4月 2015 18:03:18 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>org-webpage static site generator (https://github.com/tumashu/org-webpage)</generator>
 <item>
 <title>org-webpage&#39;s README</title>
-<link>http://tumashu.github.com/org-webpage/documents/2015/04/01/org-webpage&#39;s-readme/</link>
+<link>http://tumashu.github.com/org-webpage/documents/org-webpage&#39;s-readme/</link>
 <description>No Description</description>
-<pubDate>2015-04-04</pubDate>
-<guid>http://tumashu.github.com/org-webpage/documents/2015/04/01/org-webpage&#39;s-readme/</guid>
-</item>
-<item>
-<title>Change Log</title>
-<link>http://tumashu.github.com/org-webpage/documents/2015/04/02/change-log/</link>
-<description>No Description</description>
-<pubDate>2015-04-02</pubDate>
-<guid>http://tumashu.github.com/org-webpage/documents/2015/04/02/change-log/</guid>
+<pubDate>2015-04-25</pubDate>
+<guid>http://tumashu.github.com/org-webpage/documents/org-webpage&#39;s-readme/</guid>
 </item>
 <item>
 <title>Tips of org-webpage</title>
-<link>http://tumashu.github.com/org-webpage/documents/2015/04/01/tips-of-org-webpage/</link>
+<link>http://tumashu.github.com/org-webpage/documents/tips-of-org-webpage/</link>
+<description>No Description</description>
+<pubDate>2015-04-25</pubDate>
+<guid>http://tumashu.github.com/org-webpage/documents/tips-of-org-webpage/</guid>
+</item>
+<item>
+<title>Change Log</title>
+<link>http://tumashu.github.com/org-webpage/documents/change-log/</link>
 <description>No Description</description>
 <pubDate>2015-04-02</pubDate>
-<guid>http://tumashu.github.com/org-webpage/documents/2015/04/01/tips-of-org-webpage/</guid>
+<guid>http://tumashu.github.com/org-webpage/documents/change-log/</guid>
 </item>
 </channel>
 </rss>
