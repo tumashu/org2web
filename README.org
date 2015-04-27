@@ -27,26 +27,17 @@ org-webpage provides similar features with org-page:
 
 The main differents of two projects are as follow:
 
-1. org-page focus on personal blog while org-webpage is main used to
-   generate small project website.
-2. org-page use many customizable variables to configure org-page
-   while org-website use an `org-publish-project-alist' style
-   alist to adjust org-website's behaver.
-
-   Managing multi-site configs in an emacs session with org-website is more
-   simple than with org-page.
-3. org-website can deal with "increment" or "inherit" themes.
-
-   A "increment" theme is a mod theme which only include changed template,
-   css and other files, the files same with base theme doesn't include.
-
-   org-webpage autosearch the same files from base theme when use "increment"
-   theme.
+1. org-page focus on personal blog, while org-webpage is main used to
+   generate project website.
+2. org-webpage's default config is `org-publish-project-alist' style alist,
+   which can manage multi-site configs in an emacs session easily.
+3. org-website find theme-files from a *themes-list* in sequence and same theme-file
+   first found will be used. User can set *fallback theme* with the help of this feature.
 4. org-website include a tiny emacs web server, which can be used to test publish.
 5. ...
 
 
-** Workflow
+* Workflow
 
 1. Specify a git repo where the org source
    files will be on the "source" branch and the generated html files
@@ -80,92 +71,27 @@ management system. For more info about installation, please see
 ** Configuration
 The follow code is [[http://tumashu.github.com][my website]]'s [[https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el][config]], you can adjust and paste it to your =.emacs= file:
 
-#+BEGIN_SRC emacs-lisp :eval no
+#+BEGIN_SRC emacs-lisp
 ;; the following is only needed if you install org-page manually
 (add-to-list 'load-path "path/to/org-webpage")
 
 (require 'org-webpage)
 
-(setq eh-website-op-config
-      `("tumashu.github.com"
-        :repository-directory "~/project/emacs-packages/tumashu.github.com"
-        :site-domain "http://tumashu.github.com/"
-        :site-main-title "Tumashu 的个人小站"
-        :site-sub-title "(九天十地，太上忘情！！！)"
-        :theme (worg)
-        :personal-github-link "https://github.com/tumashu/tumashu.github.com"
-        :personal-avatar "/media/img/horse.jpg"
-        :personal-duoshuo-shortname "tumashu-website"
-        :web-server-docroot "~/.emacs.d/org-webpage-server/tumashu.github.com"
-        :web-server-port 7654))
-
 (add-to-list 'owp/project-config-alist
-             eh-website-op-config)
+             `("tumashu.github.com"
+               :repository-directory "~/project/emacs-packages/tumashu.github.com"
+               :site-domain "http://tumashu.github.com/"
+               :site-main-title "Tumashu 的个人小站"
+               :site-sub-title "(九天十地，太上忘情！！！)"
+               :theme (worg)
+               :source-browse-url ("Github" "https://github.com/tumashu/tumashu.github.com")
+               :personal-avatar "/media/img/horse.jpg"
+               :personal-duoshuo-shortname "tumashu-website"
+               :web-server-docroot "~/.emacs.d/org-webpage-server/tumashu.github.com"
+               :web-server-port 7654))
 #+END_SRC
 
-The below is a more complex example, which is use by [[http://tumashu.github.io/chinese-pyim/][chinese-pyim]] package's [[https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el][config]]:
-
-#+BEGIN_SRC emacs-lisp :eval no
-(defun pyim-path (&optional filename)
-  (concat (file-name-directory
-           (locate-library "chinese-pyim")) (or filename "")))
-
-(setq pyim-website-org-webpage-config
-      `("chinese-pyim"
-        :repository-directory ,(pyim-path)
-        :site-domain "http://tumashu.github.com/chinese-pyim"
-        :site-main-title "Chinese-pyim"
-        :site-sub-title "(一个 emacs 环境下的中文拼音输入法)"
-        :repository-org-branch "master"
-        :repository-html-branch "gh-pages"
-        :default-category "documents"
-        :theme (worg)
-        :personal-github-link "https://github.com/tumashu/chinese-pyim"
-        :personal-avatar "/media/img/horse.jpg"
-        :personal-duoshuo-shortname "tumashu-website"
-        :preparation-function pyim-preparation-org-files
-        :addition-files-function owp/git-ignored-files
-        :org-export-function pyim-org-export-function
-        :web-server-docroot "~/.emacs.d/org-webpage-server/chinese-pyim"
-        :web-server-port 9876
-        ))
-
-(add-to-list 'owp/project-config-alist
-             pyim-website-org-webpage-config)
-
-(defun pyim-devtools-generate-readme-and-index ()
-  (interactive)
-  (let* ((el-file (concat (f-parent (locate-library (symbol-name 'chinese-pyim)))
-                          "/chinese-pyim.el"))
-         (org-file (concat (file-name-sans-extension el-file) ".org")))
-    (lentic-doc-orgify-if-necessary el-file)
-    (if (file-exists-p org-file)
-        (with-current-buffer (find-file-noselect org-file)
-          (let ((org-export-filter-paragraph-functions '(pyim-devtools-org-clean-space))
-                (org-export-select-tags '("README"))
-                (indent-tabs-mode nil)
-                (tab-width 4))
-            (org-export-to-file 'gfm "README.md")
-            (org-export-to-file 'org "index.org")))
-      (message "Generate README fail!!!"))))
-
-(defun pyim-org-export-function ()
-  "A function with can export org file to html."
-  (let ((org-export-filter-paragraph-functions
-         '(pyim-devtools-org-clean-space))
-        (org-export-select-tags '("README" "devel"))
-        (indent-tabs-mode nil)
-        (tab-width 4))
-    (org-export-as 'html nil nil t nil)))
-
-(defun pyim-preparation-org-files ()
-  "Generate org files by lentic."
-  (message "Generating org files by lentic ...")
-  (lentic-doc-orgify-package 'chinese-pyim)
-  (pyim-devtools-generate-readme-and-index))
-
-#+END_SRC
-
+[[http://tumashu.github.io/chinese-pyim/][Chinese-pyim]] 's org-webpage [[https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el][config]] is a more complex example.
 
 You can find more config options and theirs default values by commands:
 
@@ -173,7 +99,6 @@ You can find more config options and theirs default values by commands:
 C-h v owp/project-config-alist
 C-h v owp/config-fallback
 #+END_EXAMPLE
-
 
 ** Publication
 The simplest way is run:

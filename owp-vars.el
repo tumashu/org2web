@@ -136,11 +136,11 @@ The theme used for page generation.
 When set this option to `nil', default theme will be used.
 
 
-  `:personal-github-link'
+  `:source-browse-url'
 
 The personal github link.
-1. Type: string
-2. Example1: \"https://github.com/tumashu/org-webpage\"
+1. Type: list
+2. Example1: (\"GitHub\" \"https://github.com/tumashu/org-webpage\")
 
 
   `:personal-avatar'
@@ -199,6 +199,29 @@ If org fils don't set category, default category will be used.
 2. Example1: \"blog\"
 3. Example2: \"wiki\"
 4. Example3: \"documents\"
+
+  `:about'
+
+About page of org-website.
+1. Type: list
+2. Example1: (\"About\" \"/about/\")
+
+
+  `:rss'
+
+RSS page of org-website.
+1. Type: list
+2. Example1: (\"RSS\" \"/rss.xml\")
+
+
+  `:summary'
+
+A summary is a statistic page, Which can be used show pages
+based on \"tags\" , \"data\" , \"author\" and so on.
+it is similar Micorsoft Excel pivot table feature.
+1. Type: alist
+2. Example1: ((\"tags\" :tags) (\"date\" :date) (\"authors\" :authors))
+2. Example2: ((\"按标签分类\" :tags) (\"按时间分类\" :date) (\"按作者分类\" :authors))
 
 
   `:category-ignore-list'
@@ -295,7 +318,7 @@ You can see fallback value of above option in `owp/config-fallback'"
   "The directory where org-webpage is loaded from.")
 
 (defvar owp/category-config-alist
-  '(("blog" ;; this is the default configuration
+  '(("blog"
      :show-meta t
      :show-comment t
      :uri-generator owp/generate-uri
@@ -359,13 +382,16 @@ You can see fallback value of above option in `owp/config-fallback'"
         :repository-html-branch "master"
         :theme-root-directory nil
         :theme (default)
-        :personal-github-link "https://github.com/tumashu/org-webpage"
+        :source-browse-url nil
         :personal-avatar nil
         :personal-disqus-shortname nil
         :personal-duoshuo-shortname nil
         :personal-google-analytics-id nil
         :default-category "blog"
+        :about ("About" "/about/")
+        :rss ("RSS" "/rss.xml")
         :category-ignore-list ("themes" "assets")
+        :summary (("tags" :tags))
         :confound-email t
         :force-absolute-url t
         :preparation-function nil

@@ -75,13 +75,18 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
                (expand-file-name "index.org" repo-dir)
                files-list)
         (owp/generate-default-index file-attr-list pub-root-dir))
-      (unless (member
-               (expand-file-name "about.org" repo-dir)
-               files-list)
+      (when (and (owp/get-config-option :about)
+                 (not (member
+                       (expand-file-name "about.org" repo-dir)
+                       files-list)))
         (owp/generate-default-about pub-root-dir))
       (owp/update-category-index file-attr-list pub-root-dir)
-      (owp/update-rss file-attr-list pub-root-dir)
-      (owp/update-tags file-attr-list pub-root-dir))))
+      (when (owp/get-config-option :rss)
+        (owp/update-rss file-attr-list pub-root-dir))
+      (mapc
+       #'(lambda (name)
+           (owp/update-summary file-attr-list pub-root-dir name))
+       (mapcar #'car (owp/get-config-option :summary))))))
 
 (defun owp/get-org-file-options (pub-root-dir do-pub)
   "Retrieve all needed options for org file opened in current buffer.
@@ -112,6 +117,11 @@ content of the buffer will be converted into html."
       (plist-put
        attr-plist :tags (delete "" (mapcar 'owp/trim-string
                                            (split-string tags "[:,]+" t)))))
+    (setq authors (owp/read-org-option "AUTHOR"))
+    (when authors
+      (plist-put
+       attr-plist :authors (delete "" (mapcar 'owp/trim-string
+                                              (split-string authors "[:,]+" t)))))
     (setq category (owp/get-category filename))
     (plist-put attr-plist :category category)
     (setq cat-config (cdr (or (assoc category owp/category-config-alist)
@@ -445,8 +455,12 @@ publication directory."
 (defun owp/generate-default-about (pub-base-dir)
   "Generate default about page, only if about.org does not exist. PUB-BASE-DIR
 is the root publication directory."
-  (let ((pub-dir (file-name-as-directory
-                  (expand-file-name "about/" pub-base-dir))))
+  (let* ((about-sub-dir
+          (replace-regexp-in-string
+           "^/" ""
+           (car (cdr (owp/get-config-option :about)))))
+         (pub-dir (file-name-as-directory
+                   (expand-file-name about-sub-dir pub-base-dir))))
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
     (owp/string-to-file
@@ -477,28 +491,34 @@ is the root publication directory."
                                                           "Unknown Email")))))))))
      (concat pub-dir "index.html") 'html-mode)))
 
-(defun owp/generate-tag-uri (tag-name)
-  "Generate tag uri based on TAG-NAME."
-  (concat "/tags/" (owp/encode-string-to-url tag-name) "/"))
+(defun owp/generate-summary-uri (summary-name summary-item-name)
+  "Generate summary uri based on `summary-name' and `summary-item-name'."
+  (concat "/" summary-name "/" (owp/encode-string-to-url summary-item-name) "/"))
 
-(defun owp/update-tags (file-attr-list pub-base-dir)
-  "Update tag pages. FILE-ATTR-LIST is the list of all file attribute property
-lists. PUB-BASE-DIR is the root publication directory.
+(defun owp/update-summary (file-attr-list pub-base-dir summary-name)
+  "Update summary pages which name is `summary-name', FILE-ATTR-LIST
+is the list of all file attribute property lists. PUB-BASE-DIR is the
+root publication directory.
+
 TODO: improve this function."
-  (let ((tag-base-dir (expand-file-name "tags/" pub-base-dir))
-        tag-alist tag-list tag-dir)
+  (let* ((summary-base-dir (expand-file-name
+                            (concat summary-name "/")
+                            pub-base-dir))
+         summary-alist summary-list summary-dir)
     (mapc
      #'(lambda (attr-plist)
          (mapc
-          #'(lambda (tag-name)
-              (setq tag-list (assoc tag-name tag-alist))
-              (unless tag-list
-                (add-to-list 'tag-alist (setq tag-list `(,tag-name))))
-              (nconc tag-list (list attr-plist)))
-          (plist-get attr-plist :tags)))
+          #'(lambda (name)
+              (setq summary-list (assoc name summary-alist))
+              (unless summary-list
+                (add-to-list 'summary-alist (setq summary-list `(,name))))
+              (nconc summary-list (list attr-plist)))
+          (let* ((summary-attr (car (cdr (assoc summary-name (owp/get-config-option :summary)))))
+                 (elem (plist-get attr-plist summary-attr)))
+            (if (listp elem) elem (list elem)))))
      file-attr-list)
-    (unless (file-directory-p tag-base-dir)
-      (mkdir tag-base-dir t))
+    (unless (file-directory-p summary-base-dir)
+      (mkdir summary-base-dir t))
     (owp/string-to-file
      (owp/relative-url-to-absolute
       (mustache-render
@@ -508,19 +528,22 @@ TODO: improve this function."
         (owp/file-to-string (owp/get-template-file "container.mustache")))
        (ht ("header"
             (owp/render-header
-             (ht ("page-title" (concat "Tag Index - " (owp/get-config-option :site-main-title)))
+             (ht ("page-title" (concat (capitalize summary-name)
+                                       " Index - "
+                                       (owp/get-config-option :site-main-title)))
                  ("author" (or user-full-name "Unknown Author")))))
            ("nav" (owp/render-navigation-bar))
            ("content"
             (owp/render-content
-             "tag-index.mustache"
-             (ht ("tags"
+             "summary-index.mustache"
+             (ht ("summary-name" (capitalize summary-name))
+                 ("summary"
                   (mapcar
-                   #'(lambda (tag-list)
-                       (ht ("tag-name" (car tag-list))
-                           ("tag-uri" (owp/generate-tag-uri (car tag-list)))
-                           ("count" (number-to-string (length (cdr tag-list))))))
-                   tag-alist)))))
+                   #'(lambda (summary-list)
+                       (ht ("summary-item-name" (car summary-list))
+                           ("summary-item-uri" (owp/generate-summary-uri summary-name (car summary-list)))
+                           ("count" (number-to-string (length (cdr summary-list))))))
+                   summary-alist)))))
            ("footer"
             (owp/render-footer
              (ht ("show-meta" nil)
@@ -531,14 +554,14 @@ TODO: improve this function."
                  ("creator-info" (owp/get-html-creator-string))
                  ("email" (owp/confound-email-address (or user-mail-address
                                                           "Unknown Email")))))))))
-     (concat tag-base-dir "index.html") 'html-mode)
+     (concat summary-base-dir "index.html") 'html-mode)
     (mapc
-     #'(lambda (tag-list)
-         (setq tag-dir (file-name-as-directory
-                        (concat tag-base-dir
-                                (owp/encode-string-to-url (car tag-list)))))
-         (unless (file-directory-p tag-dir)
-           (mkdir tag-dir t))
+     #'(lambda (summary-list)
+         (setq summary-dir (file-name-as-directory
+                            (concat summary-base-dir
+                                    (owp/encode-string-to-url (car summary-list)))))
+         (unless (file-directory-p summary-dir)
+           (mkdir summary-dir t))
          (owp/string-to-file
           (owp/relative-url-to-absolute
            (mustache-render
@@ -548,20 +571,21 @@ TODO: improve this function."
              (owp/file-to-string (owp/get-template-file "container.mustache")))
             (ht ("header"
                  (owp/render-header
-                  (ht ("page-title" (concat "Tag: " (car tag-list)
+                  (ht ("page-title" (concat (capitalize summary-name) ": " (car summary-list)
                                             " - " (owp/get-config-option :site-main-title)))
                       ("author" (or user-full-name "Unknown Author")))))
                 ("nav" (owp/render-navigation-bar))
                 ("content"
                  (owp/render-content
-                  "tag.mustache"
-                  (ht ("tag-name" (car tag-list))
+                  "summary.mustache"
+                  (ht ("summary-name" (capitalize summary-name))
+                      ("summary-item-name" (car summary-list))
                       ("posts"
                        (mapcar
                         #'(lambda (attr-plist)
                             (ht ("post-uri" (plist-get attr-plist :uri))
                                 ("post-title" (plist-get attr-plist :title))))
-                        (cdr tag-list))))))
+                        (cdr summary-list))))))
                 ("footer"
                  (owp/render-footer
                   (ht ("show-meta" nil)
@@ -572,24 +596,34 @@ TODO: improve this function."
                       ("creator-info" (owp/get-html-creator-string))
                       ("email" (owp/confound-email-address (or user-mail-address
                                                                "Unknown Email")))))))))
-          (concat tag-dir "index.html") 'html-mode))
-     tag-alist)))
+          (concat summary-dir "index.html") 'html-mode))
+     summary-alist)))
 
 (defun owp/update-rss (file-attr-list pub-base-dir)
   "Update RSS. FILE-ATTR-LIST is the list of all file attribute property lists.
 PUB-BASE-DIR is the root publication directory."
-  (let ((last-10-posts
-         (-take 10 (--sort (>= 0 (owp/compare-standard-date
-                                  (owp/fix-timestamp-string
-                                   (plist-get it :mod-date))
-                                  (owp/fix-timestamp-string
-                                   (plist-get other :mod-date))))
-                           (--filter (not (or
-                                           (string= (plist-get it :category)
-                                                    "index")
-                                           (string= (plist-get it :category)
-                                                    "about")))
-                                     file-attr-list)))))
+  (let* ((rss-file-name
+          (replace-regexp-in-string
+           "^/" ""
+           (car (cdr (owp/get-config-option :rss)))))
+         (rss-file
+          (concat (file-name-as-directory pub-base-dir) rss-file-name))
+         (rss-base-dir
+          (file-name-directory rss-file))
+         (last-10-posts
+          (-take 10 (--sort (>= 0 (owp/compare-standard-date
+                                   (owp/fix-timestamp-string
+                                    (plist-get it :mod-date))
+                                   (owp/fix-timestamp-string
+                                    (plist-get other :mod-date))))
+                            (--filter (not (or
+                                            (string= (plist-get it :category)
+                                                     "index")
+                                            (string= (plist-get it :category)
+                                                     "about")))
+                                      file-attr-list)))))
+    (unless (file-directory-p rss-base-dir)
+      (mkdir rss-base-dir t))
     (owp/string-to-file
      (owp/relative-url-to-absolute
       (mustache-render
@@ -603,7 +637,7 @@ PUB-BASE-DIR is the root publication directory."
                                ("item-description" (plist-get it :description))
                                ("item-update-date" (plist-get it :mod-date)))
                            last-10-posts)))))
-     (concat (file-name-as-directory pub-base-dir) "rss.xml"))))
+     rss-file)))
 
 
 (provide 'owp-export)

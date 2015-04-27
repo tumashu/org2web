@@ -40,7 +40,7 @@
     :default-category "documents"
     :theme (worg killjs)
     :force-absolute-url t
-    :personal-github-link "https://github.com/tumashu/org-webpage"
+    :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
     :personal-avatar "/media/img/horse.jpg"
     :personal-duoshuo-shortname "tumashu-website"
     :addition-files-function owp/git-ignored-files

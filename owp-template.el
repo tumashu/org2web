@@ -126,7 +126,28 @@ render from a default hash table."
                                (string= cat "about")))
                        (owp/get-category nil))
                       'string-lessp)))
-              ("github" (owp/get-config-option :personal-github-link))
+              ("nav-summary"
+               (mapcar
+                #'(lambda (cat)
+                    (ht ("summary-item-uri"
+                         (concat "/" (owp/encode-string-to-url cat) "/"))
+                        ("summary-item-name" (capitalize cat))))
+                (mapcar #'car (owp/get-config-option :summary))))
+              ("nav-source-browse"
+               (let ((list (owp/get-config-option :source-browse-url)))
+                 (when list
+                   (ht ("source-browse-name" (car list))
+                       ("source-browse-uri" (car (cdr list)))))))
+              ("nav-about"
+               (let ((list (owp/get-config-option :about)))
+                 (when list
+                   (ht ("about-name" (car list))
+                       ("about-uri" (car (cdr list)))))))
+              ("nav-rss"
+               (let ((list (owp/get-config-option :rss)))
+                 (when list
+                   (ht ("rss-name" (car list))
+                       ("rss-uri" (car (cdr list)))))))
               ("avatar" (owp/get-config-option :personal-avatar))
               ("site-domain" (if (string-match
                                   "\\`https?://\\(.*[a-zA-Z]\\)/?\\'"
@@ -178,7 +199,7 @@ similar to `owp/render-header'."
               (tags (if tags
                         (mapcar
                          #'(lambda (tag-name)
-                             (ht ("link" (owp/generate-tag-uri tag-name))
+                             (ht ("link" (owp/generate-summary-uri "Tags" tag-name))
                                  ("name" tag-name)))
                          (delete "" (mapcar 'owp/trim-string (split-string tags "[:,]+" t))))))
               (category (owp/get-category filename))
