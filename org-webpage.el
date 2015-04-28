@@ -268,7 +268,8 @@ month and day): " (unless (string= i "")
      (list i u k a d)))
   (if (not (bolp)) (newline))
   (insert (format
-           "#+TITLE:       %s
+           "# -*- coding: utf-8-unix; -*-
+#+TITLE:       %s
 #+AUTHOR:      %s
 #+EMAIL:       %s
 #+DATE:        %s
