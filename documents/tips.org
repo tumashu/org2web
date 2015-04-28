@@ -11,7 +11,7 @@ dependencies listed in *README.org*. Once this has been completed,
 clone the repo:
 
 #+BEGIN_EXAMPLE
-git clone https://github.com/tumashu/org-webpage.it
+git clone https://github.com/tumashu/org-webpage.git
 #+END_EXAMPLE
 
 After that, please remember to add this location to your emacs'
