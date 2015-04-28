@@ -176,7 +176,7 @@ The personal duoshuo shortname.
   `:confound-email'
 
 Determine whether email addresses should be confounded or not.
-1. Type: boolern
+1. Type: boolean
 2. Example1: t
 
 When set this option to `t', \"myname@163.com\" will be converted to \"myname <at> 163 <dot> com\"
@@ -185,7 +185,7 @@ When set this option to `t', \"myname@163.com\" will be converted to \"myname <a
   `:force-absolute-url'
 
 Force convert relative url to absolute url in html files by append site domain.
-1. Type: boolern
+1. Type: boolean
 2. Example1: t
 
 When set this option to `t', all url like \"/path/to/file.html\" will be
