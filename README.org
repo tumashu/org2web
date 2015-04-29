@@ -36,7 +36,6 @@ The main differents of two projects are as follow:
 4. org-website include a tiny emacs web server, which can be used to test publish.
 5. ...
 
-
 * Workflow
 
 1. Specify a git repo where the org source
