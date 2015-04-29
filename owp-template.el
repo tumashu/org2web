@@ -196,10 +196,12 @@ similar to `owp/render-header'."
                      (or (owp/read-org-option "DATE")
                          (format-time-string "%Y-%m-%d"))))
               (tags (owp/read-org-option "TAGS"))
-              (tags (if tags
+              (tags (if tags  ;; Bug: when set option `:summary' to `nil', can't deal with.
                         (mapcar
                          #'(lambda (tag-name)
-                             (ht ("link" (owp/generate-summary-uri "tags" tag-name))
+                             (ht ("link" (owp/generate-summary-uri
+                                          (or (car (rassoc '(:tags) (owp/get-config-option :summary)))
+                                              "tags") tag-name))
                                  ("name" tag-name)))
                          (delete "" (mapcar 'owp/trim-string (split-string tags "[:,]+" t))))))
               (category (owp/get-category filename))
