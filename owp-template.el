@@ -199,7 +199,7 @@ similar to `owp/render-header'."
               (tags (if tags
                         (mapcar
                          #'(lambda (tag-name)
-                             (ht ("link" (owp/generate-summary-uri "Tags" tag-name))
+                             (ht ("link" (owp/generate-summary-uri "tags" tag-name))
                                  ("name" tag-name)))
                          (delete "" (mapcar 'owp/trim-string (split-string tags "[:,]+" t))))))
               (category (owp/get-category filename))
