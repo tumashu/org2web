@@ -56,7 +56,6 @@
 (require 'owp-util)
 (require 'owp-vars)
 (require 'owp-config)
-(require 'owp-git)
 (require 'owp-resource)
 (require 'owp-export)
 (require 'owp-web-server)
@@ -65,10 +64,7 @@
 
 (defconst org-webpage-version "0.1")
 
-(defun owp/do-publication (&optional project-name
-                                     force-all
-                                     base-git-commit pub-base-dir
-                                     auto-commit auto-push)
+(defun owp/do-publication (&optional project-name publishing-directory)
   "The main entrance of org-webpage. The entire procedure is:
 1) verify configuration
 2) read changed files on \"org branch\" of \"repository directory\",
@@ -87,24 +83,15 @@
    NOT recommended, and a manual commit is much better
 5) if PUB-BASE-DIR is nil, AUTO-COMMIT is non-nil, and AUTO-PUSH is non-nil,
 then the \"html-branch\"  will be pushed to remote repo."
-  (interactive
-   (let* ((j (or owp/default-project-name
-                 (completing-read "Which project do you want to publish? "
-                                  (delete-dups
-                                   (mapcar 'car owp/project-config-alist))
-                                  nil t nil nil owp/last-project-name)))
-          (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
-          (b (unless f (read-string "Base git commit: " "HEAD~1")))
-          (p (progn (setq owp/current-project-name j)
-                    (setq owp/last-project-name j)
-                    (when (y-or-n-p
-                           "Publish to:  [Yes] Web server docroot, [No] Original repo. ")
-                      (expand-file-name (owp/get-config-option :web-server-docroot)))))
-          (a (when (and (not p))
-               (y-or-n-p "Auto commit to repo? ")))
-          (u (when (and a (not p))
-               (y-or-n-p "Auto push to remote repo? "))))
-     (list j f b p a u)))
+  (interactive)
+  (setq project-name (or project-name
+                         owp/default-project-name
+                         (completing-read "Which project do you want to publish? "
+                                          (delete-dups
+                                           (mapcar 'car owp/project-config-alist))
+                                          nil t nil nil owp/last-project-name)))
+  (setq owp/current-project-name project-name)
+  (setq owp/last-project-name project-name)
 
   (let ((preparation-function
          (owp/get-config-option :preparation-function)))
@@ -114,73 +101,38 @@ then the \"html-branch\"  will be pushed to remote repo."
   (owp/verify-configuration)
   (setq owp/item-cache nil)
   (let* ((repo-dir (owp/get-repository-directory))
-         (org-branch (owp/get-config-option :repository-org-branch))
-         (html-branch (owp/get-config-option :repository-html-branch))
-         (repo-files-function (owp/get-config-option :repo-files-function))
-         (addition-files-function (owp/get-config-option :addition-files-function))
-         (orig-branch (owp/git-branch-name repo-dir))
-         (to-repo (not (stringp pub-base-dir)))
-         (store-dir (if to-repo "~/.owp-tmp/" pub-base-dir)) ; TODO customization
-         (owp/publish-to-repository to-repo)
-         repo-files addition-files changed-files remote-repos)
-    (owp/git-change-branch repo-dir org-branch)
-    (owp/prepare-theme-resources store-dir)
+         (pub-dir (or publishing-directory
+                      (owp/get-publishing-directory)
+                      (concat (file-name-as-directory owp/temporary-directory)
+                              project-name)))
+         (site-domain (owp/get-site-domain))
+         repo-files repo-files-history changed-files)
+    (when (file-directory-p pub-dir)
+      (delete-directory pub-dir t))
+    (make-directory pub-dir t)
+    (owp/prepare-theme-resources pub-dir)
     (setq repo-files
-          (when (functionp repo-files-function)
-            (funcall repo-files-function repo-dir)))
-    (setq addition-files
-          (when (functionp addition-files-function)
-            (funcall addition-files-function repo-dir)))
-    (setq changed-files (if force-all
-                            `(:update ,repo-files :delete nil)
-                          (owp/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
-    (owp/publish-changes repo-files addition-files changed-files store-dir)
-    (when to-repo
-      (owp/git-change-branch repo-dir html-branch)
-      (copy-directory store-dir repo-dir t t t)
-      (delete-directory store-dir t))
-    (when (and to-repo auto-commit)
-      (owp/git-commit-changes repo-dir (concat "Update published html files, "
-                                               "committed by org-webpage."))
-      (when auto-push
-        (setq remote-repos (owp/git-remote-name repo-dir))
-        (if (not remote-repos)
-            (message "No valid remote repository found.")
-          (let (repo)
-            (if (> (length remote-repos) 1)
-                (setq repo (read-string
-                            (format "Which repo to push %s: "
-                                    (prin1-to-string remote-repos))
-                            (car remote-repos)))
-              (setq repo (car remote-repos)))
-            (if (not (member repo remote-repos))
-                (message "Invalid remote repository '%s'." repo)
-              (owp/git-push-remote repo-dir
-                                   repo
-                                   html-branch)))))
-      (owp/git-change-branch repo-dir orig-branch))
-    (if to-repo
-        (message "Publication finished: on branch '%s' of repository '%s'."
-                 html-branch repo-dir)
-      (message "Publication finished, output directory: %s." pub-base-dir)
-      (when (called-interactively-p 'any)
-        (owp/web-server-browse)))
+          (owp/directory-files-recursively repo-dir nil ".org$"))
+    (setq repo-files-history
+          (let* ((buffer (url-retrieve-synchronously
+                          (concat (file-name-as-directory site-domain) "ls-R.el")))
+                 (buffer-string (save-excursion
+                                  (set-buffer buffer)
+                                  (buffer-string))))
+            (read buffer-string)))
+    (setq changed-files
+          `(:delete nil :update ,(delq nil
+                                       (mapcar
+                                        #'(lambda (file)
+                                            (let ((file-info (assoc (file-relative-name file repo-dir)
+                                                                    repo-files-history)))
+                                              (unless (and file-info
+                                                           (string= (owp/get-modification-time file)
+                                                                    (nth 1 file-info)))
+                                                file)))
+                                        repo-files))))
+    (owp/publish-changes repo-files changed-files pub-dir)
     (setq owp/current-project-name nil)))
-
-(defun owp/new-repository (repo-dir)
-  "Generate a new git repository in directory REPO-DIR, which can be
-perfectly manipulated by org-webpage."
-  (interactive
-   (list (read-directory-name
-          "Specify a directory to become the repository: " nil nil nil)))
-  (owp/git-init-repo repo-dir)
-  (owp/generate-readme repo-dir)
-  (owp/git-commit-changes repo-dir "initial commit")
-  (owp/git-new-branch repo-dir (owp/get-config-option :repository-org-branch))
-  (owp/generate-index repo-dir)
-  (owp/git-commit-changes repo-dir "add source index.org")
-  (owp/generate-about repo-dir)
-  (owp/git-commit-changes repo-dir "add source about.org"))
 
 (defun owp/verify-configuration ()
   "Ensure all required configuration fields are properly configured, include:
@@ -188,13 +140,11 @@ perfectly manipulated by org-webpage."
 2.  `:site-domain': <required>
 3.  `:personal-disqus-shortname': <optional>
 4.  `:personal-duoshuo-shortname': <optional>
-5.  `:repository-org-branch': [optional] (but customization recommended)
-6.  `:repository-html-branch': [optional] (but customization recommended)
-7.  `:site-main-title': [optional] (but customization recommanded)
-8.  `:site-sub-title': [optional] (but customization recommanded)
-9.  `:personal-github-link': [optional] (but customization recommended)
-10. `:personal-google-analytics-id': [optional] (but customization recommended)
-11. `:theme': [optional]"
+5.  `:site-main-title': [optional] (but customization recommanded)
+6.  `:site-sub-title': [optional] (but customization recommanded)
+7.  `:personal-github-link': [optional] (but customization recommended)
+8.  `:personal-google-analytics-id': [optional] (but customization recommended)
+9.  `:theme': [optional]"
   (unless (member owp/current-project-name
                   (mapcar 'car owp/project-config-alist))
     (error "Can't find project: \"%s\"" owp/current-project-name))

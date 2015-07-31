@@ -34,24 +34,20 @@
 (require 'owp-util)
 (require 'owp-vars)
 (require 'owp-config)
-(require 'owp-git)
 (require 'owp-template)
 
 
-(defun owp/publish-changes (files-list addition-list change-plist pub-root-dir)
+(defun owp/publish-changes (files-list change-plist pub-root-dir)
   "This function is for:
 1. publish changed org files to html
 2. delete html files which are relevant to deleted org files (NOT implemented)
 3. update index pages
 4. regenerate tag pages
-`files-list' and `addition-list' contain paths of org files, `change-plist'
+`files-list' contain paths of org files, `change-plist'
 contains two properties, one is :update for files to be updated, another is :delete
 for files to be deleted. `pub-root-dir' is the root publication directory."
   (let* ((repo-dir (owp/get-repository-directory))
-         (files-list (delete-dups (append files-list addition-list)))
-         (upd-list (delete-dups
-                    (append (plist-get change-plist :update)
-                            addition-list)))
+         (upd-list (plist-get change-plist :update))
          (del-list (plist-get change-plist :delete))
          visiting file-buffer attr-cell file-attr-list)
     (when (or upd-list del-list)
@@ -71,6 +67,14 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
                (owp/handle-deleted-file org-file)))
            (or visiting (kill-buffer file-buffer)))
        files-list)
+
+      (with-temp-buffer
+        (insert (format "%S" (mapcar #'(lambda (x)
+                                         (list (file-relative-name x repo-dir)
+                                               (owp/get-modification-time x)))
+                                     files-list)))
+        (write-file (concat (file-name-as-directory pub-root-dir) "ls-R.el") t))
+
       (unless (member
                (expand-file-name "index.org" repo-dir)
                files-list)
@@ -100,12 +104,9 @@ content of the buffer will be converted into html."
                                           (format-time-string "%Y-%m-%d")))
                               :mod-date ,(if (not filename)
                                              (format-time-string "%Y-%m-%d")
-                                           (or (owp/git-last-change-date
-                                                repo-dir
-                                                filename)
-                                               (format-time-string
-                                                "%Y-%m-%d"
-                                                (nth 5 (file-attributes filename)))))
+                                           (format-time-string
+                                            "%Y-%m-%d"
+                                            (nth 5 (file-attributes filename))))
                               :description ,(or (owp/read-org-option "DESCRIPTION")
                                                 "No Description")
                               :thumb ,(owp/read-org-option "THUMBNAIL")))
@@ -254,8 +255,7 @@ file's category is based on its name and its root folder name."
     (with-temp-buffer
       (insert html-content)
       (goto-char (point-min))
-      (when (and owp/publish-to-repository
-                 (owp/get-config-option :force-absolute-url))
+      (when (owp/get-config-option :force-absolute-url)
         (while (re-search-forward
                 ;;; TODO: not only links need to convert, but also inline
                 ;;; images, may add others later

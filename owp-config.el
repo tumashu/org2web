@@ -50,6 +50,13 @@ if `option' is not found, get fallback value from
       (file-name-as-directory
        (expand-file-name dir)))))
 
+(defun owp/get-publishing-directory ()
+  "The function, which can return publishing directory string."
+  (let ((dir (owp/get-config-option :publishing-directory)))
+    (when dir
+      (file-name-as-directory
+       (expand-file-name dir)))))
+
 (defun owp/get-site-domain ()
   "The function, which can return site-domain string."
   (let ((site-domain (owp/get-config-option :site-domain)))

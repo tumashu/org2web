@@ -42,6 +42,11 @@ and `owp/new-post' will directly add new post to this project."
   :group 'org-webpage
   :type 'string)
 
+(defcustom owp/temporary-directory "~/.emacs.d/owp-temp.d/"
+  "Temporary directory used by org-webpage."
+  :group 'org-webpage
+  :type 'string)
+
 (defcustom owp/project-config-alist nil
   "Association list to control org-webpage publishing behavior.
 
@@ -58,11 +63,15 @@ Most properties are optional, but some should always be set:
 
   `:repository-directory'
 
-The git repository directory, where org files stored on branch
-`:repository-org-branch', and generated html files stored on branch
-`:repository-html-branch'.
+The repository directory, which containing publishing org files.
 1. Type: string
 2. Example1: \"~/.emacs.d/projects/tumashu.github.com/\"
+
+
+  `:publishing-directory'
+
+Directory (possibly remote) where output files will be
+published.
 
 
   `:site-domain'
@@ -93,24 +102,6 @@ Function to be called before publishing this project.  This may also
 be a list of functions.
 1. Type: function
 2. Example: eh-convert-el-to-org
-
-
-  `:repository-org-branch'
-
-The branch where org files stored on, it is within repository presented by
-`:repository-directory'.
-1. Type: string
-2. Example1: \"source\"
-3. Example2: \"master\"
-
-
-  `:repository-html-branch'
-
-The branch where generated html files stored on, it is within repository
-presented by `:repository-directory'.
-1. Type: string
-2. Example1: \"master\"
-3. Example2: \"gh-pages\"
 
 
   `:theme-root-directory'
@@ -262,22 +253,6 @@ Information about the creator of the HTML document.
 1. Type: string
 2. Example1: \"This is an example creator string\"
 
-
-  `:repo-files-function'
-
-The function used to get all org files exported.
-1. Type: function
-2. Example1: owp/git-all-files
-
-
-  `:addition-files-function'
-
-The function used to get addition org files exported, for example:
-org files ignored by git, which are generated from other files.
-1. Type: function
-2. Example1: owp/addition-all-files
-
-
   `:web-server-docroot'
 
 org-webpage can start a web server to test publish, this
@@ -378,8 +353,6 @@ You can see fallback value of above option in `owp/config-fallback'"
         :site-domain nil
         :site-main-title "org-webpage"
         :site-sub-title "static site generator"
-        :repository-org-branch "source"
-        :repository-html-branch "master"
         :theme-root-directory nil
         :theme (default)
         :source-browse-url nil
@@ -397,8 +370,6 @@ You can see fallback value of above option in `owp/config-fallback'"
         :preparation-function nil
         :get-title-function owp/get-title
         :retrieve-category-function owp/get-file-category
-        :repo-files-function owp/git-all-files
-        :addition-files-function nil
         :org-export-function owp/default-org-export
         :web-server-docroot "~/.emacs.d/org-webpage-server/default"
         :web-server-port 9876

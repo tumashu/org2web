@@ -31,6 +31,26 @@
 (require 'owp-vars)
 (require 'owp-config)
 
+(defun owp/directory-files-recursively (directory &optional type regexp)
+  "recursively list all the files in a directory"
+  (let* ((directory (or directory default-directory))
+         (regexp  (if regexp regexp ".*"))
+         (predfunc (case type
+                     (dir 'file-directory-p)
+                     (file 'file-regular-p)
+                     (otherwise 'identity)))
+         (files (delete-if
+                 (lambda (s)
+                   (string-match (rx bol (repeat 1 2 ".") eol)
+                                 (file-name-nondirectory s)))
+                 (directory-files directory t nil t))))
+    (loop for file in files
+          when (and (funcall predfunc file)
+                    (string-match regexp (file-name-nondirectory file)))
+          collect file into ret
+          when (file-directory-p file)
+          nconc (eh-directory-files-recursively file type regexp) into ret
+          finally return ret)))
 
 (defun owp/compare-standard-date (date1 date2)
   "Compare two standard ISO 8601 format dates, format is as below:
@@ -53,6 +73,12 @@
                    (t (cond ((< day1 day2) 1)
                             ((> day1 day2) -1)
                             (t 0))))))))
+
+(defun owp/get-modification-time (file)
+  "Get file modification time."
+  (format-time-string
+   "%Y-%m-%d %H:%M:%S"
+   (nth 5 (file-attributes file))))
 
 (defun owp/fix-timestamp-string (date-string)
   "This is a piece of code copied from Xah Lee (I modified a little):

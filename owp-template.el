@@ -33,7 +33,6 @@
 (require 'owp-util)
 (require 'owp-vars)
 (require 'owp-config)
-(require 'owp-git)
 
 
 (defun owp/get-template-file (template-file-name)
@@ -214,12 +213,9 @@ similar to `owp/render-header'."
              ("date" date)
              ("mod-date" (if (not filename)
                              (format-time-string "%Y-%m-%d")
-                           (or (owp/git-last-change-date
-                                (owp/get-repository-directory)
-                                filename)
-                               (format-time-string
-                                "%Y-%m-%d"
-                                (nth 5 (file-attributes filename))))))
+                           (format-time-string
+                            "%Y-%m-%d"
+                            (nth 5 (file-attributes filename)))))
              ("tags" tags)
              ("tag-links" (if (not tags) "N/A"
                             (mapconcat
