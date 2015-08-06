@@ -65,33 +65,17 @@
 (defconst org-webpage-version "0.1")
 
 (defun owp/do-publication (&optional project-name publishing-directory)
-  "The main entrance of org-webpage. The entire procedure is:
-1) verify configuration
-2) read changed files on \"org branch\" of \"repository directory\",
-   the definition of 'changed files' is:
-   1. if FORCE-ALL is non-nil, then all files will be published
-      will be published.
-   2. if FORCE-ALL is nil, the changed files will be obtained based on
-      BASE-GIT-COMMIT
-   3. if BASE-GIT-COMMIT is nil or omitted, the changed files will be obtained
-      based on previous commit
-3) publish org files to html, if PUB-BASE-DIR is specified, use that directory
-   to store the generated html files, otherwise html files will be stored on \"html-branch\"
-   of \"repository directory\".
-4) if PUB-BASE-DIR is nil, and AUTO-COMMIT is non-nil, then the changes stored
-   on \"html-branch\" will be automatically committed, but be careful, this feature is
-   NOT recommended, and a manual commit is much better
-5) if PUB-BASE-DIR is nil, AUTO-COMMIT is non-nil, and AUTO-PUSH is non-nil,
-then the \"html-branch\"  will be pushed to remote repo."
   (interactive)
-  (setq project-name (or project-name
-                         owp/default-project-name
-                         (completing-read "Which project do you want to publish? "
-                                          (delete-dups
-                                           (mapcar 'car owp/project-config-alist))
-                                          nil t nil nil owp/last-project-name)))
-  (setq owp/current-project-name project-name)
-  (setq owp/last-project-name project-name)
+  (setq project-name
+        (or project-name
+            owp/default-project-name
+            (completing-read "Which project do you want to publish? "
+                             (delete-dups
+                              (mapcar 'car owp/project-config-alist))
+                             nil t nil nil owp/last-project-name)))
+  (setq owp/current-project-name project-name
+        owp/last-project-name project-name
+        owp/item-cache nil)
 
   (let ((preparation-function
          (owp/get-config-option :preparation-function)))
@@ -99,40 +83,140 @@ then the \"html-branch\"  will be pushed to remote repo."
       (run-hooks 'preparation-function)))
 
   (owp/verify-configuration)
-  (setq owp/item-cache nil)
   (let* ((repo-dir (owp/get-repository-directory))
-         (pub-dir (or publishing-directory
-                      (owp/get-publishing-directory)
-                      (concat (file-name-as-directory owp/temporary-directory)
-                              project-name)))
+         (publish-root-dir
+          (file-name-as-directory owp/temporary-directory))
+         (export-dir
+          (concat (file-name-as-directory
+                   (concat publish-root-dir project-name))
+                  "export/"))
+         (history-dir
+          (concat (file-name-as-directory
+                   (concat publish-root-dir project-name))
+                  "history/"))
+         (publish-dir
+          (or publishing-directory
+              (concat (file-name-as-directory
+                       (concat publish-root-dir project-name))
+                      "publish/")
+              (owp/get-publishing-directory)))
+         (test-publish-dir
+          (concat (file-name-as-directory
+                   (concat publish-root-dir project-name))
+                  "test/"))
+         (upload-script
+          (concat (file-name-as-directory
+                   (concat publish-root-dir project-name))
+                  "owp-upload-script.sh"))
+         (remote (owp/get-config-option :remote))
          (site-domain (owp/get-site-domain))
-         repo-files repo-files-history changed-files)
-    (when (file-directory-p pub-dir)
-      (delete-directory pub-dir t))
-    (make-directory pub-dir t)
-    (owp/prepare-theme-resources pub-dir)
-    (setq repo-files
-          (owp/directory-files-recursively repo-dir nil ".org$"))
-    (setq repo-files-history
-          (let* ((buffer (url-retrieve-synchronously
-                          (concat (file-name-as-directory site-domain) "ls-R.el")))
-                 (buffer-string (save-excursion
-                                  (set-buffer buffer)
-                                  (buffer-string))))
-            (read buffer-string)))
-    (setq changed-files
-          `(:delete nil :update ,(delq nil
-                                       (mapcar
-                                        #'(lambda (file)
-                                            (let ((file-info (assoc (file-relative-name file repo-dir)
-                                                                    repo-files-history)))
-                                              (unless (and file-info
-                                                           (string= (owp/get-modification-time file)
-                                                                    (nth 1 file-info)))
-                                                file)))
-                                        repo-files))))
-    (owp/publish-changes repo-files changed-files pub-dir)
+         (repo-files (owp/directory-files-recursively repo-dir nil ".org$"))
+         (changed-files `(:delete nil :update ,repo-files)))
+
+    ;; (setq repo-files-history
+    ;;       (let* ((buffer (url-retrieve-synchronously
+    ;;                       (concat (file-name-as-directory site-domain) "ls-R.el")))
+    ;;              (buffer-string (save-excursion
+    ;;                               (set-buffer buffer)
+    ;;                               (buffer-string))))
+    ;;         (read buffer-string)))
+    ;; (setq changed-files
+    ;;       `(:delete nil :update ,(delq nil
+    ;;                                    (mapcar
+    ;;                                     #'(lambda (file)
+    ;;                                         (let ((file-info (assoc (file-relative-name file repo-dir)
+    ;;                                                                 repo-files-history)))
+    ;;                                           (unless (and file-info
+    ;;                                                        (string= (owp/get-modification-time file)
+    ;;                                                                 (nth 1 file-info)))
+    ;;                                             file)))
+    ;;                                     repo-files))))
+
+    (when (file-directory-p publish-root-dir)
+      (delete-directory publish-root-dir t))
+
+    (make-directory export-dir t)
+    (make-directory history-dir t)
+    (make-directory publish-dir t)
+    (make-directory test-publish-dir t)
+
+    (owp/prepare-theme-resources export-dir)
+    (owp/publish-changes repo-files changed-files export-dir)
+    (owp/generate-upload-script upload-script export-dir history-dir publish-dir remote)
+
+    (if (and (file-exists-p upload-script)
+             owp/terminal-emulater
+             (executable-find "bash")
+             (executable-find "which"))
+        (shell-command (format "%s -e 'bash %s'"
+                               owp/terminal-emulater
+                               (expand-file-name upload-script)))
+      (message "Can't run upload script file correctly!"))
     (setq owp/current-project-name nil)))
+
+(defun owp/generate-upload-script (script-file export-dir history-dir publish-dir remote)
+  "Generate a shell script file, which used to upload html files
+generated by org-webpage to remote."
+  (if (not (and script-file export-dir history-dir publish-dir remote))
+      (message "Can't generate org-webpage upload script.")
+    (with-temp-buffer
+      (insert "#!/bin/bash\n\n")
+      (insert "set -e\n\n")
+      (insert "git_cmd=`which git`\n")
+      (insert "export_dir='" (expand-file-name export-dir) "'\n")
+      (insert "history_dir='" (expand-file-name history-dir) "'\n")
+      (insert "publish_dir='" (expand-file-name publish-dir) "'\n")
+      (insert "git_url='" (nth 1 remote) "'\n")
+      (insert "git_branch='" (nth 2 remote) "'\n\n")
+      (insert "
+
+echo '###########################################################'
+echo '##              Org-webpage upload script                ##'
+echo '###########################################################'
+read -p 'Run this script to upload org-webpage project? [y/n]' -n 1 -r
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    exit 1
+fi
+
+echo '\n'
+echo '###########################################################'
+echo '##  Building history directory ...                       ##'
+echo '###########################################################'
+$git_cmd clone --depth=1 --branch $git_branch  $git_url $history_dir
+
+echo '\n'
+echo '###########################################################'
+echo '##  Generate publish directory and git add/commit ...    ##'
+echo '###########################################################'
+
+cp -r $export_dir/*      $publish_dir
+cp -r $history_dir/.git  $publish_dir
+
+cd $publish_dir
+git add --all .
+git commit -m 'This is a test'
+
+echo '\n'
+echo '###########################################################'
+echo '## Run git push ...                                      ##'
+echo '###########################################################'
+
+read -p \"Push to: Remote: $git_url\n         Branch: $git_branch?  [y/n]\" -n 1 -r
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    echo '\n'
+    exit 1
+fi
+
+git push origin $git_branch
+
+exit 0")
+      (when (file-writable-p script-file)
+        (write-region (point-min)
+                      (point-max) script-file)))))
 
 (defun owp/verify-configuration ()
   "Ensure all required configuration fields are properly configured, include:

@@ -47,6 +47,17 @@ and `owp/new-post' will directly add new post to this project."
   :group 'org-webpage
   :type 'string)
 
+(defcustom owp/terminal-emulater
+  (or (executable-find "x-terminal-emulator")
+      (executable-find "gnome-terminal")
+      (executable-find "konsole")
+      (executable-find "rxvt-unicode")
+      (executable-find "rxvt")
+      (executable-find "xterm"))
+  "Terminal emulater used by org-webpage update script."
+  :group 'org-webpage
+  :type 'string)
+
 (defcustom owp/project-config-alist nil
   "Association list to control org-webpage publishing behavior.
 
@@ -70,8 +81,15 @@ The repository directory, which containing publishing org files.
 
   `:publishing-directory'
 
-Directory (possibly remote) where output files will be
+Directory (possibly remote) where html output files will be
 published.
+
+
+  `:remote'
+
+A remote, published html file by org-webpage will be push/upload to.
+1. Type: list
+2. Example1: (git \"https://github.com/tumashu/org-webpage.git\" \"gh-pages\")
 
 
   `:site-domain'
@@ -350,6 +368,8 @@ You can see fallback value of above option in `owp/config-fallback'"
 
 (defvar owp/config-fallback
       `(:repository-directory nil
+        :publishing-directory nil
+        :remote nil
         :site-domain nil
         :site-main-title "org-webpage"
         :site-sub-title "static site generator"
