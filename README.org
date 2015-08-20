@@ -21,9 +21,9 @@ The main differents of two projects are as follow:
 
 * Workflow
 TODO
-* Usage
 
-*Here is a general introduction about how to use org-webpage, for more detailed introduction and configuration, please see
+* Usage
+Here is a general introduction about how to use org-webpage, for more detailed introduction and configuration, please see
 "tips.org" in the "documents" folder.*
 
 ** Installation
