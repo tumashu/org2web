@@ -196,7 +196,7 @@ cp -r $history_dir/.git  $publish_dir
 
 cd $publish_dir
 git add --all .
-git commit -m 'This is a test'
+git commit -m 'Update published html files, committed by org-webpage.'
 
 echo '\n'
 echo '###########################################################'
@@ -207,10 +207,10 @@ read -p \"Push to: Remote: $git_url\n         Branch: $git_branch?  [y/n]\" -n 1
 
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
-    echo '\n'
     exit 1
 fi
 
+echo '\n'
 git push origin $git_branch
 
 exit 0")
