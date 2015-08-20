@@ -45,6 +45,7 @@ The follow code is [[http://tumashu.github.com][my website]]'s [[https://github.
 (add-to-list 'owp/project-config-alist
              `("tumashu.github.com"
                :repository-directory "~/project/emacs-packages/tumashu.github.com"
+               :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
                :site-domain "http://tumashu.github.com/"
                :site-main-title "Tumashu 的个人小站"
                :site-sub-title "(九天十地，太上忘情！！！)"
@@ -52,7 +53,6 @@ The follow code is [[http://tumashu.github.com][my website]]'s [[https://github.
                :source-browse-url ("Github" "https://github.com/tumashu/tumashu.github.com")
                :personal-avatar "/media/img/horse.jpg"
                :personal-duoshuo-shortname "tumashu-website"
-               :web-server-docroot "~/.emacs.d/org-webpage-server/tumashu.github.com"
                :web-server-port 7654))
 #+END_SRC
 
