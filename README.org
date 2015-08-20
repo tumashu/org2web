@@ -8,27 +8,9 @@
 
 org-webpage is a static site generator based on [[http://orgmode.org/][org-mode]], which is a fork of Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
 
-org-webpage provides similar features with org-page:
-
-#+BEGIN_EXAMPLE
-1) Org sources and html files managed by git
-2) Incremental publication (according to =git diff= command)
-3) Category support
-4) Tags support (auto generated)
-5) RSS support (auto generated)
-6) Search engine support (auto generated)
-7) A beautiful theme
-8) Theme customization support
-9) Commenting (implemented using disqus/duoshuo)
-10) Website traffic analytics (implemented using google analytics)
-11) Index/about page support (auto generated if no default is provided)
-12) Highly customizable
-#+END_EXAMPLE
-
 The main differents of two projects are as follow:
 
-1. org-page focus on personal blog, while org-webpage is main used to
-   generate project website.
+1. org-webpage's core don't hard code git.
 2. org-webpage's default config is `org-publish-project-alist' style alist,
    which can manage multi-site configs in an emacs session easily.
 3. org-website find theme-files from a *themes-list* in sequence and same theme-file
@@ -38,24 +20,7 @@ The main differents of two projects are as follow:
 
 
 * Workflow
-
-1. Specify a git repo where the org source
-   files will be on the "source" branch and the generated html files
-   will be on the "master" branch (the branch names can be
-   customized). Repos may be created manually or by
-   org-webpage's =owp/new-repository= command.
-2. Specify a "base commit" (the most recent prior commit will be used if
-   omitted). org-webpage will read changes between the latest commit
-   and the specified base commit on branch "source". The changes
-   will then be marked for publication.
-3. org-webpage does preparation jobs.
-4. Publish the changes read in step 2. A change can be an addition,
-   a modification, or a deletion.  *org-webpage is designed to handle all of*
-   *these kinds of changes but since deletion does not happen often, *
-   *org-webpage has not implemented it yet.*
-5. Update the index page for each category and tag.
-6. Publication finished.
-
+TODO
 * Usage
 
 *Here is a general introduction about how to use org-webpage, for more detailed introduction and configuration, please see
@@ -101,32 +66,10 @@ C-h v owp/config-fallback
 #+END_EXAMPLE
 
 ** Publication
-The simplest way is run:
 
 #+BEGIN_EXAMPLE
 M-x owp/do-publication
 #+END_EXAMPLE
-
-This command will ask you some questions:
-
-1. Which project do you want to publish?
-2. Publish all org files of "XXXXX" project?
-3. Publish to:  [Yes] Web server docroot, [No] Original repo.
-4. Auto commit to repo?
-5. Auto push to remote repo?
-
-You can use `owp/do-publication' in elisp, which let you code
-your own quickly publication command:
-
-#+BEGIN_SRC emacs-lisp
-(owp/do-publication "project-name" nil "HEAD^1" "~/org-pub/" nil)
-#+END_SRC
-
-or:
-
-#+BEGIN_SRC emacs-lisp
-(call-interactively 'owp/do-publication)
-#+END_SRC
 
 * Dependencies
 
