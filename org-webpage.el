@@ -110,7 +110,7 @@
                   "owp-upload-script.sh"))
          (remote (owp/get-config-option :remote))
          (site-domain (owp/get-site-domain))
-         (repo-files (owp/directory-files-recursively repo-dir nil ".org$"))
+         (repo-files (owp/directory-files-recursively repo-dir nil "\\.org$"))
          (changed-files `(:delete nil :update ,repo-files)))
 
     ;; (setq repo-files-history
