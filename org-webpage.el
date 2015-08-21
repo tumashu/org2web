@@ -213,6 +213,7 @@ fi
 echo '\n'
 git push origin $git_branch
 
+sleep 3
 exit 0")
       (when (file-writable-p script-file)
         (write-region (point-min)
