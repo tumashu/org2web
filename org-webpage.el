@@ -217,6 +217,7 @@ fi
 echo -e \"\\n\"
 git push origin $git_branch
 
+echo -e \"\\n\"
 echo 'Press any key to continue...'
 read -s -n 1 any_key
 exit 0")
