@@ -213,7 +213,8 @@ fi
 echo '\n'
 git push origin $git_branch
 
-sleep 3
+echo 'Press any key to continue...'
+read -s -n 1 any_key
 exit 0")
       (when (file-writable-p script-file)
         (write-region (point-min)
