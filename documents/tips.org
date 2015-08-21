@@ -36,14 +36,6 @@ NOTE: This is NOT recommended way for emacs beginner.
    (require 'org-webpage)
    #+END_EXAMPLE
 
-* How to quickly build a org-webpage git repository
-
-If you find that initializing a repository manually is too much trouble,
-you can run:
-#+BEGIN_EXAMPLE
-M-x owp/new-repository
-#+END_EXAMPLE
-
 * How to quickly add a new post
 #+BEGIN_EXAMPLE
 M-x owp/new-post
@@ -80,18 +72,11 @@ Image URL example:
 2. /media/img/XXXXX.jpg
 3. /assets/XXX/XXX.jpg
 
-* How to change org source files branch to "master"?
+* How to set html git remote?
 Add the follow line to you config alist.
 
 #+BEGIN_EXAMPLE
-:repository-org-branch "master"
-#+END_EXAMPLE
-
-* How to save html file to branch: "gh-pages"?
-Add the follow line to you config alist.
-
-#+BEGIN_EXAMPLE
-:repository-org-branch "gh-pages"
+:remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
 #+END_EXAMPLE
 
 * How to add a github link
