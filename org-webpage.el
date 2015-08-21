@@ -178,42 +178,43 @@ echo '##              Org-webpage upload script                ##'
 echo '###########################################################'
 read -p 'Run this script to upload org-webpage project? [y/n]' -n 1 -r
 
-if [[ ! $REPLY =~ ^[Yy]$ ]]
+if [[ ! $REPLY = \"y\" ]]
 then
     exit 1
 fi
 
-echo '\n'
+echo -e \"\\n\"
 echo '###########################################################'
 echo '##  Building history directory ...                       ##'
 echo '###########################################################'
-$git_cmd clone --depth=1 --branch $git_branch  $git_url $history_dir
+$git_cmd clone --depth=1 --branch \"$git_branch\"  \"$git_url\" \"$history_dir\"
 
-echo '\n'
+echo -e \"\\n\"
 echo '###########################################################'
 echo '##  Generate publish directory and git add/commit ...    ##'
 echo '###########################################################'
 
-cp -r $export_dir/*      $publish_dir
-cp -r $history_dir/.git  $publish_dir
+cp -r \"$export_dir\"/*  \"$publish_dir\"
+cp -r \"$history_dir\"/.git  \"$publish_dir\"
 
-cd $publish_dir
+cd \"$publish_dir\"
+git config core.autocrlf false
 git add --all .
 git commit -m 'Update published html files, committed by org-webpage.'
 
-echo '\n'
+echo -e \"\\n\"
 echo '###########################################################'
 echo '## Run git push ...                                      ##'
 echo '###########################################################'
 
 read -p \"Push to: Remote: $git_url\n         Branch: $git_branch?  [y/n]\" -n 1 -r
 
-if [[ ! $REPLY =~ ^[Yy]$ ]]
+if [[ ! $REPLY = \"y\" ]]
 then
     exit 1
 fi
 
-echo '\n'
+echo -e \"\\n\"
 git push origin $git_branch
 
 echo 'Press any key to continue...'
