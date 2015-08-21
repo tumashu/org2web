@@ -146,16 +146,16 @@
     (owp/generate-upload-script upload-script export-dir history-dir publish-dir remote)
 
     (if (and (file-exists-p upload-script)
-             owp/terminal-emulater
              (executable-find "bash"))
         (cond
          ((string-equal system-type "windows-nt")
           (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" upload-script t t)))
-         ((string-equal system-type "gnu/linux")
+         ((and (string-equal system-type "gnu/linux")
+               owp/terminal-emulater)
           (shell-command (format "%s -e 'bash %s'"
                                  owp/terminal-emulater
                                  (expand-file-name upload-script)))))
-      (message "Can't run upload script file correctly!"))
+      (message "Can't run upload script file, make sure install 'bash' and 'git' correctly!"))
     (setq owp/current-project-name nil)))
 
 (defun owp/generate-upload-script (script-file export-dir history-dir publish-dir remote)
