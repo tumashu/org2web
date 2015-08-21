@@ -146,8 +146,7 @@
 
     (if (and (file-exists-p upload-script)
              owp/terminal-emulater
-             (executable-find "bash")
-             (executable-find "which"))
+             (executable-find "bash"))
         (shell-command (format "%s -e 'bash %s'"
                                owp/terminal-emulater
                                (expand-file-name upload-script)))
