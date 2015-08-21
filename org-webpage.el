@@ -33,15 +33,18 @@
 
 ;; The main differents of two projects are as follow:
 
-;; 1. org-webpage's core don't hard code git, its process is different from org-page, which like:
+;; 1. org-webpage's core don't hard code git, its process is like below:
 ;;    #+BEGIN_EXAMPLE
-;;    [ org files ] --( export )--> [ html files ] -------
+;;    [ Org files ] --( Export )--> [ Html files ] -------
 ;;          \                                             \
-;;           \--------(generate)--> [ Upload bash script] ---> ( git repos )--\
+;;           \--------(Generate)--> [ Upload bash script] ---> ( Git repos )--\
 ;;                                         \                                   \
-;;                                          \------------------------------------( upload )---> remote
+;;                                          \------------------------------------( Upload )---> Remote
 
 ;;    #+END_EXAMPLE
+
+;;    Which is *very* different from org-page's process.
+
 ;; 2. org-webpage's default config is `org-publish-project-alist' style alist,
 ;;    which can manage multi-site configs in an emacs session easily.
 ;; 3. org-website find theme-files from a *themes-list* in sequence and same theme-file
