@@ -147,9 +147,13 @@
     (if (and (file-exists-p upload-script)
              owp/terminal-emulater
              (executable-find "bash"))
-        (shell-command (format "%s -e 'bash %s'"
-                               owp/terminal-emulater
-                               (expand-file-name upload-script)))
+        (cond
+         ((string-equal system-type "windows-nt")
+          (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" upload-script t t)))
+         ((string-equal system-type "gnu/linux")
+          (shell-command (format "%s -e 'bash %s'"
+                                 owp/terminal-emulater
+                                 (expand-file-name upload-script)))))
       (message "Can't run upload script file correctly!"))
     (setq owp/current-project-name nil)))
 
