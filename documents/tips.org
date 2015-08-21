@@ -76,7 +76,7 @@ Image URL example:
 Add the follow line to you config alist.
 
 #+BEGIN_EXAMPLE
-:remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
+:remote (git "<your-html-git-remote-url>" "<branch-name>")
 #+END_EXAMPLE
 
 * How to add a github link
