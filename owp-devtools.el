@@ -32,20 +32,16 @@
 (defvar owp/devtools-webpage-config
   `("org-webpage"
     :repository-directory ,owp/load-directory
+    :remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
     :site-domain "http://tumashu.github.com/org-webpage"
     :site-main-title "Org-webpage"
     :site-sub-title "(Static site senerator based on org mode)"
-    :repository-org-branch "master"
-    :repository-html-branch "gh-pages"
     :default-category "documents"
     :theme (worg killjs)
     :force-absolute-url t
     :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
     :personal-avatar "/media/img/horse.jpg"
     :personal-duoshuo-shortname "tumashu-website"
-    :addition-files-function owp/git-ignored-files
-    :preparation-function owp/devtools-generate-index-file
-    :web-server-docroot "~/.emacs.d/org-webpage-server/org-webpage"
     :web-server-port 6789
     ))
 
