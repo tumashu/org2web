@@ -62,15 +62,20 @@ The main differents of two projects are as follow:
 
 <ol class="org-ol">
 <li><p>
-org-webpage's core don't hard code git, its process is different from org-page, which like:
+org-webpage's core don't hard code git, its process is like below:
 </p>
 <pre class="example">
-[ org files ] --( export )--&gt; [ html files ] -------
+[ Org files ] --( Export )--&gt; [ Html files ] -------
       \                                             \
-       \--------(generate)--&gt; [ Upload bash script] ---&gt; ( git repos )--\
+       \--------(Generate)--&gt; [ Upload bash script] ---&gt; ( Git repos )--\
                                      \                                   \
-                                      \------------------------------------( upload )---&gt; remote
-</pre></li>
+                                      \------------------------------------( Upload )---&gt; Remote
+</pre>
+
+<p>
+Which is <b>very</b> different from org-page's process.
+</p></li>
+
 <li>org-webpage's default config is `org-publish-project-alist' style alist,
 which can manage multi-site configs in an emacs session easily.</li>
 <li>org-website find theme-files from a <b>themes-list</b> in sequence and same theme-file
@@ -85,8 +90,7 @@ first found will be used. User can set <b>fallback theme</b> with the help of th
 <h2 id="orgheadline5"><span class="section-number-2">2</span> Usage</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-Here is a general introduction about how to use org-webpage, for more detailed introduction and configuration, please see
-"tips.org" in the "documents" folder.*
+Here is a general introduction about how to use org-webpage, for more detailed introduction and configuration, please see "tips.org" in the "documents" folder.*
 </p>
 </div>
 
