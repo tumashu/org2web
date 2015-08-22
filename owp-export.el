@@ -67,14 +67,6 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
                (owp/handle-deleted-file org-file)))
            (or visiting (kill-buffer file-buffer)))
        files-list)
-
-      (with-temp-buffer
-        (insert (format "%S" (mapcar #'(lambda (x)
-                                         (list (file-relative-name x repo-dir)
-                                               (owp/get-modification-time x)))
-                                     files-list)))
-        (write-file (concat (file-name-as-directory pub-root-dir) "ls-R.el") t))
-
       (unless (member
                (expand-file-name "index.org" repo-dir)
                files-list)

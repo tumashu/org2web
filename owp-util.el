@@ -74,12 +74,6 @@
                             ((> day1 day2) -1)
                             (t 0))))))))
 
-(defun owp/get-modification-time (file)
-  "Get file modification time."
-  (format-time-string
-   "%Y-%m-%d %H:%M:%S"
-   (nth 5 (file-attributes file))))
-
 (defun owp/fix-timestamp-string (date-string)
   "This is a piece of code copied from Xah Lee (I modified a little):
 Returns yyyy-mm-dd format of date-string
