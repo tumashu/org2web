@@ -120,13 +120,13 @@
                     (time-less-p
                      (sixth (file-attributes b))
                      (sixth (file-attributes a))))))
-         (length-repos-files (length repo-files))
+         (length-repo-files (length repo-files))
          (partial-update
           (cond ((numberp partial-update) partial-update)
                 (partial-update 1) ;; when `partial-update' set to t, update top 1 org-files.
                 (t (let ((partial-update-p (yes-or-no-p "Do you want to partial update? "))
                          (max-mini-window-height 0.9)
-                         (max-line 20))
+                         (max-line (min length-repo-files 20)))
                      (when partial-update-p
                        (read-number
                         (concat (let ((i 1))
@@ -136,13 +136,13 @@
                                                       (number-to-string i)
                                                       (file-relative-name file repo-dir))
                                          (setq i (+ i 1))))
-                                   (append (delq nil (subseq repo-files 0 max-line))
-                                           (when (> length-repos-files max-line)
+                                   (append (cl-subseq repo-files 0 max-line)
+                                           (when (> length-repo-files max-line)
                                              '("## Hide others ... ##")))
                                    "\n"))
                                 "\n\nOrg-webpage will update TOP (N) org-files, Please type N: ")))))))
          (changed-files `(:delete nil :update ,(if partial-update
-                                                   (subseq repo-files 0 partial-update)
+                                                   (cl-subseq repo-files 0 partial-update)
                                                  repo-files))))
 
     (when (file-directory-p publish-root-dir)
