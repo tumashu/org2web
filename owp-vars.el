@@ -53,8 +53,7 @@ and `owp/new-post' will directly add new post to this project."
       (executable-find "konsole")
       (executable-find "rxvt-unicode")
       (executable-find "rxvt")
-      (executable-find "xterm")
-      (executable-find "mintty"))
+      (executable-find "xterm"))
   "Terminal emulater used by org-webpage update script."
   :group 'org-webpage
   :type 'string)
