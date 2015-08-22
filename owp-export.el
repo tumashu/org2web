@@ -252,25 +252,27 @@ file's category is based on its name and its root folder name."
   "Force convert relative url of `html-content' to absolute url."
   (let ((site-domain (owp/get-site-domain))
         url)
-    (with-temp-buffer
-      (insert html-content)
-      (goto-char (point-min))
-      (when (owp/get-config-option :force-absolute-url)
-        (while (re-search-forward
+    (if owp/always-use-relative-url
+        html-content
+      (with-temp-buffer
+        (insert html-content)
+        (goto-char (point-min))
+        (when (owp/get-config-option :force-absolute-url)
+          (while (re-search-forward
                 ;;; TODO: not only links need to convert, but also inline
                 ;;; images, may add others later
-                ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
-                "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
-          (setq url (match-string 4))
-          (when (string-prefix-p "/" url)
-            (setq url (concat
-                       (match-string 1)
-                       (match-string 2)
-                       (match-string 3)
-                       site-domain url
-                       (match-string 5)))
-            (replace-match url))))
-      (buffer-string))))
+                  ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+                  "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
+            (setq url (match-string 4))
+            (when (string-prefix-p "/" url)
+              (setq url (concat
+                         (match-string 1)
+                         (match-string 2)
+                         (match-string 3)
+                         site-domain url
+                         (match-string 5)))
+              (replace-match url))))
+        (buffer-string)))))
 
 (defun owp/publish-modified-file (component-table pub-dir)
   "Publish org file opened in current buffer. COMPONENT-TABLE is the hash table

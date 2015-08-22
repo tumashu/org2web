@@ -31,19 +31,12 @@
 (require 'owp-config)
 
 (defvar owp/web-server nil)
+(defvar owp/last-web-server-docroot nil)
+(defvar owp/last-web-server-port nil)
 
-(defun owp/web-server-get-url ()
-  (file-name-as-directory
-   (format "http://localhost:%s"
-           (number-to-string
-            (owp/get-config-option :web-server-port)))))
-
-(defun owp/web-server-start ()
-  (interactive)
-  (lexical-let ((docroot
-                 (expand-file-name
-                  (owp/get-config-option :web-server-docroot)))
-                (port (owp/get-config-option :web-server-port)))
+(defun owp/web-server-start (docroot port)
+  (lexical-let ((docroot (expand-file-name docroot))
+                (port port))
     (when (and (not owp/web-server)
                docroot port)
       (setq owp/web-server
@@ -68,7 +61,7 @@
                          (ws-send-directory-list process path-expand))
                         (t (ws-send-404 process)))
                      (ws-send-404 process)))))
-             (owp/get-config-option :web-server-port))))))
+             port)))))
 
 (defun owp/web-server-stop ()
   (interactive)
@@ -76,13 +69,19 @@
     (ws-stop owp/web-server)
     (setq owp/web-server nil)))
 
-(defun owp/web-server-browse ()
+(defun owp/web-server-browse (&optional docroot port)
   (interactive)
   (owp/web-server-stop)
-  (owp/web-server-start)
-  (when owp/web-server
-    (browse-url-default-browser
-     (owp/web-server-get-url))))
+  (let ((docroot (or docroot owp/last-web-server-docroot) )
+        (port (or port owp/last-web-server-port)))
+    (when (and docroot port)
+      (progn
+        (owp/web-server-start docroot port)
+        (setq owp/last-web-server-docroot docroot)
+        (setq owp/last-web-server-port port)
+        (when owp/web-server
+          (browse-url-default-browser
+           (format "http://localhost:%s" port)))))))
 
 (provide 'owp-web-server)
 

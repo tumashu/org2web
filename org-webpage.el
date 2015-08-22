@@ -68,7 +68,7 @@
 
 (defconst org-webpage-version "0.1")
 
-(defun owp/do-publication (&optional project-name publishing-directory partial-update)
+(defun owp/do-publication (&optional project-name publishing-directory partial-update test-publish)
   (interactive)
   (setq project-name
         (or project-name
@@ -104,6 +104,9 @@
                        (concat publish-root-dir project-name))
                       "publish/")
               (owp/get-publishing-directory)))
+         (test-publish
+          (or test-publish
+              (yes-or-no-p "Test publish with emacs-web-server? ")))
          (test-publish-dir
           (concat (file-name-as-directory
                    (concat publish-root-dir project-name))
@@ -153,24 +156,33 @@
     (make-directory publish-dir t)
     (make-directory test-publish-dir t)
 
-    (owp/prepare-theme-resources export-dir)
-    (owp/publish-changes repo-files changed-files export-dir)
-    (owp/generate-upload-script upload-script
-                                export-dir history-dir publish-dir
-                                remote
-                                partial-update)
-
-    (if (and (file-exists-p upload-script)
-             (executable-find "bash"))
-        (cond
-         ((string-equal system-type "windows-nt")
-          (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" upload-script t t)))
-         ((and (string-equal system-type "gnu/linux")
-               owp/terminal-emulater)
-          (shell-command (format "%s -e 'bash %s'"
-                                 owp/terminal-emulater
-                                 (expand-file-name upload-script)))))
-      (message "Can't run upload script file, make sure install 'bash' and 'git' correctly!"))
+    (if test-publish
+        (let ((owp/always-use-relative-url t)) ; Local test website, can't use absolute path.
+          (owp/prepare-theme-resources test-publish-dir)
+          (owp/publish-changes repo-files changed-files test-publish-dir)
+          (owp/web-server-browse test-publish-dir
+                                 (or (owp/get-config-option :web-server-port)
+                                     (+ (* (random 9) 1000)
+                                        (* (random 9) 100)
+                                        (* (random 9) 10)
+                                        (* (random 9) 1)))))
+      (owp/prepare-theme-resources export-dir)
+      (owp/publish-changes repo-files changed-files export-dir)
+      (owp/generate-upload-script upload-script
+                                  export-dir history-dir publish-dir
+                                  remote
+                                  partial-update)
+      (if (and (file-exists-p upload-script)
+               (executable-find "bash"))
+          (cond
+           ((string-equal system-type "windows-nt")
+            (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" upload-script t t)))
+           ((and (string-equal system-type "gnu/linux")
+                 owp/terminal-emulater)
+            (shell-command (format "%s -e 'bash %s'"
+                                   owp/terminal-emulater
+                                   (expand-file-name upload-script)))))
+        (message "Can't run upload script file, make sure install 'bash' and 'git' correctly!")))
     (setq owp/current-project-name nil)))
 
 (defun owp/generate-upload-script (script-file export-dir history-dir publish-dir remote &optional partial-update)

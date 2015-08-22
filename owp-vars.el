@@ -339,6 +339,9 @@ You can see fallback value of above option in `owp/config-fallback'"
 (defvar owp/last-project-name nil)
 
 (defvar owp/publish-to-repository nil)
+(defvar owp/always-use-relative-url nil
+  "Always use relative url in exported html files, this is useful for
+test publish.")
 
 (defvar owp/item-cache nil
   "The cache for general purpose.")
