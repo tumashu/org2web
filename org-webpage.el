@@ -120,17 +120,26 @@
                     (time-less-p
                      (sixth (file-attributes b))
                      (sixth (file-attributes a))))))
-         (partial-update
-          (or partial-update
-              (read-number
-               (concat (let ((i 1))
-                         (mapconcat #'(lambda (x)
-                                        (prog1
-                                            (concat (number-to-string i) ". " x)
-                                          (setq i (+ i 1))))
-                                    repo-files "\n"))
-                       "\n\nOrg-webpage will update TOP (N) org-files, Please type N: "))))
-         (changed-files `(:delete nil :update ,(subseq repo-files 0 partial-update))))
+         (length-repos-files (length repo-files))
+         (top-n (cond
+                 ((numberp partial-update) partial-update)
+                 (partial-update 1) ;; when `partial-update' set to t, update top 1 org-files.
+                 (t (let ((max-mini-window-height 0.9)
+                          (max-line 20))
+                      (read-number
+                       (concat (let ((i 1))
+                                 (mapconcat
+                                  #'(lambda (file)
+                                      (prog1 (format "%2s. %s"
+                                                     (number-to-string i)
+                                                     (file-relative-name file repo-dir))
+                                        (setq i (+ i 1))))
+                                  (append (delq nil (subseq repo-files 0 max-line))
+                                          (when (> length-repos-files max-line)
+                                            '("## Hide others ... ##")))
+                                  "\n"))
+                               "\n\nOrg-webpage will update TOP (N) org-files, Please type N: "))))))
+         (changed-files `(:delete nil :update ,(subseq repo-files 0 top-n))))
 
     (when (file-directory-p publish-root-dir)
       (delete-directory publish-root-dir t))
