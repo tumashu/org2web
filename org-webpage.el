@@ -68,7 +68,7 @@
 
 (defconst org-webpage-version "0.1")
 
-(defun owp/do-publication (&optional project-name publishing-directory)
+(defun owp/do-publication (&optional project-name publishing-directory partial-update)
   (interactive)
   (setq project-name
         (or project-name
@@ -114,27 +114,23 @@
                   "owp-upload-script.sh"))
          (remote (owp/get-config-option :remote))
          (site-domain (owp/get-site-domain))
-         (repo-files (owp/directory-files-recursively repo-dir nil "\\.org$"))
-         (changed-files `(:delete nil :update ,repo-files)))
-
-    ;; (setq repo-files-history
-    ;;       (let* ((buffer (url-retrieve-synchronously
-    ;;                       (concat (file-name-as-directory site-domain) "ls-R.el")))
-    ;;              (buffer-string (save-excursion
-    ;;                               (set-buffer buffer)
-    ;;                               (buffer-string))))
-    ;;         (read buffer-string)))
-    ;; (setq changed-files
-    ;;       `(:delete nil :update ,(delq nil
-    ;;                                    (mapcar
-    ;;                                     #'(lambda (file)
-    ;;                                         (let ((file-info (assoc (file-relative-name file repo-dir)
-    ;;                                                                 repo-files-history)))
-    ;;                                           (unless (and file-info
-    ;;                                                        (string= (owp/get-modification-time file)
-    ;;                                                                 (nth 1 file-info)))
-    ;;                                             file)))
-    ;;                                     repo-files))))
+         (repo-files
+          (sort (owp/directory-files-recursively repo-dir nil "\\.org$")
+                #'(lambda (a b)
+                    (time-less-p
+                     (sixth (file-attributes b))
+                     (sixth (file-attributes a))))))
+         (partial-update
+          (or partial-update
+              (read-number
+               (concat (let ((i 1))
+                         (mapconcat #'(lambda (x)
+                                        (prog1
+                                            (concat (number-to-string i) ". " x)
+                                          (setq i (+ i 1))))
+                                    repo-files "\n"))
+                       "\n\nOrg-webpage will update TOP (N) org-files, Please type N: "))))
+         (changed-files `(:delete nil :update ,(subseq repo-files 0 partial-update))))
 
     (when (file-directory-p publish-root-dir)
       (delete-directory publish-root-dir t))
@@ -146,7 +142,10 @@
 
     (owp/prepare-theme-resources export-dir)
     (owp/publish-changes repo-files changed-files export-dir)
-    (owp/generate-upload-script upload-script export-dir history-dir publish-dir remote)
+    (owp/generate-upload-script upload-script
+                                export-dir history-dir publish-dir
+                                remote
+                                partial-update)
 
     (if (and (file-exists-p upload-script)
              (executable-find "bash"))
