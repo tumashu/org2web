@@ -182,7 +182,12 @@
             (shell-command (format "%s -e 'bash %s'"
                                    owp/terminal-emulater
                                    (expand-file-name upload-script)))))
-        (message "Can't run upload script file, make sure install 'bash' and 'git' correctly!")))
+        (message "Can't run upload script file!
+
+User should install 'bash' and 'git' correctly:
+1. In Linux/Unix system, user can install 'bash' and 'git' with package manager.
+2. In Window system, user can install 'msysgit',
+   then add '<INSTALL-PATH>/bin' to envirment variable '$PATH'")))
     (setq owp/current-project-name nil)))
 
 (defun owp/generate-upload-script (script-file export-dir history-dir publish-dir remote &optional partial-update)
