@@ -54,7 +54,11 @@
                           (when (file-exists-p file)
                             file)))
                     (list (concat (file-name-as-directory owp/load-directory)
-                                  "upload-scripts/"))))))
+                                  "upload-scripts/"
+                                  (replace-regexp-in-string "/" "-" (symbol-name system-type))
+                                  "/")
+                          (concat (file-name-as-directory owp/load-directory)
+                                  "upload-scripts/common/"))))))
 
 (defun owp/get-title ()
   "Get the title of org file."
