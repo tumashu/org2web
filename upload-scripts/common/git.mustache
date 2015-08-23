@@ -15,16 +15,16 @@ echo '###########################################################'
 echo '##              Org-webpage upload script                ##'
 echo '###########################################################'
 
-echo -e "\n"
+echo ''
 echo "Export  Directory:    $export_dir"
 echo "Publish Directory:    $publish_dir"
 echo "History Directory:    $history_dir"
 
-echo -e "\n"
+echo ''
 echo "Git Remote url:       $git_url"
 echo "Git Remote branch:    $git_branch"
 
-echo -e "\n"
+echo ''
 read -p 'Run this script to upload org-webpage project? [y/n]' -n 1 -r
 
 if [[ ! $REPLY = "y" ]]
@@ -32,13 +32,15 @@ then
     exit 1
 fi
 
-echo -e "\n"
+echo ''
+echo ''
 echo '###########################################################'
 echo '##  Building history directory ...                       ##'
 echo '###########################################################'
 $git_cmd clone --depth=1 --branch "$git_branch"  "$git_url" "$history_dir"
 
-echo -e "\n"
+echo ''
+echo ''
 echo '###########################################################'
 echo '##  Generate publish directory and git add/commit ...    ##'
 echo '###########################################################'
@@ -61,7 +63,8 @@ $git_cmd add --all .
 $git_cmd commit -m 'Update published html files, committed by org-webpage.'
 $git_cmd diff HEAD~1 --stat
 
-echo -e "\n"
+echo ''
+echo ''
 echo '###########################################################'
 echo '## Run git push ...                                      ##'
 echo '###########################################################'
@@ -74,10 +77,10 @@ then
     exit 1
 fi
 
-echo -e "\n"
+echo ''
 $git_cmd push origin $git_branch
 
-echo -e "\n"
+echo ''
 echo 'Press any key to continue...'
 read -s -n 1 any_key
 exit 0
