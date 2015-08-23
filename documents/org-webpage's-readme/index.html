@@ -35,27 +35,25 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#orgheadline1">1. Introduction</a></li>
-<li><a href="#orgheadline2">2. Workflow</a></li>
-<li><a href="#orgheadline6">3. Usage</a>
+<li><a href="#orgheadline5">2. Usage</a>
 <ul>
-<li><a href="#orgheadline3">3.1. Installation</a></li>
-<li><a href="#orgheadline4">3.2. Configuration</a></li>
-<li><a href="#orgheadline5">3.3. Publication</a></li>
+<li><a href="#orgheadline2">2.1. Installation</a></li>
+<li><a href="#orgheadline3">2.2. Configuration</a></li>
+<li><a href="#orgheadline4">2.3. Publication</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline7">4. Dependencies</a></li>
-<li><a href="#orgheadline8">5. Known issues</a></li>
+<li><a href="#orgheadline6">3. Dependencies</a></li>
+<li><a href="#orgheadline7">4. Known issues</a></li>
 </ul>
 </div>
 </div>
-
 
 
 <div id="outline-container-orgheadline1" class="outline-2">
 <h2 id="orgheadline1"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-org-webpage is a static site generator based on <a href="http://orgmode.org/">org-mode</a>, which is a fork of Kelvin H's <a href="https://github.com/kelvinh/org-page">org-page</a>.
+org-webpage is a static site generator based on <a href="http://orgmode.org/">org-mode</a>, which code derived from Kelvin H's <a href="https://github.com/kelvinh/org-page">org-page</a>.
 </p>
 
 <p>
@@ -63,7 +61,21 @@ The main differents of two projects are as follow:
 </p>
 
 <ol class="org-ol">
-<li>org-webpage's core don't hard code git.</li>
+<li><p>
+org-webpage's core don't hard code git, its process is like below:
+</p>
+<pre class="example">
+[ Org files ] --( Export )--&gt; [ Html files ] -------
+      \                                             \
+       \--------(Generate)--&gt; [ Upload bash script] ---&gt; ( Git repos )--\
+                                     \                                   \
+                                      \------------------------------------( Upload )---&gt; Remote
+</pre>
+
+<p>
+Which is <b>very</b> different from org-page's process.
+</p></li>
+
 <li>org-webpage's default config is `org-publish-project-alist' style alist,
 which can manage multi-site configs in an emacs session easily.</li>
 <li>org-website find theme-files from a <b>themes-list</b> in sequence and same theme-file
@@ -74,28 +86,17 @@ first found will be used. User can set <b>fallback theme</b> with the help of th
 </div>
 </div>
 
-
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2"><span class="section-number-2">2</span> Workflow</h2>
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5"><span class="section-number-2">2</span> Usage</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-TODO
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgheadline6" class="outline-2">
-<h2 id="orgheadline6"><span class="section-number-2">3</span> Usage</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-Here is a general introduction about how to use org-webpage, for more detailed introduction and configuration, please see
-"tips.org" in the "documents" folder.*
+Here is a general introduction about how to use org-webpage, for more detailed introduction and configuration, please see "tips.org" in the "documents" folder.*
 </p>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3"><span class="section-number-3">3.1</span> Installation</h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2"><span class="section-number-3">2.1</span> Installation</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 org-webpage is now available from the famous emacs package repo <a href="http://melpa.milkbox.net/">melpa</a>
 so the recommended way is to install it through emacs' package
@@ -105,9 +106,9 @@ management system. For more info about installation, please see
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4"><span class="section-number-3">3.2</span> Configuration</h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3"><span class="section-number-3">2.2</span> Configuration</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 The follow code is <a href="http://tumashu.github.com/">my website</a>'s <a href="https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el">config</a>, you can adjust and paste it to your <code>.emacs</code> file:
 </p>
@@ -149,9 +150,9 @@ C-h v owp/config-fallback
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5"><span class="section-number-3">3.3</span> Publication</h3>
-<div class="outline-text-3" id="text-3-3">
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4"><span class="section-number-3">2.3</span> Publication</h3>
+<div class="outline-text-3" id="text-2-3">
 <pre class="example">
 M-x owp/do-publication
 </pre>
@@ -159,12 +160,13 @@ M-x owp/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-2">
-<h2 id="orgheadline7"><span class="section-number-2">4</span> Dependencies</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orgheadline6" class="outline-2">
+<h2 id="orgheadline6"><span class="section-number-2">3</span> Dependencies</h2>
+<div class="outline-text-2" id="text-3">
 <ol class="org-ol">
 <li><a href="http://www.gnu.org/software/emacs/">emacs</a>: this is an "of-course" dependency</li>
 <li><a href="http://orgmode.org/">org mode</a>: v8.0 is required, please use <code>M-x org-version &lt;RET&gt;</code> to make sure you org mode version is not less than 8.0</li>
+<li><a href="http://www.gnu.org/software/bash/">bash</a>: the GNU Project's shell</li>
 <li><a href="http://git-scm.com/">git</a>: a free and open source version control system</li>
 <li><a href="https://github.com/Wilfred/mustache.el">mustache.el</a>: a mustache templating library for Emacs</li>
 <li><a href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi">htmlize.el</a>: a library for syntax highlighting (usually this library is shipped with emacs)</li>
@@ -175,9 +177,9 @@ M-x owp/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline8" class="outline-2">
-<h2 id="orgheadline8"><span class="section-number-2">5</span> Known issues</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7"><span class="section-number-2">4</span> Known issues</h2>
+<div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>Currently the deletion change handler has not been implemented so
 if you deleted some org sources, you may have to manually delete
@@ -195,6 +197,27 @@ the old URI manually.</li>
 </div>
 </div>
     <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2015-04-01</span>
+        <span title="last modification date" class="post-info">2015-08-22</span>
+        <span title="tags" class="post-info">N/A</span>
+        <span title="author" class="post-info">Feng Shu</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div class="ds-thread"></div>
+        <script type="text/javascript">
+          var duoshuoQuery = {short_name:'tumashu-website'};
+          (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = 'http://static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0]
+          || document.getElementsByTagName('body')[0]).appendChild(ds);
+          })();
+        </script>
+      </section>
       <div class="footer">
         <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 8.x)</p>
         <p>

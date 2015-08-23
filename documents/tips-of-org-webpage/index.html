@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Tips of org-webpage - Org-webpage</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Feng Shu" />
+    <link rel="stylesheet" href="http://tumashu.github.com/org-webpage/media/css/main.css" type="text/css">
+  </head>
+<body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="http://tumashu.github.com/org-webpage/">Org-webpage</a> <span class="subtitle">(Static site senerator based on org mode)</span></h1>
+        <ul>
+          <li><a href="http://tumashu.github.com/org-webpage/changelog/">Changelog</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/documents/">Documents</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/tags/">Tags</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/about/">About</a></li>
+          <li><a href="https://github.com/tumashu/org-webpage">GitHub</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="http://www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="tumashu.github.com/org-webpage">
+        </form>
+        <img class="avatar" src="http://tumashu.github.com/org-webpage/media/img/horse.jpg" />
+      </header>
+    </div>
+
+<div class="content-and-footer">
+<div>
+<div class="post">
+<h1 class="post-title">Tips of org-webpage</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">1. How to install org-webpage in manual way</a></li>
+<li><a href="#orgheadline2">2. How to install org-webpage Through package management system</a></li>
+<li><a href="#orgheadline3">3. How to quickly add a new post</a></li>
+<li><a href="#orgheadline4">4. How to quickly insert org-website post template</a></li>
+<li><a href="#orgheadline5">5. How to configure the default slogan</a></li>
+<li><a href="#orgheadline6">6. How to add an avatar to the page?</a></li>
+<li><a href="#orgheadline7">7. How to set html git remote?</a></li>
+<li><a href="#orgheadline8">8. How to add a github link</a></li>
+<li><a href="#orgheadline9">9. How to do site traffic analytics with Google Analytics?</a></li>
+<li><a href="#orgheadline10">10. How to disable commenting for posts under certain categories?</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> How to install org-webpage in manual way</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+To install org-webpage manually you should first install all
+dependencies listed in <b>README.org</b>. Once this has been completed,
+clone the repo:
+</p>
+
+<pre class="example">
+git clone https://github.com/tumashu/org-webpage.git
+</pre>
+
+<p>
+After that, please remember to add this location to your emacs'
+<code>load-path</code> variable so that emacs can find the package.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #61CE3C;">"/path/to/org-webpage"</span>)
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">org-webpage</span>)
+</pre>
+</div>
+
+<p>
+NOTE: This is NOT recommended way for emacs beginner.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2"><span class="section-number-2">2</span> How to install org-webpage Through package management system</h2>
+<div class="outline-text-2" id="text-2">
+<ol class="org-ol">
+<li>Setting melpa repository, see: <a href="http://melpa.org/#/getting-started">http://melpa.org/#/getting-started</a></li>
+<li><p>
+Run the following command
+</p>
+<pre class="example">
+M-x package-install RET org-website RET
+</pre></li>
+<li><p>
+Add the following to your <code>~/.emacs</code> file:
+</p>
+<pre class="example">
+(require 'org-webpage)
+</pre></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3"><span class="section-number-2">3</span> How to quickly add a new post</h2>
+<div class="outline-text-2" id="text-3">
+<pre class="example">
+M-x owp/new-post
+</pre>
+
+<p>
+This command will ask you the follow question:
+</p>
+<ol class="org-ol">
+<li>Which project do you want post?</li>
+<li>Category?</li>
+<li>Filename?</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4"><span class="section-number-2">4</span> How to quickly insert org-website post template</h2>
+<div class="outline-text-2" id="text-4">
+<pre class="example">
+M-x owp/insert-options-template
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5"><span class="section-number-2">5</span> How to configure the default slogan</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Add the follow two lines to you config alist.
+</p>
+
+<pre class="example">
+:site-main-title "your main slogan"
+:site-sub-title "your sub slogan"
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline6" class="outline-2">
+<h2 id="orgheadline6"><span class="section-number-2">6</span> How to add an avatar to the page?</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Add the follow line to you config alist.
+</p>
+
+<pre class="example">
+:personal-avatar "URL to an image"
+</pre>
+
+<p>
+Image URL example:
+</p>
+<ol class="org-ol">
+<li><code>http:/XXXXX.com/XXXX.jpg</code></li>
+<li>/media/img/XXXXX.jpg</li>
+<li>/assets/XXX/XXX.jpg</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7"><span class="section-number-2">7</span> How to set html git remote?</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Add the follow line to you config alist.
+</p>
+
+<pre class="example">
+:remote (git "&lt;your-html-git-remote-url&gt;" "&lt;branch-name&gt;")
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline8" class="outline-2">
+<h2 id="orgheadline8"><span class="section-number-2">8</span> How to add a github link</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+Add the follow line to you config alist.
+</p>
+
+<pre class="example">
+:source-browse-url ("GitHub" "https://github.io/&lt;username&gt;/&lt;project-name&gt;")
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline9" class="outline-2">
+<h2 id="orgheadline9"><span class="section-number-2">9</span> How to do site traffic analytics with Google Analytics?</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Add the follow line to you config alist.
+</p>
+
+<pre class="example">
+:personal-google-analytics-id "your google analytics id"
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline10" class="outline-2">
+<h2 id="orgheadline10"><span class="section-number-2">10</span> How to disable commenting for posts under certain categories?</h2>
+<div class="outline-text-2" id="text-10">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #FBDE2D;">setq</span> owp/category-config-alist
+      (cons '(<span style="color: #61CE3C;">"photography"</span> <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">category name goes here</span>
+              <span style="color: #FF6400;">:show-comment</span> nil)
+            owp/category-config-alist))
+</pre>
+</div>
+
+<p>
+Other config items:
+</p>
+
+<ol class="org-ol">
+<li><code>:show-meta</code>: show post meta info at the bottom of post?</li>
+<li><code>:uri-generator</code>: the function used to generate uri for posts
+under that category (however, it is not recommended to
+customize except you are an expert)</li>
+<li><code>:uri-template</code>: the template used to generate uri</li>
+<li><code>:sort-by</code>: how to sort posts on category index page, by</li>
+<li><code>:date</code> or by <code>:mod-date</code>  (:mod-date is last modification date)?</li>
+<li><code>:category-index</code>: generate an index page for this category?</li>
+</ol>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2015-04-01</span>
+        <span title="last modification date" class="post-info">2015-08-22</span>
+        <span title="tags" class="post-info">N/A</span>
+        <span title="author" class="post-info">Feng Shu</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div class="ds-thread"></div>
+        <script type="text/javascript">
+          var duoshuoQuery = {short_name:'tumashu-website'};
+          (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = 'http://static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0]
+          || document.getElementsByTagName('body')[0]).appendChild(ds);
+          })();
+        </script>
+      </section>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; <span id="footerYear"></span> <a href="mailto:tumashu &lt;at&gt; 163 &lt;dot&gt; com">Feng Shu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/tumashu/org-webpage" target="_blank">org-webpage</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+</div>
+</body>
+</html>
