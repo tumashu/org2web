@@ -45,6 +45,17 @@
                             file)))
                     (owp/get-theme-dirs nil nil 'templates)))))
 
+(defun owp/get-upload-script-file (upload-script-file-name)
+  "Get path of upload script file which name is `upload-script-name'."
+  (car (remove nil (mapcar
+                    #'(lambda (dir)
+                        (let ((file (concat (file-name-as-directory dir)
+                                            upload-script-file-name)))
+                          (when (file-exists-p file)
+                            file)))
+                    (list (concat (file-name-as-directory owp/load-directory)
+                                  "upload-scripts/"))))))
+
 (defun owp/get-title ()
   "Get the title of org file."
   (or (owp/read-org-option "TITLE")

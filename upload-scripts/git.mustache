@@ -1,0 +1,72 @@
+#!/bin/bash
+
+set -e
+
+git_cmd=`which git`
+export_dir='{{export-dir}}'
+history_dir='{{history-dir}}'
+publish_dir='{{publish-dir}}'
+git_url='{{remote-url}}'
+git_branch='{{remote-branch}}'
+partial_update='{{partial-update}}'
+
+
+echo '###########################################################'
+echo '##              Org-webpage upload script                ##'
+echo '###########################################################'
+read -p 'Run this script to upload org-webpage project? [y/n]' -n 1 -r
+
+if [[ ! $REPLY = "y" ]]
+then
+    exit 1
+fi
+
+echo -e "\n"
+echo '###########################################################'
+echo '##  Building history directory ...                       ##'
+echo '###########################################################'
+$git_cmd clone --depth=1 --branch "$git_branch"  "$git_url" "$history_dir"
+
+echo -e "\n"
+echo '###########################################################'
+echo '##  Generate publish directory and git add/commit ...    ##'
+echo '###########################################################'
+
+cd "$publish_dir"
+
+cp -r "$history_dir"/.git  "$publish_dir"
+
+$git_cmd config core.autocrlf false
+
+if [[ $partial_update = "yes" ]]
+then
+    $git_cmd reset --hard
+    echo "** NOTE: Enable Partial upload, reset to HEAD with command: '$git_cmd reset --hard' ..."
+fi
+
+cp -r "$export_dir"/*  "$publish_dir"
+
+$git_cmd add --all .
+$git_cmd commit -m 'Update published html files, committed by org-webpage.'
+$git_cmd diff HEAD~1 --stat
+
+echo -e "\n"
+echo '###########################################################'
+echo '## Run git push ...                                      ##'
+echo '###########################################################'
+
+read -p "Push to: Remote: $git_url
+         Branch: $git_branch?  [y/n]" -n 1 -r
+
+if [[ ! $REPLY = "y" ]]
+then
+    exit 1
+fi
+
+echo -e "\n"
+$git_cmd push origin $git_branch
+
+echo -e "\n"
+echo 'Press any key to continue...'
+read -s -n 1 any_key
+exit 0

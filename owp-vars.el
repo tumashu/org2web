@@ -386,7 +386,7 @@ test publish.")
         :default-category "blog"
         :about ("About" "/about/")
         :rss ("RSS" "/rss.xml")
-        :category-ignore-list ("themes" "assets")
+        :category-ignore-list ("themes" "assets" "upload-scripts")
         :summary (("tags" :tags))
         :confound-email t
         :force-absolute-url t
