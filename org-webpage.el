@@ -106,7 +106,7 @@
               (owp/get-publishing-directory)))
          (test-publish
           (or test-publish
-              (yes-or-no-p "Test publish with emacs-web-server? ")))
+              (yes-or-no-p "Do you want to test publish? ")))
          (test-publish-dir
           (concat (file-name-as-directory
                    (concat publish-root-dir project-name))
