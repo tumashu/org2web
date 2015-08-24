@@ -1,6 +1,6 @@
 (define-package
   "org-webpage" "0.1"
-  "a static site generator based on org mode, forked from org-page."
+  "a static site generator based on org mode."
   '((cl-lib "1.0")
     (ht "1.5")
     (mustache "0.22")
