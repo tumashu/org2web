@@ -77,9 +77,21 @@ then
     exit 1
 fi
 
+if [[ $git_branch = "master" ]]
+then
+    echo ''
+    read -p "NOTE: You will push to \"master\" branch, please type \"master\" to confirm! " -r
+
+    if [[ ! $REPLY = "master" ]]
+    then
+        exit 1
+    fi
+fi
+
 echo ''
 $git_cmd push origin $git_branch
 
+echo ''
 echo ''
 echo 'Press any key to continue...'
 read -s -n 1 any_key
