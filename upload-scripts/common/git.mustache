@@ -25,11 +25,19 @@ echo "Git Remote url:       $git_url"
 echo "Git Remote branch:    $git_branch"
 
 echo ''
-read -p 'Run this script to upload org-webpage project? [y/n]' -n 1 -r
-
-if [[ ! $REPLY = "y" ]]
+if [[ $git_branch = "master" ]]
 then
-    exit 1
+    read -p "Type \"branch-name\" to run this upload-script: " -r
+    if [[ ! $REPLY = "master" ]]
+    then
+        exit 1
+    fi
+else
+    read -p 'Run this upload-script? [y/n]' -n 1 -r
+    if [[ ! $REPLY = "y" ]]
+    then
+        exit 1
+    fi
 fi
 
 echo ''
@@ -54,7 +62,7 @@ $git_cmd config core.autocrlf false
 if [[ $partial_update = "yes" ]]
 then
     $git_cmd reset --hard
-    echo "** NOTE: Enable Partial upload, reset to HEAD with command: '$git_cmd reset --hard' ..."
+    echo "NOTE: Enable Partial upload, reset to HEAD with command: '$git_cmd reset --hard' ..."
 fi
 
 cp -r "$export_dir"/*  "$publish_dir"
@@ -75,17 +83,6 @@ read -p "Push to: Remote: $git_url
 if [[ ! $REPLY = "y" ]]
 then
     exit 1
-fi
-
-if [[ $git_branch = "master" ]]
-then
-    echo ''
-    read -p "NOTE: You will push to \"master\" branch, please type \"master\" to confirm! " -r
-
-    if [[ ! $REPLY = "master" ]]
-    then
-        exit 1
-    fi
 fi
 
 echo ''

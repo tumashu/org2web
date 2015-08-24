@@ -68,7 +68,7 @@
 
 (defconst org-webpage-version "0.1")
 
-(defun owp/do-publication (&optional project-name publishing-directory partial-update test-publish)
+(defun owp/do-publication (&optional project-name publishing-directory job-number update-top-n)
   (interactive)
   (setq project-name
         (or project-name
@@ -87,7 +87,19 @@
       (run-hooks 'preparation-function)))
 
   (owp/verify-configuration)
-  (let* ((repo-dir (owp/get-repository-directory))
+  (let* ((jobs '((1 . "Full publish")
+                 (2 . "Partial publish")
+                 (3 . "Test full publish")
+                 (4 . "Test partial publish")))
+         (job-used (completing-read
+                    "Which job do you want to active: "
+                    (mapcar #'cdr jobs)))
+         (job-number (car (rassoc job-used jobs)))
+         (test-publish (or (= job-number 3)
+                           (= job-number 4)))
+         (partial-update (or (= job-number 2)
+                             (= job-number 4)))
+         (repo-dir (owp/get-repository-directory))
          (publish-root-dir
           (file-name-as-directory owp/temporary-directory))
          (export-dir
@@ -104,9 +116,6 @@
                        (concat publish-root-dir project-name))
                       "publish/")
               (owp/get-publishing-directory)))
-         (test-publish
-          (or test-publish
-              (yes-or-no-p "Do you want to test publish? ")))
          (test-publish-dir
           (concat (file-name-as-directory
                    (concat publish-root-dir project-name))
@@ -124,28 +133,26 @@
                      (sixth (file-attributes b))
                      (sixth (file-attributes a))))))
          (length-repo-files (length repo-files))
-         (partial-update
-          (cond ((numberp partial-update) partial-update)
-                (partial-update 1) ;; when `partial-update' set to t, update top 1 org-files.
-                (t (let ((partial-update-p (yes-or-no-p "Do you want to partial update? "))
-                         (max-mini-window-height 0.9)
-                         (max-line (min length-repo-files 20)))
-                     (when partial-update-p
-                       (read-number
-                        (concat (let ((i 1))
-                                  (mapconcat
-                                   #'(lambda (file)
-                                       (prog1 (format "%2s. %s"
-                                                      (number-to-string i)
-                                                      (file-relative-name file repo-dir))
-                                         (setq i (+ i 1))))
-                                   (append (cl-subseq repo-files 0 max-line)
-                                           (when (> length-repo-files max-line)
-                                             '("## Hide others ... ##")))
-                                   "\n"))
-                                "\n\nOrg-webpage will update TOP (N) org-files, Please type N: ")))))))
-         (changed-files `(:delete nil :update ,(if partial-update
-                                                   (cl-subseq repo-files 0 (min partial-update length-repo-files))
+         (update-top-n
+          (cond ((and partial-update (numberp update-top-n)) update-top-n)
+                (partial-update
+                 (let ((max-mini-window-height 0.9)
+                       (max-line (min length-repo-files 20)))
+                   (read-number
+                    (concat (let ((i 1))
+                              (mapconcat
+                               #'(lambda (file)
+                                   (prog1 (format "%2s. %s"
+                                                  (number-to-string i)
+                                                  (file-relative-name file repo-dir))
+                                     (setq i (+ i 1))))
+                               (append (cl-subseq repo-files 0 max-line)
+                                       (when (> length-repo-files max-line)
+                                         '("## Hide others ... ##")))
+                               "\n"))
+                            "\n\nOrg-webpage will update TOP (N) org-files, Please type N: "))))))
+         (changed-files `(:delete nil :update ,(if (numberp update-top-n)
+                                                   (cl-subseq repo-files 0 (min update-top-n length-repo-files))
                                                  repo-files))))
 
     (when (file-directory-p publish-root-dir)
