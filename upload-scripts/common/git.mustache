@@ -61,7 +61,7 @@ cp -r "$export_dir"/*  "$publish_dir"
 
 $git_cmd add --all .
 $git_cmd commit -m 'Update published html files, committed by org-webpage.'
-$git_cmd diff HEAD~1 --stat
+$git_cmd --no-pager diff HEAD~1 --stat
 
 echo ''
 echo ''
