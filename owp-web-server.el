@@ -24,6 +24,10 @@
 ;; owp-web-server.el is a web server used to test org-webpage.
 
 ;;; Code:
+
+(eval-when-compile
+  (require 'cl))
+
 (require 'url-util)
 (require 'browse-url)
 (require 'web-server)
