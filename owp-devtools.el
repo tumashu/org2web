@@ -29,24 +29,28 @@
 (require 'owp-vars)
 (require 'owp-config)
 
-(defvar owp/devtools-webpage-config
-  `("org-webpage"
-    :repository-directory ,owp/load-directory
-    :remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
-    :site-domain "http://tumashu.github.com/org-webpage"
-    :site-main-title "Org-webpage"
-    :site-sub-title "(Static site senerator based on org mode)"
-    :default-category "documents"
-    :theme (worg killjs)
-    :force-absolute-url t
-    :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
-    :personal-avatar "/media/img/horse.jpg"
-    :personal-duoshuo-shortname "tumashu-website"
-    :web-server-port 6789
-    ))
+(defvar owp/devtools-repository-directory
+  "~/project/emacs-packages/org-webpage/")
 
-(add-to-list 'owp/project-config-alist
-             owp/devtools-webpage-config)
+(defun owp/devtools-update-owp-config ()
+  (interactive)
+  (add-to-list
+   'owp/project-config-alist
+   `("org-webpage"
+     :repository-directory ,owp/devtools-repository-directory
+     :remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
+     :site-domain "http://tumashu.github.com/org-webpage"
+     :site-main-title "Org-webpage"
+     :site-sub-title "(Static site senerator based on org mode)"
+     :default-category "documents"
+     :theme (worg killjs)
+     :force-absolute-url t
+     :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
+     :personal-avatar "/media/img/horse.jpg"
+     :personal-duoshuo-shortname "tumashu-website"
+     :web-server-port 6789)))
+
+(owp/devtools-update-owp-config)
 
 (defun owp/devtools-generate-index-file ()
   (interactive)
