@@ -104,7 +104,7 @@ content of the buffer will be converted into html."
                               :thumb ,(owp/read-org-option "THUMBNAIL")))
          assets-dir post-content
          asset-path asset-abs-path pub-abs-path converted-path
-         component-table tags category cat-config)
+         component-table tags authors category cat-config)
     (setq tags (owp/read-org-option "TAGS"))
     (when tags
       (plist-put
