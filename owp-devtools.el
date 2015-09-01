@@ -56,7 +56,8 @@
   (interactive)
   (let* ((org-file (concat
                     (file-name-as-directory
-                     owp/load-directory) "README.org")))
+                     owp/devtools-repository-directory)
+                    "README.org")))
     (if (file-exists-p org-file)
         (with-current-buffer (find-file-noselect org-file)
           (let ((indent-tabs-mode nil)
