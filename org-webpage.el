@@ -130,8 +130,8 @@
           (sort (owp/directory-files-recursively repo-dir nil "\\.org$")
                 #'(lambda (a b)
                     (time-less-p
-                     (sixth (file-attributes b))
-                     (sixth (file-attributes a))))))
+                     (cl-sixth (file-attributes b))
+                     (cl-sixth (file-attributes a))))))
          (length-repo-files (length repo-files))
          (update-top-n
           (cond ((and partial-update (numberp update-top-n)) update-top-n)

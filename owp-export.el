@@ -35,6 +35,7 @@
 (require 'owp-vars)
 (require 'owp-config)
 (require 'owp-template)
+(require 'cl-lib)
 
 
 (defun owp/publish-changes (files-list change-plist pub-root-dir)
@@ -207,7 +208,7 @@ can contain following parameters:
         (encoded-title (owp/encode-string-to-url title)))
     (format-spec uri-template `((?y . ,(car date-list))
                                 (?m . ,(cadr date-list))
-                                (?d . ,(caddr date-list))
+                                (?d . ,(cl-caddr date-list))
                                 (?t . ,encoded-title)))))
 
 
