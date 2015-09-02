@@ -48,6 +48,7 @@
      :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
      :personal-avatar "/media/img/horse.jpg"
      :personal-duoshuo-shortname "tumashu-website"
+     :preparation-function owp/devtools-generate-index-file
      :web-server-port 6789)))
 
 (owp/devtools-update-owp-config)
