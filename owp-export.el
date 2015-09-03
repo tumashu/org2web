@@ -38,20 +38,18 @@
 (require 'cl-lib)
 
 
-(defun owp/publish-changes (files-list change-plist pub-root-dir)
+(defun owp/publish-changes (all-files changed-files pub-root-dir)
   "This function is for:
 1. publish changed org files to html
-2. delete html files which are relevant to deleted org files (NOT implemented)
 3. update index pages
 4. regenerate tag pages
-`files-list' contain paths of org files, `change-plist'
-contains two properties, one is :update for files to be updated, another is :delete
-for files to be deleted. `pub-root-dir' is the root publication directory."
+`all-files' contain paths of org files, `changed-files' contain org files
+ to be updated.
+
+This function don't handle deleted org-files."
   (let* ((repo-dir (owp/get-repository-directory))
-         (upd-list (plist-get change-plist :update))
-         (del-list (plist-get change-plist :delete))
          visiting file-buffer attr-cell file-attr-list)
-    (when (or upd-list del-list)
+    (when changed-files
       (mapc
        #'(lambda (org-file)
            (setq visiting (find-buffer-visiting org-file))
@@ -59,23 +57,21 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
                                       (or visiting (find-file org-file)))
              (setq attr-cell (owp/get-org-file-options
                               pub-root-dir
-                              (member org-file upd-list)))
+                              (member org-file changed-files)))
              (setq file-attr-list (cons (car attr-cell) file-attr-list))
-             (when (member org-file upd-list)
+             (when (member org-file changed-files)
                (owp/publish-modified-file (cdr attr-cell)
-                                          (plist-get (car attr-cell) :pub-dir)))
-             (when (member org-file del-list)
-               (owp/handle-deleted-file org-file)))
+                                          (plist-get (car attr-cell) :pub-dir))))
            (or visiting (kill-buffer file-buffer)))
-       files-list)
+       all-files)
       (unless (member
                (expand-file-name "index.org" repo-dir)
-               files-list)
+               all-files)
         (owp/generate-default-index file-attr-list pub-root-dir))
       (when (and (owp/get-config-option :about)
                  (not (member
                        (expand-file-name "about.org" repo-dir)
-                       files-list)))
+                       all-files)))
         (owp/generate-default-about pub-root-dir))
       (owp/update-category-index file-attr-list pub-root-dir)
       (when (owp/get-config-option :rss)
@@ -284,10 +280,6 @@ If COMPONENT-TABLE is nil, the publication will be skipped."
        component-table))
      (concat (file-name-as-directory pub-dir) "index.html") ;; 'html-mode ;; do NOT indent the code
      )))
-
-(defun owp/handle-deleted-file (org-file-path)
-  "TODO: add logic for this function, maybe a little complex."
-  )
 
 (defun owp/rearrange-category-sorted (file-attr-list)
   "Rearrange and sort attribute property lists from FILE-ATTR-LIST. Rearrange

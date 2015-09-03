@@ -151,9 +151,9 @@
                                          '("## Hide others ... ##")))
                                "\n"))
                             "\n\nOrg-webpage will update TOP (N) org-files, Please type N: "))))))
-         (changed-files `(:delete nil :update ,(if (numberp update-top-n)
-                                                   (cl-subseq repo-files 0 (min update-top-n length-repo-files))
-                                                 repo-files))))
+         (changed-files (if (numberp update-top-n)
+                            (cl-subseq repo-files 0 (min update-top-n length-repo-files))
+                          repo-files)))
 
     (when (file-directory-p publish-root-dir)
       (delete-directory publish-root-dir t))
