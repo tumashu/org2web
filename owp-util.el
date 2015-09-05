@@ -50,7 +50,7 @@
                        (string-match regexp (file-name-nondirectory file)))
              collect file into ret
              when (file-directory-p file)
-             nconc (eh-directory-files-recursively file type regexp) into ret
+             nconc (owp/directory-files-recursively file type regexp) into ret
              finally return ret)))
 
 (defun owp/compare-standard-date (date1 date2)
