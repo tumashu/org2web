@@ -362,17 +362,28 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                         ("posts"
                          (mapcar
                           #'(lambda (attr-plist)
-                              (ht ("date"
-                                   (plist-get
-                                    attr-plist
-                                    (plist-get
-                                     (cdr (or (assoc
-                                               (plist-get attr-plist :category)
-                                               owp/category-config-alist)
-                                              (owp/get-category-setting default-category)))
-                                     :sort-by)))
-                                  ("post-uri" (plist-get attr-plist :uri))
-                                  ("post-title" (plist-get attr-plist :title))))
+                              (let ((tags-multi (mapcar
+                                                 #'(lambda (tag-name)
+                                                     (ht ("link" (owp/generate-summary-uri "tags" tag-name))
+                                                         ("name" tag-name)))
+                                                 (plist-get attr-plist :tags))))
+                                (ht ("date"
+                                     (plist-get
+                                      attr-plist
+                                      (plist-get
+                                       (cdr (or (assoc
+                                                 (plist-get attr-plist :category)
+                                                 owp/category-config-alist)
+                                                (owp/get-category-setting default-category)))
+                                       :sort-by)))
+                                    ("post-uri" (plist-get attr-plist :uri))
+                                    ("post-title" (plist-get attr-plist :title))
+                                    ("tag-links" (when tags-multi
+                                                   (mapconcat
+                                                    #'(lambda (tag)
+                                                        (mustache-render
+                                                         "<a href=\"{{link}}\">{{name}}</a>" tag))
+                                                    tags-multi " : "))))))
                           (cdr cat-list))))))
                   ("footer"
                    (owp/render-footer

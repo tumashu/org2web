@@ -167,6 +167,13 @@ table th.left, table td.left {
 table th.right, table td.right {
     text-align: right;
 }
+
+span.tags-links {
+    display:block;
+    float:right;
+    text-align:right;
+}
+
 /******************************************************/
 /* body */
 .container {
