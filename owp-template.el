@@ -60,12 +60,18 @@
                           (concat (file-name-as-directory owp/load-directory)
                                   "upload-scripts/common/"))))))
 
+(defun owp/get-org-file-name (buffer)
+  "Get org-file's name associated with `buffer'"
+  (cdr (assoc buffer owp/buffer-list)))
+
 (defun owp/get-title ()
   "Get the title of org file."
-  (let ((title (owp/read-org-option "TITLE")))
+  (let ((title (owp/read-org-option "TITLE"))
+        (file-name-base (file-name-base
+                         (owp/get-org-file-name (current-buffer)))))
     (if (and title (> (length title) 0))
         title
-      (capitalize (file-name-sans-extension (buffer-name))))))
+      (capitalize file-name-base))))
 
 (defun owp/get-category (org-file)
   "Get org file category presented by ORG-FILE, return all categories if
@@ -205,7 +211,7 @@ similar to `owp/render-header'."
     (message "Read footer.mustache from file")
     (owp/file-to-string (owp/get-template-file "footer.mustache")))
    (or param-table
-       (let* ((filename (buffer-file-name))
+       (let* ((filename (owp/get-org-file-name (current-buffer)))
               (title (funcall (owp/get-config-option :get-title-function)))
               (default-category (owp/get-config-option :default-category))
               (date (owp/fix-timestamp-string

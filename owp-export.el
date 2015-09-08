@@ -52,17 +52,23 @@ This function don't handle deleted org-files."
     (when changed-files
       (mapc
        #'(lambda (org-file)
-           (setq visiting (find-buffer-visiting org-file))
-           (with-current-buffer (setq file-buffer
-                                      (or visiting (find-file org-file)))
-             (setq attr-cell (owp/get-org-file-options
-                              pub-root-dir
-                              (member org-file changed-files)))
-             (setq file-attr-list (cons (car attr-cell) file-attr-list))
-             (when (member org-file changed-files)
-               (owp/publish-modified-file (cdr attr-cell)
-                                          (plist-get (car attr-cell) :pub-dir))))
-           (or visiting (kill-buffer file-buffer)))
+           (let (coding)
+             (with-current-buffer (generate-new-buffer owp/buffer-name)
+               (if coding
+                   (let ((coding-system-for-read coding))
+                     (insert-file-contents org-file))
+                 (insert-file-contents org-file))
+               (org-mode)
+               (push (cons (current-buffer) org-file)
+                     owp/buffer-list)
+               (setq attr-cell (owp/get-org-file-options
+                                pub-root-dir
+                                (member org-file changed-files)))
+               (setq file-attr-list (cons (car attr-cell) file-attr-list))
+               (when (member org-file changed-files)
+                 (owp/publish-modified-file (cdr attr-cell)
+                                            (plist-get (car attr-cell) :pub-dir)))
+               (kill-buffer))))
        all-files)
       (unless (member
                (expand-file-name "index.org" repo-dir)
@@ -86,7 +92,7 @@ This function don't handle deleted org-files."
 PUB-ROOT-DIR is the root directory of published files, if DO-PUB is t, the
 content of the buffer will be converted into html."
   (let* ((repo-dir (owp/get-repository-directory))
-         (filename (buffer-file-name))
+         (filename (owp/get-org-file-name (current-buffer)))
          (attr-plist `(:title ,(funcall (owp/get-config-option :get-title-function))
                               :date ,(owp/fix-timestamp-string
                                       (or (owp/read-org-option "DATE")
