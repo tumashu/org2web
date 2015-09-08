@@ -128,7 +128,7 @@ content of the buffer will be converted into html."
                                       "\\`/" ""
                                       (plist-get attr-plist :uri)))))
     (when do-pub
-      (princ attr-plist)
+      ;; (princ attr-plist)
       (setq post-content (owp/render-content))
       (setq assets-dir (file-name-as-directory
                         (concat (file-name-as-directory pub-root-dir)
@@ -154,16 +154,18 @@ content of the buffer will be converted into html."
             (setq asset-abs-path
                   (expand-file-name asset-path (file-name-directory filename)))
             (if (not (file-exists-p asset-abs-path))
-                (message "[WARN] File %s in hyper link does not exist, org \
-file: %s." asset-path filename)
+                (message (concat "[WARN] File %s in hyper link does not exist, "
+                                 "org file: %s.")
+                         asset-path filename)
               (unless (file-directory-p assets-dir)
                 (mkdir assets-dir t))
               (copy-file asset-abs-path assets-dir t t t t)
               (setq pub-abs-path (concat assets-dir
                                          (file-name-nondirectory asset-path)))
               (unless (string-prefix-p pub-root-dir pub-abs-path)
-                (message "[WARN] The publication root directory %s is not an \
-ancestor directory of assets directory %s." pub-root-dir assets-dir))
+                (message (concat "[WARN] The publication root directory %s is not an "
+                                 "ancestor directory of assets directory %s.")
+                         pub-root-dir assets-dir))
               (setq converted-path
                     (concat "/" (file-relative-name pub-abs-path pub-root-dir)))
               (setq post-content
