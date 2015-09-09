@@ -48,7 +48,7 @@
 
 This function don't handle deleted org-files."
   (let* ((repo-dir (owp/get-repository-directory))
-         visiting file-buffer attr-cell file-attr-list)
+         visiting uri-alist attr-cell file-attr-list)
     (when changed-files
       (mapc
        #'(lambda (org-file)
@@ -59,6 +59,38 @@ This function don't handle deleted org-files."
                      (insert-file-contents org-file))
                  (insert-file-contents org-file)))
              (org-mode)
+             (push (cons (file-relative-name org-file repo-dir)
+                         (replace-regexp-in-string
+                          "\\`/" ""
+                          (plist-get (car (owp/get-org-file-options
+                                           org-file
+                                           pub-root-dir nil)) :uri)))
+                   uri-alist))
+           (kill-buffer))
+       all-files)
+      ;; (princ uri-alist)
+      (mapc
+       #'(lambda (org-file)
+           (with-current-buffer (generate-new-buffer owp/buffer-name)
+             (let (coding)
+               (if coding
+                   (let ((coding-system-for-read coding))
+                     (insert-file-contents org-file))
+                 (insert-file-contents org-file)))
+             (org-mode)
+             ;; Deal with file links, which are likes:
+             ;; 1. [[file:test1.org][test1]]
+             ;; 2. [[file:./test2.org][test2]]
+             (mapc #'(lambda (file-link)
+                       (goto-char (point-min))
+                       (while (re-search-forward
+                               (format "\\(file:%s\\)\\|\\(file:./%s\\)"
+                                       (car file-link)
+                                       (car file-link)) nil t)
+                         (replace-match
+                          (format "file:%s/index.html"
+                                  (cdr file-link)) nil t)))
+                   uri-alist)
              (setq attr-cell (owp/get-org-file-options
                               org-file
                               pub-root-dir
