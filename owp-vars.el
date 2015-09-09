@@ -337,7 +337,6 @@ You can see fallback value of above option in `owp/config-fallback'"
 (defvar owp/current-project-name nil)
 (defvar owp/last-project-name nil)
 (defvar owp/buffer-name " *org-webpage buffer*")
-(defvar owp/buffer-list nil)
 
 (defvar owp/publish-to-repository nil)
 (defvar owp/always-use-relative-url nil

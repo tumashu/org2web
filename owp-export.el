@@ -52,23 +52,22 @@ This function don't handle deleted org-files."
     (when changed-files
       (mapc
        #'(lambda (org-file)
-           (let (coding)
-             (with-current-buffer (generate-new-buffer owp/buffer-name)
+           (with-current-buffer (generate-new-buffer owp/buffer-name)
+             (let (coding)
                (if coding
                    (let ((coding-system-for-read coding))
                      (insert-file-contents org-file))
-                 (insert-file-contents org-file))
-               (org-mode)
-               (push (cons (current-buffer) org-file)
-                     owp/buffer-list)
-               (setq attr-cell (owp/get-org-file-options
-                                pub-root-dir
-                                (member org-file changed-files)))
-               (setq file-attr-list (cons (car attr-cell) file-attr-list))
-               (when (member org-file changed-files)
-                 (owp/publish-modified-file (cdr attr-cell)
-                                            (plist-get (car attr-cell) :pub-dir)))
-               (kill-buffer))))
+                 (insert-file-contents org-file)))
+             (org-mode)
+             (setq attr-cell (owp/get-org-file-options
+                              org-file
+                              pub-root-dir
+                              (member org-file changed-files)))
+             (setq file-attr-list (cons (car attr-cell) file-attr-list))
+             (when (member org-file changed-files)
+               (owp/publish-modified-file (cdr attr-cell)
+                                          (plist-get (car attr-cell) :pub-dir)))
+             (kill-buffer)))
        all-files)
       (unless (member
                (expand-file-name "index.org" repo-dir)
@@ -87,21 +86,20 @@ This function don't handle deleted org-files."
            (owp/update-summary file-attr-list pub-root-dir name))
        (mapcar #'car (owp/get-config-option :summary))))))
 
-(defun owp/get-org-file-options (pub-root-dir do-pub)
+(defun owp/get-org-file-options (org-file pub-root-dir do-pub)
   "Retrieve all needed options for org file opened in current buffer.
 PUB-ROOT-DIR is the root directory of published files, if DO-PUB is t, the
 content of the buffer will be converted into html."
   (let* ((repo-dir (owp/get-repository-directory))
-         (filename (owp/get-org-file-name (current-buffer)))
-         (attr-plist `(:title ,(funcall (owp/get-config-option :get-title-function))
+         (attr-plist `(:title ,(funcall (owp/get-config-option :get-title-function) org-file)
                               :date ,(owp/fix-timestamp-string
                                       (or (owp/read-org-option "DATE")
                                           (format-time-string "%Y-%m-%d")))
-                              :mod-date ,(if (not filename)
+                              :mod-date ,(if (not org-file)
                                              (format-time-string "%Y-%m-%d")
                                            (format-time-string
                                             "%Y-%m-%d"
-                                            (nth 5 (file-attributes filename))))
+                                            (nth 5 (file-attributes org-file))))
                               :description ,(or (owp/read-org-option "DESCRIPTION")
                                                 "No Description")
                               :thumb ,(owp/read-org-option "THUMBNAIL")))
@@ -118,7 +116,7 @@ content of the buffer will be converted into html."
       (plist-put
        attr-plist :authors (delete "" (mapcar 'owp/trim-string
                                               (split-string authors "[:,]+" t)))))
-    (setq category (owp/get-category filename))
+    (setq category (owp/get-category org-file))
     (plist-put attr-plist :category category)
     (setq cat-config (cdr (or (assoc category owp/category-config-alist)
                               (owp/get-category-setting
@@ -135,7 +133,7 @@ content of the buffer will be converted into html."
                                       (plist-get attr-plist :uri)))))
     (when do-pub
       ;; (princ attr-plist)
-      (setq post-content (owp/render-content))
+      (setq post-content (owp/render-content nil nil org-file))
       (setq assets-dir (file-name-as-directory
                         (concat (file-name-as-directory pub-root-dir)
                                 "assets/"
@@ -158,11 +156,11 @@ content of the buffer will be converted into html."
                          ;; TODO add more here
                          ))
             (setq asset-abs-path
-                  (expand-file-name asset-path (file-name-directory filename)))
+                  (expand-file-name asset-path (file-name-directory org-file)))
             (if (not (file-exists-p asset-abs-path))
                 (message (concat "[WARN] File %s in hyper link does not exist, "
                                  "org file: %s.")
-                         asset-path filename)
+                         asset-path org-file)
               (unless (file-directory-p assets-dir)
                 (mkdir assets-dir t))
               (copy-file asset-abs-path assets-dir t t t t)
@@ -177,10 +175,10 @@ content of the buffer will be converted into html."
               (setq post-content
                     (replace-regexp-in-string
                      (regexp-quote asset-path) converted-path post-content))))))
-      (setq component-table (ht ("header" (owp/render-header))
-                                ("nav" (owp/render-navigation-bar))
+      (setq component-table (ht ("header" (owp/render-header nil org-file))
+                                ("nav" (owp/render-navigation-bar nil org-file))
                                 ("content" post-content)
-                                ("footer" (owp/render-footer)))))
+                                ("footer" (owp/render-footer nil org-file)))))
     (cons attr-plist component-table)))
 
 (defun owp/read-org-option (option)

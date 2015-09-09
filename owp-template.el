@@ -60,18 +60,12 @@
                           (concat (file-name-as-directory owp/load-directory)
                                   "upload-scripts/common/"))))))
 
-(defun owp/get-org-file-name (buffer)
-  "Get org-file's name associated with `buffer'"
-  (cdr (assoc buffer owp/buffer-list)))
-
-(defun owp/get-title ()
+(defun owp/get-title (org-file)
   "Get the title of org file."
-  (let ((title (owp/read-org-option "TITLE"))
-        (file-name-base (file-name-base
-                         (owp/get-org-file-name (current-buffer)))))
+  (let ((title (owp/read-org-option "TITLE")))
     (if (and title (> (length title) 0))
         title
-      (capitalize file-name-base))))
+      (capitalize (file-name-base org-file)))))
 
 (defun owp/get-category (org-file)
   "Get org file category presented by ORG-FILE, return all categories if
@@ -101,7 +95,7 @@ BODY and push the result into cache and return it."
   `(or (owp/get-cache-item ,key)
        (owp/update-cache-item ,key (funcall (lambda () ,@body)))))
 
-(defun owp/render-header (&optional param-table)
+(defun owp/render-header (&optional param-table org-file)
   "Render the header on each page. PARAM-TABLE is the hash table from mustache
 to render the template. If it is not set or nil, this function will try to build
 a hash table accordint to current buffer."
@@ -111,14 +105,14 @@ a hash table accordint to current buffer."
     (message "Read header.mustache from file")
     (owp/file-to-string (owp/get-template-file "header.mustache")))
    (or param-table
-       (ht ("page-title" (concat (funcall (owp/get-config-option :get-title-function))
+       (ht ("page-title" (concat (funcall (owp/get-config-option :get-title-function) org-file)
                                  " - " (owp/get-config-option :site-main-title)))
            ("author" (or (owp/read-org-option "AUTHOR")
                          user-full-name "Unknown Author"))
            ("description" (owp/read-org-option "DESCRIPTION"))
            ("keywords" (owp/read-org-option "KEYWORDS"))))))
 
-(defun owp/render-navigation-bar (&optional param-table)
+(defun owp/render-navigation-bar (&optional param-table org-file)
   "Render the navigation bar on each page. it will be read firstly from
 `owp/item-cache', if there is no cached content, it will be rendered
 and pushed into cache from template. PARAM-TABLE is the hash table for mustache
@@ -177,7 +171,7 @@ render from a default hash table."
                                  (match-string 1 site-domain)
                                site-domain))))))))
 
-(defun owp/render-content (&optional template param-table)
+(defun owp/render-content (&optional template param-table org-file)
   "Render the content on each page. TEMPLATE is the template name for rendering,
 if it is not set of nil, will use default post.mustache instead. PARAM-TABLE is
 similar to `owp/render-header'."
@@ -190,7 +184,7 @@ similar to `owp/render-header'."
     (owp/file-to-string (owp/get-template-file
                          (or template "post.mustache"))))
    (or param-table
-       (ht ("title" (funcall (owp/get-config-option :get-title-function)))
+       (ht ("title" (funcall (owp/get-config-option :get-title-function) org-file))
            ("content" (cl-flet ((org-html-fontify-code
                                  (code lang)
                                  (when code (org-html-encode-plain-text code))))
@@ -202,7 +196,7 @@ similar to `owp/render-header'."
   "A function with can export org file to html."
   (org-export-as 'html nil nil t nil))
 
-(defun owp/render-footer (&optional param-table)
+(defun owp/render-footer (&optional param-table org-file)
   "Render the footer on each page. PARAM-TABLE is similar to
 `owp/render-header'."
   (mustache-render
@@ -211,8 +205,7 @@ similar to `owp/render-header'."
     (message "Read footer.mustache from file")
     (owp/file-to-string (owp/get-template-file "footer.mustache")))
    (or param-table
-       (let* ((filename (owp/get-org-file-name (current-buffer)))
-              (title (funcall (owp/get-config-option :get-title-function)))
+       (let* ((title (funcall (owp/get-config-option :get-title-function) org-file))
               (default-category (owp/get-config-option :default-category))
               (date (owp/fix-timestamp-string
                      (or (owp/read-org-option "DATE")
@@ -226,7 +219,7 @@ similar to `owp/render-header'."
                                               "tags") tag-name))
                                  ("name" tag-name)))
                          (delete "" (mapcar 'owp/trim-string (split-string tags "[:,]+" t))))))
-              (category (owp/get-category filename))
+              (category (owp/get-category org-file))
               (config (cdr (or (assoc category owp/category-config-alist)
                                (owp/get-category-setting default-category))))
               (uri (funcall (plist-get config :uri-generator)
@@ -234,11 +227,11 @@ similar to `owp/render-header'."
          (ht ("show-meta" (plist-get config :show-meta))
              ("show-comment" (plist-get config :show-comment))
              ("date" date)
-             ("mod-date" (if (not filename)
+             ("mod-date" (if (not org-file)
                              (format-time-string "%Y-%m-%d")
                            (format-time-string
                             "%Y-%m-%d"
-                            (nth 5 (file-attributes filename)))))
+                            (nth 5 (file-attributes org-file)))))
              ("tags" tags)
              ("tag-links" (if (not tags) "N/A"
                             (mapconcat
