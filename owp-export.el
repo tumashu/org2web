@@ -48,57 +48,47 @@
 
 This function don't handle deleted org-files."
   (let* ((repo-dir (owp/get-repository-directory))
-         visiting uri-alist attr-cell file-attr-list)
+         visiting uri-alist file-attr-list)
     (when changed-files
-      (mapc
-       #'(lambda (org-file)
-           (with-current-buffer (generate-new-buffer owp/buffer-name)
-             (let (coding)
-               (if coding
-                   (let ((coding-system-for-read coding))
-                     (insert-file-contents org-file))
-                 (insert-file-contents org-file)))
-             (org-mode)
-             (push (cons (file-relative-name org-file repo-dir)
-                         (plist-get (car (owp/get-org-file-options
-                                          org-file
-                                          pub-root-dir nil)) :relative-uri))
-                   uri-alist))
-           (kill-buffer))
-       all-files)
+      (dolist (org-file all-files)
+        (with-temp-buffer
+          (let (attr-cell)
+            (insert-file-contents org-file)
+            (org-mode)
+            (setq attr-cell (owp/get-org-file-options
+                             org-file pub-root-dir))
+            (push attr-cell file-attr-list)
+            (push (cons (file-relative-name org-file repo-dir)
+                        (plist-get attr-cell :relative-uri))
+                  uri-alist))))
+      ;; (princ file-attr-list)
       ;; (princ uri-alist)
-      (mapc
-       #'(lambda (org-file)
-           (with-current-buffer (generate-new-buffer owp/buffer-name)
-             (let (coding)
-               (if coding
-                   (let ((coding-system-for-read coding))
-                     (insert-file-contents org-file))
-                 (insert-file-contents org-file)))
-             (org-mode)
-             ;; Deal with file links, which are likes:
-             ;; 1. [[file:test1.org][test1]]
-             ;; 2. [[file:./test2.org][test2]]
-             (mapc #'(lambda (file-link)
-                       (goto-char (point-min))
-                       (while (re-search-forward
-                               (format "\\(file:%s\\)\\|\\(file:./%s\\)"
-                                       (car file-link)
-                                       (car file-link)) nil t)
-                         (replace-match
-                          (format "file:%s/index.html"
-                                  (cdr file-link)) nil t)))
-                   uri-alist)
-             (setq attr-cell (owp/get-org-file-options
-                              org-file
-                              pub-root-dir
-                              (member org-file changed-files)))
-             (setq file-attr-list (cons (car attr-cell) file-attr-list))
-             (when (member org-file changed-files)
-               (owp/publish-modified-file (cdr attr-cell)
-                                          (plist-get (car attr-cell) :pub-dir)))
-             (kill-buffer)))
-       all-files)
+      (dolist (org-file all-files)
+        (when (member org-file changed-files)
+          (with-temp-buffer
+            (let (attr-cell exported-content)
+              (insert-file-contents org-file)
+              (org-mode)
+              ;; Deal with file links, which are likes:
+              ;; 1. [[file:test1.org][test1]]
+              ;; 2. [[file:./test2.org][test2]]
+              (mapc #'(lambda (file-link)
+                        (goto-char (point-min))
+                        (while (re-search-forward
+                                (format "\\(file:%s\\)\\|\\(file:./%s\\)"
+                                        (car file-link)
+                                        (car file-link)) nil t)
+                          (replace-match
+                           (format "file:%s/index.html"
+                                   (cdr file-link)) nil t)))
+                    uri-alist)
+              (setq attr-cell (owp/get-org-file-options
+                               org-file
+                               pub-root-dir))
+              (setq exported-content (owp/get-org-file-export-content
+                                      org-file pub-root-dir attr-cell))
+              (owp/publish-modified-file exported-content
+                                         (plist-get attr-cell :pub-dir))))))
       (unless (member
                (expand-file-name "index.org" repo-dir)
                all-files)
@@ -116,10 +106,9 @@ This function don't handle deleted org-files."
            (owp/update-summary file-attr-list pub-root-dir name))
        (mapcar #'car (owp/get-config-option :summary))))))
 
-(defun owp/get-org-file-options (org-file pub-root-dir do-pub)
+(defun owp/get-org-file-options (org-file pub-root-dir)
   "Retrieve all needed options for org file opened in current buffer.
-PUB-ROOT-DIR is the root directory of published files, if DO-PUB is t, the
-content of the buffer will be converted into html."
+PUB-ROOT-DIR is the root directory of published files."
   (let* ((repo-dir (owp/get-repository-directory))
          (attr-plist `(:title ,(funcall (owp/get-config-option :get-title-function) org-file)
                               :date ,(owp/fix-timestamp-string
@@ -132,10 +121,7 @@ content of the buffer will be converted into html."
                                             (nth 5 (file-attributes org-file))))
                               :description ,(or (owp/read-org-option "DESCRIPTION")
                                                 "No Description")
-                              :thumb ,(owp/read-org-option "THUMBNAIL")))
-         assets-dir post-content
-         asset-path asset-abs-path pub-abs-path converted-path
-         component-table tags authors category cat-config)
+                              :thumb ,(owp/read-org-option "THUMBNAIL"))))
     (setq tags (owp/read-org-option "TAGS"))
     (when tags
       (plist-put
@@ -162,54 +148,63 @@ content of the buffer will be converted into html."
                                     (concat
                                      (file-name-as-directory pub-root-dir)
                                      (plist-get attr-plist :relative-uri))))
-    (when do-pub
-      ;; (princ attr-plist)
-      (setq post-content (owp/render-content nil nil org-file))
-      (setq assets-dir (file-name-as-directory
-                        (concat (file-name-as-directory pub-root-dir)
-                                "assets/"
-                                (plist-get attr-plist :relative-uri))))
-      (with-temp-buffer
-        (insert post-content)
-        (goto-char (point-min))
-        (while (re-search-forward
+
+    attr-plist))
+
+
+(defun owp/get-org-file-export-content (org-file pub-root-dir attr-plist)
+  "Export org file to html and return html content."
+  (let* ((repo-dir (owp/get-repository-directory))
+         assets-dir post-content
+         asset-path asset-abs-path pub-abs-path converted-path
+         component-table tags authors category cat-config)
+    ;; (princ attr-plist)
+    (setq post-content (owp/render-content nil nil org-file))
+    (setq assets-dir (file-name-as-directory
+                      (concat (file-name-as-directory pub-root-dir)
+                              "assets/"
+                              (plist-get attr-plist :relative-uri))))
+    (with-temp-buffer
+      (insert post-content)
+      (goto-char (point-min))
+      (while (re-search-forward
                 ;;; TODO: not only links need to convert, but also inline
                 ;;; images, may add others later
-                ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
-                "<[a-zA-Z]+[^/>]+\\(src\\|href\\)=\"\\([^\"]+\\)\"[^>]*>" nil t)
-          (setq asset-path (match-string 2))
-          (when (not (or (string-prefix-p "http://" asset-path)
-                         (string-prefix-p "https://" asset-path)
-                         (string-prefix-p "mailto:" asset-path)
-                         (string-prefix-p "ftp://" asset-path)
-                         (string-prefix-p "#" asset-path)
-                         ;; TODO add more here
-                         ))
-            (setq asset-abs-path
-                  (expand-file-name asset-path (file-name-directory org-file)))
-            (if (not (file-exists-p asset-abs-path))
-                (message (concat "[WARN] File %s in hyper link does not exist, "
-                                 "org file: %s.")
-                         asset-path org-file)
-              (unless (file-directory-p assets-dir)
-                (mkdir assets-dir t))
-              (copy-file asset-abs-path assets-dir t t t t)
-              (setq pub-abs-path (concat assets-dir
-                                         (file-name-nondirectory asset-path)))
-              (unless (string-prefix-p pub-root-dir pub-abs-path)
-                (message (concat "[WARN] The publication root directory %s is not an "
-                                 "ancestor directory of assets directory %s.")
-                         pub-root-dir assets-dir))
-              (setq converted-path
-                    (concat "/" (file-relative-name pub-abs-path pub-root-dir)))
-              (setq post-content
-                    (replace-regexp-in-string
-                     (regexp-quote asset-path) converted-path post-content))))))
-      (setq component-table (ht ("header" (owp/render-header nil org-file))
-                                ("nav" (owp/render-navigation-bar nil org-file))
-                                ("content" post-content)
-                                ("footer" (owp/render-footer nil org-file)))))
-    (cons attr-plist component-table)))
+              ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+              "<[a-zA-Z]+[^/>]+\\(src\\|href\\)=\"\\([^\"]+\\)\"[^>]*>" nil t)
+        (setq asset-path (match-string 2))
+        (when (not (or (string-prefix-p "http://" asset-path)
+                       (string-prefix-p "https://" asset-path)
+                       (string-prefix-p "mailto:" asset-path)
+                       (string-prefix-p "ftp://" asset-path)
+                       (string-prefix-p "#" asset-path)
+                       ;; TODO add more here
+                       ))
+          (setq asset-abs-path
+                (expand-file-name asset-path (file-name-directory org-file)))
+          (if (not (file-exists-p asset-abs-path))
+              (message (concat "[WARN] File %s in hyper link does not exist, "
+                               "org file: %s.")
+                       asset-path org-file)
+            (unless (file-directory-p assets-dir)
+              (mkdir assets-dir t))
+            (copy-file asset-abs-path assets-dir t t t t)
+            (setq pub-abs-path (concat assets-dir
+                                       (file-name-nondirectory asset-path)))
+            (unless (string-prefix-p pub-root-dir pub-abs-path)
+              (message (concat "[WARN] The publication root directory %s is not an "
+                               "ancestor directory of assets directory %s.")
+                       pub-root-dir assets-dir))
+            (setq converted-path
+                  (concat "/" (file-relative-name pub-abs-path pub-root-dir)))
+            (setq post-content
+                  (replace-regexp-in-string
+                   (regexp-quote asset-path) converted-path post-content))))))
+    (setq component-table (ht ("header" (owp/render-header nil org-file))
+                              ("nav" (owp/render-navigation-bar nil org-file))
+                              ("content" post-content)
+                              ("footer" (owp/render-footer nil org-file))))
+    component-table))
 
 (defun owp/read-org-option (option)
   "Read option value of org file opened in current buffer.
