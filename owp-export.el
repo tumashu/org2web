@@ -60,11 +60,9 @@ This function don't handle deleted org-files."
                  (insert-file-contents org-file)))
              (org-mode)
              (push (cons (file-relative-name org-file repo-dir)
-                         (replace-regexp-in-string
-                          "\\`/" ""
-                          (plist-get (car (owp/get-org-file-options
-                                           org-file
-                                           pub-root-dir nil)) :uri)))
+                         (plist-get (car (owp/get-org-file-options
+                                          org-file
+                                          pub-root-dir nil)) :relative-uri))
                    uri-alist))
            (kill-buffer))
        all-files)
@@ -157,20 +155,20 @@ content of the buffer will be converted into html."
                                         (plist-get cat-config :uri-template)
                                         (plist-get attr-plist :date)
                                         (plist-get attr-plist :title)))
+    (plist-put attr-plist :relative-uri (replace-regexp-in-string
+                                         "\\`/" ""
+                                         (plist-get attr-plist :uri)))
     (plist-put attr-plist :pub-dir (file-name-as-directory
                                     (concat
                                      (file-name-as-directory pub-root-dir)
-                                     (replace-regexp-in-string
-                                      "\\`/" ""
-                                      (plist-get attr-plist :uri)))))
+                                     (plist-get attr-plist :relative-uri))))
     (when do-pub
       ;; (princ attr-plist)
       (setq post-content (owp/render-content nil nil org-file))
       (setq assets-dir (file-name-as-directory
                         (concat (file-name-as-directory pub-root-dir)
                                 "assets/"
-                                (replace-regexp-in-string
-                                 "\\`" "" (plist-get attr-plist :uri)))))
+                                (plist-get attr-plist :relative-uri))))
       (with-temp-buffer
         (insert post-content)
         (goto-char (point-min))
