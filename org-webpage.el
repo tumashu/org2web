@@ -23,6 +23,9 @@
 
 ;;; Commentary:
 
+;; Note: org-webpage will not add more features in the funture,
+;; suggest kuangdash's [[https://github.com/emacs-china/EGO][EGO]].
+
 ;; org-webpage is a static site generator based on org mode.
 
 ;; 1. Sources:   https://github.com/tumashu/org-webpage
