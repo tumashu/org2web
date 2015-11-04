@@ -65,7 +65,7 @@
   (let ((title (owp/read-org-option "TITLE")))
     (if (and title (> (length title) 0))
         title
-      (capitalize (file-name-base org-file)))))
+      (file-name-base org-file))))
 
 (defun owp/get-category (org-file)
   "Get org file category presented by ORG-FILE, return all categories if
