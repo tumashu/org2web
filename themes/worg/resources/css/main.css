@@ -182,16 +182,15 @@
 
     }
 
-    li {
-        text-align: left;
-        text-indent: 0.7em;
-        margin: 0.4em 0.4em 0.4em -1.4em;
-        list-style: none outside none;
+    ul {
+        padding: 0px;
+        margin: 0px;
     }
 
-    li p {
-        margin-top: -1.5em;
-        margin-left: -0.7em;
+    li {
+        text-align: left;
+        margin: 0px;
+        padding: 0px;
     }
 
     table {
