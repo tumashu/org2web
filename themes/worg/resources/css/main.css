@@ -1223,3 +1223,46 @@
         overflow: auto;
     }
 } /* END OF @media screen */
+
+@media screen and (min-width:1000px) {
+
+    .post li{
+        margin-left: -1.2em;
+    }
+
+    .post li pre {
+        margin-left: 0em;
+    }
+
+    .post li p {
+        display: inline;
+    }
+
+    .post li {
+        list-style: none outside none;
+    }
+
+    .post ul > li:before {
+        content: "- ";
+        margin-left: -1.25em;
+    }
+
+    .post ol {
+        counter-reset: o-list;
+    }
+
+    .post ol > li:before {
+        content: counter(o-list) ") ";
+        counter-increment: o-list;
+        margin-left: -1.25em;
+    }
+
+    /* special for li in pre */
+    .post pre li {
+        list-style-type: decimal;
+    }
+
+    .post pre li:before {
+        display: none;
+    }
+} /* END OF @media (min-width:800px)  */
