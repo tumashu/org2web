@@ -328,7 +328,7 @@ month and day): " (unless (string= i "")
                "<TODO: insert your description here>"
              description)
            org-export-default-language
-           org-export-headline-levels
+           7   ;; Set default level to 7 instead of `org-export-headline-levels'
            nil ;; org-export-with-section-numbers
            nil ;; org-export-with-toc
            org-export-preserve-breaks
