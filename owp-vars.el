@@ -287,6 +287,32 @@ set the server port.
 2. Example1: 9876
 
 
+  `:lentic-doc-source'
+
+Emacs-lisp files from which org files will be generated with the
+help of lentic:
+1. Type: regexp
+2. Example: \"\\(org-webpage.el\\) \\| \\(owp-*.el\\)\"
+
+
+
+  `:lentic-readme-source'
+
+Emacs-lisp file from which README.md will be generated with the
+help of lentic:
+1. Type: file
+2. Example: \"org-webpage.el\"
+
+
+
+  `:lentic-index-source'
+
+Emacs-lisp file from which index.org will be generated with the
+help of lentic:
+1. Type: file
+2. Example: \"org-webpage.el\"
+
+
 You can see fallback value of above option in `owp/config-fallback'"
 :group 'org-webpage
 :type 'alist)
@@ -397,6 +423,9 @@ test publish.")
         :org-export-function owp/default-org-export
         :web-server-docroot "~/.emacs.d/org-webpage-server/default"
         :web-server-port 9876
+        :lentic-doc-source nil
+        :lentic-readme-source nil
+        :lentic-index-source nil
         :html-creator-string ,(format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\
 (<a href=\"http://orgmode.org\">Org mode</a> %s)"
 (format "%s.x" emacs-major-version)
