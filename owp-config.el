@@ -30,7 +30,13 @@
 (defun owp/get-config-option (option)
   "The function used to read org-webpage config"
   (when (functionp owp/get-config-option-function)
-    (funcall owp/get-config-option-function option)))
+    (let ((output (funcall owp/get-config-option-function option)))
+      ;; if "output" is a form which like (:eval myform),
+      ;; eval myform and return the result, otherwise
+      ;; return "output".
+      (if (eq (car output) :eval)
+          (eval `(progn ,@(cdr output)))
+        output))))
 
 (defun owp/get-config-option-from-alist (option)
   "The default org-webpage config read function,

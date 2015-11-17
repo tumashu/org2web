@@ -61,7 +61,7 @@ and `owp/new-post' will directly add new post to this project."
 (defcustom owp/project-config-alist nil
   "Association list to control org-webpage publishing behavior.
 
-Each element of the alist is a org-webpage 'project.'  The CAR of
+Each element of the alist is a org-webpage project.  The CAR of
 each element is a string, uniquely identifying the project.  The
 CDR of each element is a well-formed property list with an even
 number of elements, alternating keys and values, specifying
@@ -339,9 +339,16 @@ from `:lentic-index-source'.
 2. Example: (\"tag1\" \"tag2\" \"tag3\")
 
 
-You can see fallback value of above option in `owp/config-fallback'"
-:group 'org-webpage
-:type 'alist)
+You can see fallback value of above option in `owp/config-fallback'
+
+Note: Advanced user can use (:eval form) to config *All* org-webpage config options,
+for example, set `:repository-directory' to:
+
+ (:eval (concat \"~/.emacs.d/project/\" \"tumashu.github.com/\"))
+
+This feature is very useful in certain case."
+  :group 'org-webpage
+  :type 'alist)
 
 (defcustom owp/get-config-option-function
   'owp/get-config-option-from-alist
