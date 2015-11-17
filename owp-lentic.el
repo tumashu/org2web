@@ -31,7 +31,11 @@
 ;; lentic 是一个比较有意思的工具，下面是它的作者对它的介绍：
 
 ;; #+BEGIN_EXAMPLE
-;; Lentic allows two buffers to share the same or similar content but otherwise operate independently. This can be used for several different purposes. Different buffers can be in the same mode, with different locations of point, even different text sizes -- in effect, providing multiple persistent views
+;; Lentic allows two buffers to share the same or similar content
+;; but otherwise operate independently. This can be used for several
+;; different purposes. Different buffers can be in the same mode,
+;; with different locations of point, even different text sizes -- in effect,
+;; providing multiple persistent views
 ;; #+END_EXAMPLE
 
 ;; lentic 功能很多，在这里，我仅仅把它当做一个用 org-mode 格式写 comment 的工具。
@@ -58,7 +62,7 @@
 
 ;; ** 使用
 
-;; *** 用 `owp/lentic-switch-buffer' 命令写 org 格式的 Comment
+;; *** 用 `owp/lentic-switch-window' 命令写 org 格式的 Comment
 ;; 编辑 emacs-lisp 文件的时时，按 'C-c j' 快捷键会弹出一个 org-mode 窗口，这个窗口
 ;; 显示的内容和 emacs-lisp 文件内容在逻辑上具有高度的相似性。
 
