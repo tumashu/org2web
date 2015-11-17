@@ -71,6 +71,16 @@
 
 (defconst org-webpage-version "0.1")
 
+(defun owp/add-project-config (project-config)
+  "Add `project-config' to `owp/project-config-alist'"
+  (let ((project-name (car project-config)))
+    (when (and (listp project-config)
+               (stringp project-name))
+      (setq owp/project-config-alist
+            (remove (assoc project-name owp/project-config-alist)
+                    owp/project-config-alist)))
+    (add-to-list 'owp/project-config-alist project-config)))
+
 (defun owp/do-publication (&optional project-name publishing-directory job-number update-top-n)
   (interactive)
   (setq project-name
