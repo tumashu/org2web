@@ -23,7 +23,51 @@
 
 ;; * 说明文档
 
-;; 这个文件包含一些与 [[https://github.com/phillord/lentic][lentic]] 集成的工具。
+;; 这个文件包含一些辅助工具，这些工具可以让 org-webpage 与 [[https://github.com/phillord/lentic][lentic]] 更方便的集成。
+
+;; ** 安装
+
+;; *** 安装 lentic
+;; lentic 是一个比较有意思的工具，下面是它的作者对它的介绍：
+
+;; #+BEGIN_EXAMPLE
+;; Lentic allows two buffers to share the same or similar content but otherwise operate independently. This can be used for several different purposes. Different buffers can be in the same mode, with different locations of point, even different text sizes -- in effect, providing multiple persistent views
+;; #+END_EXAMPLE
+
+;; lentic 功能很多，在这里，我仅仅把它当做一个用 org-mode 格式写 comment 的工具。
+
+;; 安装方式：
+
+;; 1. 配置melpa源，参考：http://melpa.org/#/getting-started
+;; 2. M-x package-install RET lentic RET
+
+;; *** 安装 ox-gfm
+
+;; ox-gfm (Github Flavored Markdown exporter for Org Mode) 可以将 org 文档转换为 github markdown 格式。
+
+;; 安装方式：
+
+;; 1. 配置melpa源，参考：http://melpa.org/#/getting-started
+;; 2. M-x package-install RET ox-gfm RET
+
+;; ** 配置 owp-lentic
+;; #+BEGIN_EXAMPLE
+;; (require 'owp-lentic) ;; you need install lentic and gfm
+
+;; (org-defkey org-mode-map "\C-cj" 'owp/lentic-switch-window)
+;; (define-key emacs-lisp-mode-map "\C-cj" 'owp/lentic-switch-window)
+;; #+END_EXAMPLE
+
+;; ** 使用
+
+;; *** 用 `owp/lentic-switch-buffer' 命令写 org 格式的 Comment
+;; 编辑 emacs-lisp 文件的时时，按 'C-c j' 快捷键会弹出一个 org-mode 窗口，这个窗口
+;; 显示的内容和 emacs-lisp 文件内容在逻辑上具有高度的相似性。
+
+;; 文件不同的部份，在不同的地方编辑， comment 在 org buffer 中编辑，而 elisp 到 emacs-lisp buffer
+;; 中编辑，两个 buffer 中的内容实时自动的同步。
+
+;; *** 让 org-webpage 处理 lentic 化的 emacs-lisp 文件
 
 ;;; Code:
 
