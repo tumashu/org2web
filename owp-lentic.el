@@ -54,7 +54,7 @@
 ;; #+BEGIN_EXAMPLE
 ;; (require 'owp-lentic) ;; you need install lentic and gfm
 
-;; (org-defkey org-mode-map "\C-cj" 'owp/lentic-switch-window)
+;; (define-key org-mode-map "\C-cj" 'owp/lentic-switch-window)
 ;; (define-key emacs-lisp-mode-map "\C-cj" 'owp/lentic-switch-window)
 ;; #+END_EXAMPLE
 
@@ -68,6 +68,8 @@
 ;; 中编辑，两个 buffer 中的内容实时自动的同步。
 
 ;; *** 让 org-webpage 处理 lentic 化的 emacs-lisp 文件
+
+;; TODO
 
 ;;; Code:
 
@@ -108,7 +110,7 @@
     (m-buffer-replace-match
      (m-buffer-match
       (lentic-that conf)
-      ";;; ")
+      "^ *;; ;;; ")
      ";;; ")
     clone-return))
 
