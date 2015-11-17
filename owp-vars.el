@@ -295,6 +295,14 @@ help of lentic:
 2. Example: \"\\(org-webpage.el\\) \\| \\(owp-*.el\\)\"
 
 
+  `:lentic-doc-tags'
+
+The content with these tags will be considered when generate org files
+from `:lentic-doc-source'.
+1. Type: list
+2. Example: (\"tag1\" \"tag2\" \"tag3\")
+
+
 
   `:lentic-readme-source'
 
@@ -305,12 +313,30 @@ help of lentic:
 
 
 
+  `:lentic-readme-tags'
+
+The content with these tags will be considered when generate README.md
+from `:lentic-readme-source'.
+1. Type: list
+2. Example: (\"tag1\" \"tag2\" \"tag3\")
+
+
+
   `:lentic-index-source'
 
 Emacs-lisp file from which index.org will be generated with the
 help of lentic:
 1. Type: file
 2. Example: \"org-webpage.el\"
+
+
+
+  `:lentic-index-tags'
+
+The content with these tags will be considered when generate index.org
+from `:lentic-index-source'.
+1. Type: list
+2. Example: (\"tag1\" \"tag2\" \"tag3\")
 
 
 You can see fallback value of above option in `owp/config-fallback'"
@@ -426,6 +452,9 @@ test publish.")
         :lentic-doc-source nil
         :lentic-readme-source nil
         :lentic-index-source nil
+        :lentic-doc-tags ("README" "devel" "doc" "code")
+        :lentic-readme-tags ("README")
+        :lentic-index-tags ("README")
         :html-creator-string ,(format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\
 (<a href=\"http://orgmode.org\">Org mode</a> %s)"
 (format "%s.x" emacs-major-version)

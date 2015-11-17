@@ -276,7 +276,7 @@ emacs-lisp files by lentic."
           (lentic-batch-clone-and-save-with-config
            el-file 'owp/lentic-el2org-init))))))
 
-(defun owp/lentic-generate-file (el-filename backend filename)
+(defun owp/lentic-generate-file (el-filename tags backend filename)
   (let ((repo-dir (owp/get-repository-directory))
         el-file org-file)
     (when (and repo-dir el-filename backend filename)
@@ -287,7 +287,7 @@ emacs-lisp files by lentic."
           (with-current-buffer (find-file-noselect org-file)
             (let ((org-export-filter-paragraph-functions '(owp/lentic-org-clean-space))
                   (org-export-before-processing-hook '(owp/lentic-org-export-preprocess))
-                  (org-export-select-tags '("README"))
+                  (org-export-select-tags tags)
                   (org-export-with-tags nil)
                   (indent-tabs-mode nil)
                   (tab-width 4))
@@ -306,7 +306,9 @@ emacs-lisp files by lentic."
   (setq owp/current-project-name project-name
         owp/last-project-name project-name)
   (owp/lentic-generate-file
-   (owp/get-config-option :lentic-readme-source) 'gfm "README.md")
+   (owp/get-config-option :lentic-readme-source)
+   (owp/get-config-option :lentic-readme-tags)
+   'gfm "README.md")
   (setq owp/current-project-name nil))
 
 ;; #+END_SRC
@@ -320,7 +322,7 @@ emacs-lisp files by lentic."
          '(owp/lentic-org-export-preprocess))
         (org-export-filter-paragraph-functions
          '(owp/lentic-org-clean-space))
-        (org-export-select-tags '("README" "devel" "doc" "code"))
+        (org-export-select-tags (owp/get-config-option :lentic-doc-tags))
         (org-export-headline-levels 7)
         (indent-tabs-mode nil)
         (tab-width 4))
@@ -328,22 +330,25 @@ emacs-lisp files by lentic."
 
 (defun owp/lentic-preparation-function ()
   "Generate org files by lentic."
+  ;; Orgify elisp files
   (let* ((repo-dir (owp/get-repository-directory))
-         (el-files (directory-files
-                    repo-dir t (owp/get-config-option :lentic-doc-source)))
-         (el-file-for-readme (owp/get-config-option :lentic-readme-source))
-         (el-file-for-index (owp/get-config-option :lentic-index-source)))
+         (files (directory-files
+                 repo-dir t (owp/get-config-option :lentic-doc-source))))
+    (mapc #'owp/lentic-orgify-if-necessary files))
 
-    ;; Orgify elisp files
-    (mapc #'owp/lentic-orgify-if-necessary el-files)
+  ;; Generate README.mk if necessary
+  (let ((file (owp/get-config-option :lentic-readme-source))
+        (tags (owp/get-config-option :lentic-readme-tags)))
+    (when file
+      (owp/lentic-generate-file
+       file tags 'gfm "README.mk")))
 
-    ;; Generate README.mk if necessary
-    (when el-file-for-readme
-      (owp/lentic-generate-file el-file-for-readme 'gfm "README.mk"))
-
-    ;; Generate index.org if necessary
-    (when el-file-for-index
-      (owp/lentic-generate-file el-file-for-index 'org "index.org"))))
+  ;; Generate index.org if necessary
+  (let ((file (owp/get-config-option :lentic-index-source))
+        (tags (owp/get-config-option :lentic-index-tags)))
+    (when file
+      (owp/lentic-generate-file
+       file tags 'org "index.org"))))
 ;; #+END_SRC
 
 ;; * Footer
