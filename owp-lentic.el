@@ -53,9 +53,7 @@
 ;; ** 配置 owp-lentic
 ;; #+BEGIN_EXAMPLE
 ;; (require 'owp-lentic) ;; you need install lentic and gfm
-
-;; (define-key org-mode-map "\C-cj" 'owp/lentic-switch-window)
-;; (define-key emacs-lisp-mode-map "\C-cj" 'owp/lentic-switch-window)
+;; (owp/lentic-define-switch-window-key "\C-cj") ;; set keybinding for `owp/lentic-switch-window'
 ;; #+END_EXAMPLE
 
 ;; ** 使用
@@ -188,6 +186,14 @@
            (current-buffer)))))
     (when (window-live-p window)
       (select-window window))))
+
+(defun owp/lentic-define-switch-window-key (key)
+  (require 'org)
+  (require 'lisp-mode)
+  (define-key org-mode-map (read-kbd-macro key)
+    'owp/lentic-switch-window)
+  (define-key emacs-lisp-mode-map (read-kbd-macro key)
+    'owp/lentic-switch-window))
 ;; #+END_SRC
 
 
