@@ -75,7 +75,6 @@
    :that-buffer
    (lentic-this conf)))
 
-;;;###autoload
 (defun owp/lentic-org2el-init ()
   (lentic-org-oset
    (owp/lentic-org2el-configuration
@@ -111,7 +110,6 @@
    :delete-on-exit t
    :that-buffer (lentic-this conf)))
 
-;;;###autoload
 (defun owp/lentic-el2org-init ()
   (lentic-org-oset
    (owp/lentic-el2org-configuration
@@ -296,5 +294,10 @@ emacs-lisp files by lentic."
 
 ;; #+BEGIN_SRC emacs-lisp
 (provide 'owp-lentic)
+
+;; Local Variables:
+;; no-byte-compile: t
+;; End:
+
 ;;; owp-lentic.el ends here
 ;; #+END_SRC
