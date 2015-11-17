@@ -341,7 +341,7 @@ emacs-lisp files by lentic."
         (tags (owp/get-config-option :lentic-readme-tags)))
     (when file
       (owp/lentic-generate-file
-       file tags 'gfm "README.mk")))
+       file tags 'gfm "README.md")))
 
   ;; Generate index.org if necessary
   (let ((file (owp/get-config-option :lentic-index-source))
