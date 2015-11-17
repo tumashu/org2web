@@ -121,7 +121,8 @@ PUB-ROOT-DIR is the root directory of published files."
                                             (nth 5 (file-attributes org-file))))
                               :description ,(or (owp/read-org-option "DESCRIPTION")
                                                 "No Description")
-                              :thumb ,(owp/read-org-option "THUMBNAIL"))))
+                              :thumb ,(owp/read-org-option "THUMBNAIL")))
+         tags authors category cat-config)
     (setq tags (owp/read-org-option "TAGS"))
     (when tags
       (plist-put
