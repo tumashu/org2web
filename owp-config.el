@@ -34,7 +34,8 @@
       ;; if "output" is a form which like (:eval myform),
       ;; eval myform and return the result, otherwise
       ;; return "output".
-      (if (eq (car output) :eval)
+      (if (and (listp output)
+               (eq (car output) :eval))
           (eval `(progn ,@(cdr output)))
         output))))
 
