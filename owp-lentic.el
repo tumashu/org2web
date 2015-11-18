@@ -297,19 +297,13 @@ emacs-lisp files by lentic."
 (defun owp/lentic-generate-readme (&optional project-name)
   (interactive)
   (setq project-name
-        (or project-name
-            owp/default-project-name
-            (completing-read "Which project do you want to publish? "
-                             (delete-dups
-                              (mapcar 'car owp/project-config-alist))
-                             nil t nil nil owp/last-project-name)))
-  (setq owp/current-project-name project-name
-        owp/last-project-name project-name)
+        (owp/select-project-name
+         "Which project do you want to generate README.md? "
+         project-name))
   (owp/lentic-generate-file
    (owp/get-config-option :lentic-readme-source)
    (owp/get-config-option :lentic-readme-tags)
-   'gfm "README.md")
-  (setq owp/current-project-name nil))
+   'gfm "README.md"))
 
 ;; #+END_SRC
 

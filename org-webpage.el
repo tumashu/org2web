@@ -82,19 +82,24 @@
         (add-to-list 'owp/project-config-alist project-config))
     (message "Invalid project config!")))
 
-(defun owp/do-publication (&optional project-name publishing-directory job-number update-top-n)
-  (interactive)
+(defun owp/select-project-name (prompt &optional project-name)
+  "Let user select a project then return its name."
+  (setq owp/current-project-name nil)
   (setq project-name
         (or project-name
             owp/default-project-name
-            (completing-read "Which project do you want to publish? "
+            (completing-read prompt
                              (delete-dups
                               (mapcar 'car owp/project-config-alist))
                              nil t nil nil owp/last-project-name)))
   (setq owp/current-project-name project-name
-        owp/last-project-name project-name
-        owp/item-cache nil)
+        owp/last-project-name project-name)
+  project-name)
 
+(defun owp/do-publication (&optional project-name publishing-directory job-number update-top-n)
+  (interactive)
+  (setq project-name (owp/select-project-name "Which project do you want to publish? " project-name))
+  (setq owp/item-cache nil)
   (let ((preparation-function
          (owp/get-config-option :preparation-function)))
     (when preparation-function
@@ -208,8 +213,7 @@
 User should install 'bash' and 'git' correctly:
 1. In Linux/Unix system, user can install 'bash' and 'git' with package manager.
 2. In Window system, user can install 'msysgit',
-   then add '<INSTALL-PATH>/bin' to envirment variable '$PATH'")))
-    (setq owp/current-project-name nil)))
+   then add '<INSTALL-PATH>/bin' to envirment variable '$PATH'")))))
 
 (defun owp/generate-upload-script (script-file export-dir history-dir publish-dir remote &optional partial-update)
   "Generate a shell script file, which used to upload html files
@@ -362,15 +366,9 @@ FILENAME:     the file name of this post
 Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive
-   (let* ((p (or owp/default-project-name
-                 (completing-read "Which project do you want post? "
-                                  (delete-dups
-                                   (mapcar 'car owp/project-config-alist))
-                                  nil t nil nil owp/last-project-name)))
+   (let* ((p (owp/select-project-name "Which project do you want post? "))
           (c (read-string (format "Category of \"%s\" project: " p)
-                          (progn (setq owp/current-project-name p)
-                                 (setq owp/last-project-name p)
-                                 (owp/get-config-option :default-category))))
+                          (owp/get-config-option :default-category)))
           (f (read-string (format "Filename of \"%s\" project: " p) "new-post.org" p))
           (d (yes-or-no-p "Insert fallback template? ")))
      (list p c f d)))
@@ -398,8 +396,7 @@ responsibility to guarantee the two parameters are valid."
                                    "keyword1, keyword2, keyword3"
                                    "tag1, tag2, tag3"
                                    "<Add description here>"))
-    (save-buffer))
-  (setq owp/current-project-name nil))
+    (save-buffer)))
 
 
 (provide 'org-webpage)
