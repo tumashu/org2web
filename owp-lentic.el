@@ -296,10 +296,8 @@ emacs-lisp files by lentic."
 
 (defun owp/lentic-generate-readme (&optional project-name)
   (interactive)
-  (setq project-name
-        (owp/select-project-name
-         "Which project do you want to generate README.md? "
-         project-name))
+  (owp/select-project-name
+   "Which project do you want to generate README.md? " project-name)
   (owp/lentic-generate-file
    (owp/get-config-option :lentic-readme-source)
    (owp/get-config-option :lentic-readme-tags)
