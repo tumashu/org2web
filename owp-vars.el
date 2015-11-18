@@ -306,7 +306,7 @@ from `:lentic-doc-source'.
 
   `:lentic-readme-source'
 
-Emacs-lisp file from which README.md will be generated with the
+Emacs-lisp or org file from which README.md will be generated with the
 help of lentic:
 1. Type: file
 2. Example: \"org-webpage.el\"
@@ -324,7 +324,7 @@ from `:lentic-readme-source'.
 
   `:lentic-index-source'
 
-Emacs-lisp file from which index.org will be generated with the
+Emacs-lisp or org file from which index.org will be generated with the
 help of lentic:
 1. Type: file
 2. Example: \"org-webpage.el\"

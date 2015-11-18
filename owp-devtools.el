@@ -28,43 +28,27 @@
 (require 'ox-org)
 (require 'owp-vars)
 (require 'owp-config)
+(require 'owp-lentic)
 
 (defvar owp/devtools-repository-directory
   "~/project/emacs-packages/org-webpage/")
 
-(defun owp/devtools-update-owp-config ()
-  (interactive)
-  (add-to-list
-   'owp/project-config-alist
-   `("org-webpage"
-     :repository-directory ,owp/devtools-repository-directory
-     :remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
-     :site-domain "http://tumashu.github.com/org-webpage"
-     :site-main-title "Org-webpage"
-     :site-sub-title "(Static site senerator based on org mode)"
-     :default-category "documents"
-     :theme (worg killjs)
-     :force-absolute-url t
-     :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
-     :personal-avatar "/media/img/horse.jpg"
-     :personal-duoshuo-shortname "tumashu-website"
-     :preparation-function owp/devtools-generate-index-file
-     :web-server-port 6789)))
-
-(owp/devtools-update-owp-config)
-
-(defun owp/devtools-generate-index-file ()
-  (interactive)
-  (let* ((org-file (concat
-                    (file-name-as-directory
-                     owp/devtools-repository-directory)
-                    "README.org")))
-    (if (file-exists-p org-file)
-        (with-current-buffer (find-file-noselect org-file)
-          (let ((indent-tabs-mode nil)
-                (tab-width 4))
-            (org-export-to-file 'org "index.org")))
-      (message "Generate index.org fail!!!"))))
+(owp/add-project-config
+ '("org-webpage"
+   :repository-directory (:eval owp/devtools-repository-directory)
+   :remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
+   :site-domain "http://tumashu.github.com/org-webpage"
+   :site-main-title "Org-webpage"
+   :site-sub-title "(Static site senerator based on org mode)"
+   :default-category "documents"
+   :theme (worg killjs)
+   :force-absolute-url t
+   :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
+   :personal-avatar "/media/img/horse.jpg"
+   :personal-duoshuo-shortname "tumashu-website"
+   :preparation-function owp/lentic-preparation-function
+   :lentic-index-source "README.org"
+   :web-server-port 6789))
 
 (provide 'owp-devtools)
 
