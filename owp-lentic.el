@@ -119,7 +119,7 @@
 (defmethod lentic-invert
   ((conf owp/lentic-org2el-configuration))
   (lentic-m-oset
-   (lentic-el2org-init)
+   (owp/lentic-el2org-init)
    :that-buffer
    (lentic-this conf)))
 
