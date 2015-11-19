@@ -75,7 +75,7 @@
                             ((> day1 day2) -1)
                             (t 0))))))))
 
-(defun owp/remove-matched-item (list regexp-list)
+(defun owp/remove-matched-items (list regexp-list)
   "Remove all items of`list', which match any regexp of `regexp-list'."
   (dolist (regexp regexp-list)
     (setq list

@@ -146,7 +146,7 @@
          (remote (owp/get-config-option :remote))
          (site-domain (owp/get-site-domain))
          (repo-files
-          (sort (owp/remove-matched-item
+          (sort (owp/remove-matched-items
                  (owp/directory-files-recursively
                   repo-dir nil "\\.org$")
                  (owp/get-config-option :ignore))
