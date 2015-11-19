@@ -75,6 +75,15 @@
                             ((> day1 day2) -1)
                             (t 0))))))))
 
+(defun owp/remove-matched-item (list regexp-list)
+  "Remove all items of`list', which match any regexp of `regexp-list'."
+  (dolist (regexp regexp-list)
+    (setq list
+          (cl-remove-if
+           #'(lambda (x)
+               (string-match-p regexp x)) list)))
+  list)
+
 (defun owp/fix-timestamp-string (date-string)
   "This is a piece of code copied from Xah Lee (I modified a little):
 Returns yyyy-mm-dd format of date-string

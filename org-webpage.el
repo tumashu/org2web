@@ -146,7 +146,10 @@
          (remote (owp/get-config-option :remote))
          (site-domain (owp/get-site-domain))
          (repo-files
-          (sort (owp/directory-files-recursively repo-dir nil "\\.org$")
+          (sort (owp/remove-matched-item
+                 (owp/directory-files-recursively
+                  repo-dir nil "\\.org$")
+                 (owp/get-config-option :ignore))
                 #'(lambda (a b)
                     (time-less-p
                      (cl-sixth (file-attributes b))

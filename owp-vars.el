@@ -79,6 +79,13 @@ The repository directory, which containing publishing org files.
 2. Example1: \"~/.emacs.d/projects/tumashu.github.com/\"
 
 
+  `:ignore'
+
+Ignore files in repository directory when publish.
+1. Type: regexp list
+2. Example1: (\"regexp1\" \"regexp2\")
+
+
   `:publishing-directory'
 
 Directory (possibly remote) where html output files will be
@@ -431,6 +438,7 @@ test publish.")
 
 (defvar owp/config-fallback
       `(:repository-directory nil
+        :ignore ("-pkg\\.org$" "-autoloads\\.org")
         :publishing-directory nil
         :remote nil
         :site-domain nil
