@@ -398,20 +398,22 @@ month and day): " (unless (string= i "")
      (list i u k a d)))
   (if (not (bolp)) (newline))
   (insert (format
-           "# -*- coding: utf-8-unix; -*-
-#+TITLE:       %s
-#+AUTHOR:      %s
-#+EMAIL:       %s
-#+DATE:        %s
+           (replace-regexp-in-string
+            "#\\+\\+" "#+"
+            "# -*- coding: utf-8-unix; -*-
+#++TITLE:       %s
+#++AUTHOR:      %s
+#++EMAIL:       %s
+#++DATE:        %s
 
-# #+URI:         %s
-# #+KEYWORDS:    %s
-# #+TAGS:        %s
-# #+DESCRIPTION: %s
+# #++URI:         %s
+# #++KEYWORDS:    %s
+# #++TAGS:        %s
+# #++DESCRIPTION: %s
 
-#+LANGUAGE:    %s
-#+OPTIONS:     H:%d num:%s toc:%s \\n:%s ::%s |:%s ^:%s -:%s f:%s *:%s <:%s
-"
+#++LANGUAGE:    %s
+#++OPTIONS:     H:%d num:%s toc:%s \\n:%s ::%s |:%s ^:%s -:%s f:%s *:%s <:%s
+")
            (if (string= title "") (buffer-name) title)
            (user-full-name)
            user-mail-address
