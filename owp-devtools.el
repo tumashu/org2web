@@ -47,7 +47,10 @@
    :personal-avatar "/media/img/horse.jpg"
    :personal-duoshuo-shortname "tumashu-website"
    :preparation-function owp/lentic-preparation-function
-   :lentic-index-source "README.org"
+   :org-export-function owp/lentic-org-export-function
+   :lentic-doc-sources ("org-webpage.el")
+   :lentic-readme-sources ("org-webpage.el")
+   :lentic-index-sources ("org-webpage.el")
    :web-server-port 6789))
 
 (provide 'owp-devtools)
