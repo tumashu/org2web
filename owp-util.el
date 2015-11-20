@@ -89,7 +89,7 @@
                                  #'(lambda (x)
                                      (when (string-match-p regexp x)
                                        x)) list)))))
-    (delete-duplicates output)))
+    (cl-delete-duplicates output)))
 
 (defun owp/fix-timestamp-string (date-string)
   "This is a piece of code copied from Xah Lee (I modified a little):
