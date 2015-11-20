@@ -26,13 +26,12 @@
 
 ;; * org-webpage README                                                 :README:
 
-;; ** Introduction
 ;; org-webpage is a static site generator based on [[http://orgmode.org/][org-mode]],
 ;; which code derived from Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
 
 ;; The main differents of two projects are as follow:
 
-;; 1. org-webpage's core don't hard code git, its process is like below:
+;; 1. org-webpage's core *don't hard code git*, its process is like below:
 ;;    #+BEGIN_EXAMPLE
 ;;    [ Org files ] --( Export )--> [ Html files ] -------
 ;;          \                                             \
@@ -42,8 +41,6 @@
 
 ;;    #+END_EXAMPLE
 
-;;    Which is *very* different from org-page's process.
-
 ;; 2. org-webpage's default config is `org-publish-project-alist' style alist,
 ;;    which can manage multi-site configs in an emacs session easily.
 ;; 3. org-website find theme-files from a *themes-list* in sequence and same theme-file
@@ -51,23 +48,17 @@
 ;; 4. org-website include a tiny emacs web server, which can be used to test publish.
 ;; 5. ...
 
-;; ** Usage
-;; Here is a general introduction about how to use org-webpage,
-;; for more detailed introduction and configuration,
-;; please see "tips.org" in the "documents" folder.*
-
-;; *** Installation
+;; ** Installation
 
 ;; org-webpage is now available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]
-;; so the recommended way is to install it through emacs' package
+;; so the recommended way is to install it through emacs package
 ;; management system. For more info about installation, please see
 ;; *tips.org* in the "doc" folder.
 
-;; *** Configuration
+;; ** Configuration
 ;; org-webpage use variable `owp/project-config-alist' to store all projects's configures, user
 ;; can add a project with the help of `add-to-list' function, but the easiest way is
 ;; using `owp/add-project-config' function.
-
 
 ;; The follow code is [[http://tumashu.github.com][my website]]'s [[https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el][config]],
 ;; you can adjust and paste it to your =.emacs= file:
@@ -92,7 +83,7 @@
 ;;    :web-server-port 7654))
 ;; #+END_EXAMPLE
 
-;; Chinese-pyim]] 's org-webpage [[https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el][config]] is a more complex example.
+;; [[https://github.com/tumashu/chinese-pyim][Chinese-pyim]] 's org-webpage [[https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el][config]] is a more complex example.
 
 ;; You can find more config options and theirs default values by commands:
 
@@ -101,7 +92,7 @@
 ;; C-h v owp/config-fallback
 ;; #+END_EXAMPLE
 
-;; *** Publication
+;; ** Publication
 
 ;; #+BEGIN_EXAMPLE
 ;; M-x owp/do-publication
