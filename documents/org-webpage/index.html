@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>org-webpage - Org-webpage</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Feng Shu" />
+    <link rel="stylesheet" href="http://tumashu.github.com/org-webpage/media/css/main.css" type="text/css">
+  </head>
+<body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="http://tumashu.github.com/org-webpage/">Org-webpage</a> <span class="subtitle">(Static site senerator based on org mode)</span></h1>
+        <ul>
+          <li><a href="http://tumashu.github.com/org-webpage/changelog/">Changelog</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/documents/">Documents</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/tags/">Tags</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/about/">About</a></li>
+          <li><a href="https://github.com/tumashu/org-webpage">GitHub</a></li>
+          <li><a href="http://tumashu.github.com/org-webpage/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="http://www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="tumashu.github.com/org-webpage">
+        </form>
+        <img class="avatar" src="http://tumashu.github.com/org-webpage/media/img/horse.jpg" />
+      </header>
+    </div>
+
+<div class="content-and-footer">
+<div>
+<div class="post">
+<h1 class="post-title">org-webpage</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline6">1. org-webpage README</a>
+<ul>
+<li><a href="#orgheadline1">1.1. Installation</a></li>
+<li><a href="#orgheadline2">1.2. Configuration</a></li>
+<li><a href="#orgheadline3">1.3. Publication</a></li>
+<li><a href="#orgheadline4">1.4. Dependencies</a></li>
+<li><a href="#orgheadline5">1.5. Known issues</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline7">2. 代码说明</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline6" class="outline-2">
+<h2 id="orgheadline6"><span class="section-number-2">1</span> org-webpage README</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+org-webpage is a static site generator based on <a href="http://orgmode.org/">org-mode</a>,
+which code derived from Kelvin H's <a href="https://github.com/kelvinh/org-page">org-page</a>.
+</p>
+
+<p>
+The main differents of two projects are as follow:
+</p>
+
+<ol class="org-ol">
+<li><p>
+org-webpage's core <b>don't hard code git</b>, its process is like below:
+</p>
+<pre class="example">
+[ Org files ] --( Export )--&gt; [ Html files ] -------
+      \                                             \
+       \--------(Generate)--&gt; [ Upload bash script] ---&gt; ( Git repos )--\
+                                     \                                   \
+                                      \------------------------------------( Upload )---&gt; Remote
+</pre></li>
+
+<li>org-webpage's default config is `org-publish-project-alist' style alist,
+which can manage multi-site configs in an emacs session easily.</li>
+<li>org-website find theme-files from a <b>themes-list</b> in sequence and same theme-file
+first found will be used. User can set <b>fallback theme</b> with the help of this feature.</li>
+<li>org-website include a tiny emacs web server, which can be used to test publish.</li>
+<li>&#x2026;</li>
+</ol>
+</div>
+
+<div id="outline-container-orgheadline1" class="outline-3">
+<h3 id="orgheadline1"><span class="section-number-3">1.1</span> Installation</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+org-webpage is now available from the famous emacs package repo <a href="http://melpa.milkbox.net/">melpa</a>
+so the recommended way is to install it through emacs package
+management system. For more info about installation, please see
+<b>tips.org</b> in the "doc" folder.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2"><span class="section-number-3">1.2</span> Configuration</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+org-webpage use variable `owp/project-config-alist' to store all projects's configures, user
+can add a project with the help of `add-to-list' function, but the easiest way is
+using `owp/add-project-config' function.
+</p>
+
+<p>
+The follow code is <a href="http://tumashu.github.com/">my website</a>'s <a href="https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el">config</a>,
+you can adjust and paste it to your <code>.emacs</code> file:
+</p>
+
+<pre class="example">
+the following is only needed if you install org-page manually
+(add-to-list 'load-path "path/to/org-webpage")
+
+(require 'org-webpage)
+
+(owp/add-project-config
+ '("tumashu.github.com"
+   :repository-directory "~/project/emacs-packages/tumashu.github.com"
+   :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
+   :site-domain "http://tumashu.github.com/"
+   :site-main-title "Tumashu 的个人小站"
+   :site-sub-title "(九天十地，太上忘情！！！)"
+   :theme (worg)
+   :source-browse-url ("Github" "https://github.com/tumashu/tumashu.github.com")
+   :personal-avatar "/media/img/horse.jpg"
+   :personal-duoshuo-shortname "tumashu-website"
+   :web-server-port 7654))
+</pre>
+
+<p>
+<a href="https://github.com/tumashu/chinese-pyim">Chinese-pyim</a> 's org-webpage <a href="https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el">config</a> is a more complex example.
+</p>
+
+<p>
+You can find more config options and theirs default values by commands:
+</p>
+
+<pre class="example">
+C-h v owp/project-config-alist
+C-h v owp/config-fallback
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3"><span class="section-number-3">1.3</span> Publication</h3>
+<div class="outline-text-3" id="text-1-3">
+<pre class="example">
+M-x owp/do-publication
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4"><span class="section-number-3">1.4</span> Dependencies</h3>
+<div class="outline-text-3" id="text-1-4">
+<ol class="org-ol">
+<li><a href="http://www.gnu.org/software/emacs/">emacs</a>: this is an "of-course" dependency</li>
+<li><a href="http://orgmode.org/">org mode</a>: v8.0 is required, please use <code>M-x org-version &lt;RET&gt;</code> to make sure you org mode version is not less than 8.0</li>
+<li><a href="http://www.gnu.org/software/bash/">bash</a>: the GNU Project's shell</li>
+<li><a href="http://git-scm.com/">git</a>: a free and open source version control system</li>
+<li><a href="https://github.com/Wilfred/mustache.el">mustache.el</a>: a mustache templating library for Emacs</li>
+<li><a href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi">htmlize.el</a>: a library for syntax highlighting (usually this library is shipped with emacs)</li>
+<li><a href="https://github.com/magnars/dash.el">dash.el</a>: a modern list library for Emacs</li>
+<li><a href="https://github.com/Wilfred/ht.el">ht.el</a>: a modern hash-table library for Emacs</li>
+<li><a href="https://github.com/eschulte/emacs-web-server">web-server</a>: a web server library for Emacs</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5"><span class="section-number-3">1.5</span> Known issues</h3>
+<div class="outline-text-3" id="text-1-5">
+<ol class="org-ol">
+<li>Currently the deletion change handler has not been implemented so
+if you deleted some org sources, you may have to manually delete
+corresponding generated html files.</li>
+<li>URI path change detection is not available. That is, if you make a
+post with the URI "/blog/2013/03/25/the-old-post-name" and then
+change this value in your org source, org-webpage would be unable to
+detect that this has happened. it will only publish a new html
+file for you so you need to delete the old html file related to
+the old URI manually.</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7"><span class="section-number-2">2</span> 代码说明</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">ox</span>)
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">ht</span>)
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">owp-util</span>)
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">owp-vars</span>)
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">owp-config</span>)
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">owp-resource</span>)
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">owp-export</span>)
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">owp-web-server</span>)
+(<span style="color: #FBDE2D;">require</span> '<span style="color: #4c83ff;">cl-lib</span>)
+
+
+(<span style="color: #FBDE2D;">defconst</span> <span style="color: #D8FA3C;">org-webpage-version</span> <span style="color: #61CE3C;">"0.1"</span>)
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/add-project-config</span> (project-config)
+  <span style="color: #61CE3C;">"Add `</span><span style="color: #4c83ff;">project-config</span><span style="color: #61CE3C;">' to `</span><span style="color: #4c83ff;">owp/project-config-alist</span><span style="color: #61CE3C;">'"</span>
+  (<span style="color: #FBDE2D;">if</span> (listp project-config)
+      (<span style="color: #FBDE2D;">let</span> ((project-name (car project-config)))
+        (<span style="color: #FBDE2D;">when</span> (stringp project-name)
+          (setq owp/project-config-alist
+                (remove (assoc project-name owp/project-config-alist)
+                        owp/project-config-alist)))
+        (add-to-list 'owp/project-config-alist project-config))
+    (message <span style="color: #61CE3C;">"Invalid project config!"</span>)))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/select-project-name</span> (prompt <span style="color: #D8FA3C;">&amp;optional</span> project-name)
+  <span style="color: #61CE3C;">"Let user select a project then return its name."</span>
+  (setq owp/current-project-name nil)
+  (setq project-name
+        (or project-name
+            owp/default-project-name
+            (completing-read prompt
+                             (delete-dups
+                              (mapcar 'car owp/project-config-alist))
+                             nil t nil nil owp/last-project-name)))
+  (setq owp/current-project-name project-name
+        owp/last-project-name project-name)
+  project-name)
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/do-publication</span> (<span style="color: #D8FA3C;">&amp;optional</span> project-name publishing-directory job-number update-top-n)
+  (interactive)
+  (setq project-name (owp/select-project-name <span style="color: #61CE3C;">"Which project do you want to publish? "</span> project-name))
+  (setq owp/item-cache nil)
+  (<span style="color: #FBDE2D;">let</span> ((preparation-function
+         (owp/get-config-option <span style="color: #FF6400;">:preparation-function</span>)))
+    (<span style="color: #FBDE2D;">when</span> preparation-function
+      (run-hooks 'preparation-function)))
+
+  (owp/verify-configuration)
+  (<span style="color: #FBDE2D;">let*</span> ((jobs '((1 . <span style="color: #61CE3C;">"Full publish"</span>)
+                 (2 . <span style="color: #61CE3C;">"Partial publish"</span>)
+                 (3 . <span style="color: #61CE3C;">"Test full publish"</span>)
+                 (4 . <span style="color: #61CE3C;">"Test partial publish"</span>)))
+         (job-used (completing-read
+                    <span style="color: #61CE3C;">"Which job do you want to active: "</span>
+                    (mapcar #'cdr jobs)))
+         (job-number (car (rassoc job-used jobs)))
+         (test-publish (or (= job-number 3)
+                           (= job-number 4)))
+         (partial-update (or (= job-number 2)
+                             (= job-number 4)))
+         (repo-dir (owp/get-repository-directory))
+         (publish-root-dir
+          (file-name-as-directory owp/temporary-directory))
+         (export-dir
+          (concat (file-name-as-directory
+                   (concat publish-root-dir project-name))
+                  <span style="color: #61CE3C;">"export/"</span>))
+         (history-dir
+          (concat (file-name-as-directory
+                   (concat publish-root-dir project-name))
+                  <span style="color: #61CE3C;">"history/"</span>))
+         (publish-dir
+          (or publishing-directory
+              (concat (file-name-as-directory
+                       (concat publish-root-dir project-name))
+                      <span style="color: #61CE3C;">"publish/"</span>)
+              (owp/get-publishing-directory)))
+         (test-publish-dir
+          (concat (file-name-as-directory
+                   (concat publish-root-dir project-name))
+                  <span style="color: #61CE3C;">"test/"</span>))
+         (upload-script
+          (concat (file-name-as-directory
+                   (concat publish-root-dir project-name))
+                  <span style="color: #61CE3C;">"owp-upload-script.sh"</span>))
+         (remote (owp/get-config-option <span style="color: #FF6400;">:remote</span>))
+         (site-domain (owp/get-site-domain))
+         (repo-files
+          (sort (owp/remove-matched-items
+                 (owp/directory-files-recursively repo-dir <span style="color: #61CE3C;">"\\.org$"</span>)
+                 (owp/get-config-option <span style="color: #FF6400;">:ignore</span>))
+                #'(<span style="color: #FBDE2D;">lambda</span> (a b)
+                    (time-less-p
+                     (cl-sixth (file-attributes b))
+                     (cl-sixth (file-attributes a))))))
+         (length-repo-files (length repo-files))
+         (update-top-n
+          (<span style="color: #FBDE2D;">cond</span> ((and partial-update (numberp update-top-n)) update-top-n)
+                (partial-update
+                 (<span style="color: #FBDE2D;">let</span> ((max-mini-window-height 0.9)
+                       (max-line (min length-repo-files 20)))
+                   (read-number
+                    (concat (<span style="color: #FBDE2D;">let</span> ((i 1))
+                              (mapconcat
+                               #'(<span style="color: #FBDE2D;">lambda</span> (file)
+                                   (<span style="color: #FBDE2D;">prog1</span> (format <span style="color: #61CE3C;">"%2s. %s"</span>
+                                                  (number-to-string i)
+                                                  (file-relative-name file repo-dir))
+                                     (setq i (+ i 1))))
+                               (append (cl-subseq repo-files 0 max-line)
+                                       (<span style="color: #FBDE2D;">when</span> (&gt; length-repo-files max-line)
+                                         '(<span style="color: #61CE3C;">"## Hide others ... ##"</span>)))
+                               <span style="color: #61CE3C;">"\n"</span>))
+                            <span style="color: #61CE3C;">"\n\nOrg-webpage will update TOP (N) org-files, Please type N: "</span>))))))
+         (changed-files (<span style="color: #FBDE2D;">if</span> (numberp update-top-n)
+                            (cl-subseq repo-files 0 (min update-top-n length-repo-files))
+                          repo-files)))
+
+    (<span style="color: #FBDE2D;">when</span> (file-directory-p publish-root-dir)
+      (delete-directory publish-root-dir t))
+
+    (make-directory export-dir t)
+    (make-directory history-dir t)
+    (make-directory publish-dir t)
+    (make-directory test-publish-dir t)
+
+    (<span style="color: #FBDE2D;">if</span> test-publish
+        (<span style="color: #FBDE2D;">let</span> ((owp/always-use-relative-url t)) <span style="color: #8B8989; font-style: italic;">; </span><span style="color: #8B8989; font-style: italic;">Local test website, can't use absolute path.</span>
+          (owp/prepare-theme-resources test-publish-dir)
+          (owp/publish-changes repo-files changed-files test-publish-dir)
+          (owp/web-server-browse test-publish-dir
+                                 (or (owp/get-config-option <span style="color: #FF6400;">:web-server-port</span>)
+                                     (+ (* (random 9) 1000)
+                                        (* (random 9) 100)
+                                        (* (random 9) 10)
+                                        (* (random 9) 1)))))
+      (owp/prepare-theme-resources export-dir)
+      (owp/publish-changes repo-files changed-files export-dir)
+      (owp/generate-upload-script upload-script
+                                  export-dir history-dir publish-dir
+                                  remote
+                                  partial-update)
+      (<span style="color: #FBDE2D;">if</span> (and (file-exists-p upload-script)
+               (executable-find <span style="color: #61CE3C;">"bash"</span>))
+          (<span style="color: #FBDE2D;">cond</span>
+           ((string-equal system-type <span style="color: #61CE3C;">"windows-nt"</span>)
+            (w32-shell-execute <span style="color: #61CE3C;">"open"</span> (replace-regexp-in-string <span style="color: #61CE3C;">"/"</span> <span style="color: #61CE3C;">"\\"</span> upload-script t t)))
+           ((and (string-equal system-type <span style="color: #61CE3C;">"gnu/linux"</span>)
+                 owp/terminal-emulater)
+            (shell-command (format <span style="color: #61CE3C;">"%s -e 'bash %s'"</span>
+                                   owp/terminal-emulater
+                                   (expand-file-name upload-script)))))
+        (message <span style="color: #61CE3C;">"Can't run upload script file!</span>
+
+<span style="color: #61CE3C;">User should install 'bash' and 'git' correctly:</span>
+<span style="color: #61CE3C;">1. In Linux/Unix system, user can install 'bash' and 'git' with package manager.</span>
+<span style="color: #61CE3C;">2. In Window system, user can install 'msysgit',</span>
+<span style="color: #61CE3C;">   then add '&lt;INSTALL-PATH&gt;/bin' to envirment variable '$PATH'"</span>)))))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/generate-upload-script</span> (script-file export-dir history-dir publish-dir remote <span style="color: #D8FA3C;">&amp;optional</span> partial-update)
+  <span style="color: #61CE3C;">"Generate a shell script file, which used to upload html files</span>
+<span style="color: #61CE3C;">generated by org-webpage to remote."</span>
+  (<span style="color: #FBDE2D;">if</span> (not (and script-file export-dir history-dir publish-dir remote))
+      (message <span style="color: #61CE3C;">"Can't generate org-webpage upload script."</span>)
+    (owp/string-to-file
+     (mustache-render
+      (owp/file-to-string (owp/get-upload-script-file
+                           (concat (symbol-name (nth 0 remote)) <span style="color: #61CE3C;">".mustache"</span>)))
+      (ht (<span style="color: #61CE3C;">"export-dir"</span> (expand-file-name export-dir))
+          (<span style="color: #61CE3C;">"history-dir"</span> (expand-file-name history-dir))
+          (<span style="color: #61CE3C;">"publish-dir"</span> (expand-file-name publish-dir))
+          (<span style="color: #61CE3C;">"remote-url"</span> (nth 1 remote))
+          (<span style="color: #61CE3C;">"remote-branch"</span> (nth 2 remote))
+          (<span style="color: #61CE3C;">"partial-update"</span> (<span style="color: #FBDE2D;">if</span> partial-update <span style="color: #61CE3C;">"yes"</span> <span style="color: #61CE3C;">"no"</span>))))
+     script-file)))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/verify-configuration</span> ()
+  <span style="color: #61CE3C;">"Ensure all required configuration fields are properly configured, include:</span>
+<span style="color: #61CE3C;">1.  `</span><span style="color: #4c83ff;">:repository-directory</span><span style="color: #61CE3C;">': &lt;required&gt;</span>
+<span style="color: #61CE3C;">2.  `</span><span style="color: #4c83ff;">:site-domain</span><span style="color: #61CE3C;">': &lt;required&gt;</span>
+<span style="color: #61CE3C;">3.  `</span><span style="color: #4c83ff;">:personal-disqus-shortname</span><span style="color: #61CE3C;">': &lt;optional&gt;</span>
+<span style="color: #61CE3C;">4.  `</span><span style="color: #4c83ff;">:personal-duoshuo-shortname</span><span style="color: #61CE3C;">': &lt;optional&gt;</span>
+<span style="color: #61CE3C;">5.  `</span><span style="color: #4c83ff;">:site-main-title</span><span style="color: #61CE3C;">': [optional] (but customization recommanded)</span>
+<span style="color: #61CE3C;">6.  `</span><span style="color: #4c83ff;">:site-sub-title</span><span style="color: #61CE3C;">': [optional] (but customization recommanded)</span>
+<span style="color: #61CE3C;">7.  `</span><span style="color: #4c83ff;">:personal-github-link</span><span style="color: #61CE3C;">': [optional] (but customization recommended)</span>
+<span style="color: #61CE3C;">8.  `</span><span style="color: #4c83ff;">:personal-google-analytics-id</span><span style="color: #61CE3C;">': [optional] (but customization recommended)</span>
+<span style="color: #61CE3C;">9.  `</span><span style="color: #4c83ff;">:theme</span><span style="color: #61CE3C;">': [optional]"</span>
+  (<span style="color: #FBDE2D;">unless</span> (member owp/current-project-name
+                  (mapcar 'car owp/project-config-alist))
+    (<span style="color: #ff69b4;">error</span> <span style="color: #61CE3C;">"Can't find project: \"%s\""</span> owp/current-project-name))
+  (<span style="color: #FBDE2D;">let</span> ((repo-dir (owp/get-repository-directory))
+        (site-domain (owp/get-site-domain)))
+    (<span style="color: #FBDE2D;">unless</span> (and repo-dir (file-directory-p repo-dir))
+      (<span style="color: #ff69b4;">error</span> <span style="color: #61CE3C;">"Repository directory is not properly configured."</span>))
+    (<span style="color: #FBDE2D;">unless</span> site-domain
+      (<span style="color: #ff69b4;">error</span> <span style="color: #61CE3C;">"Site domain is not properly configured."</span>))))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/generate-readme</span> (save-dir)
+  <span style="color: #61CE3C;">"Generate README for `</span><span style="color: #4c83ff;">owp/new-repository</span><span style="color: #61CE3C;">'. SAVE-DIR is the directory where to</span>
+<span style="color: #61CE3C;">save generated README."</span>
+  (owp/string-to-file
+   (concat
+    (format <span style="color: #61CE3C;">"Personal site of %s, managed by emacs, org mode, git and org-webpage."</span>
+            (or user-full-name <span style="color: #61CE3C;">"[Author]"</span>))
+    <span style="color: #61CE3C;">"\n\n"</span>
+    <span style="color: #61CE3C;">"This git repository is generated by org-webpage \"owp/new-repository\" \</span>
+<span style="color: #61CE3C;">function, it is only used for demonstrating how the git branches and directory \</span>
+<span style="color: #61CE3C;">structure are organized by org-webpage."</span>)
+   (expand-file-name <span style="color: #61CE3C;">"README"</span> save-dir)))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/generate-index</span> (save-dir)
+  <span style="color: #61CE3C;">"Generate index.org for `</span><span style="color: #4c83ff;">owp/new-repository</span><span style="color: #61CE3C;">'. SAVE-DIR is the directory where</span>
+<span style="color: #61CE3C;">to save generated index.org."</span>
+  (owp/string-to-file
+   (concat <span style="color: #61CE3C;">"#+TITLE: Index"</span> <span style="color: #61CE3C;">"\n\n"</span>
+           (format <span style="color: #61CE3C;">"This is the home page of %s."</span>
+                   (or user-full-name <span style="color: #61CE3C;">"[Author]"</span>)))
+   (expand-file-name <span style="color: #61CE3C;">"index.org"</span> save-dir)))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/generate-about</span> (save-dir)
+  <span style="color: #61CE3C;">"Generate about.org for `</span><span style="color: #4c83ff;">owp/new-repository</span><span style="color: #61CE3C;">'. SAVE-DIR is the directory where</span>
+<span style="color: #61CE3C;">to save generated about.org."</span>
+  (owp/string-to-file
+   (concat <span style="color: #61CE3C;">"#+TITLE: About"</span> <span style="color: #61CE3C;">"\n\n"</span>
+           (format <span style="color: #61CE3C;">"* About %s"</span> (or user-full-name <span style="color: #61CE3C;">"[Author]"</span>)) <span style="color: #61CE3C;">"\n\n"</span>
+           <span style="color: #61CE3C;">"  This file is automatically generated by org-webpage."</span>)
+   (expand-file-name <span style="color: #61CE3C;">"about.org"</span> save-dir)))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/insert-options-template</span> (<span style="color: #D8FA3C;">&amp;optional</span> title uri
+                                              keywords tags description)
+  <span style="color: #61CE3C;">"Insert a template into current buffer with information for exporting.</span>
+
+<span style="color: #61CE3C;">TITLE: the title of this post</span>
+<span style="color: #61CE3C;">URI: the uri of this post, usually looks like: /2013/12/27/the-post-title,</span>
+<span style="color: #61CE3C;">the following parameters could be used:</span>
+<span style="color: #61CE3C;">    %y: to represent the year of creation date</span>
+<span style="color: #61CE3C;">    %m: to represent the month of creation date</span>
+<span style="color: #61CE3C;">    %d: to represent the day of creation date</span>
+<span style="color: #61CE3C;">KEYWORDS: the keywords of this post, used by search engine</span>
+<span style="color: #61CE3C;">TAGS: the tags of this post, should be separated by comma and space</span>
+<span style="color: #61CE3C;">DESCRIPTION: the description of this post, it will be displayed in RSS feed</span>
+
+<span style="color: #61CE3C;">Note that this function does not verify the input parameters, it is users'</span>
+<span style="color: #61CE3C;">responsibility to guarantee these parameters are valid."</span>
+  (interactive
+   (<span style="color: #FBDE2D;">let*</span> ((i (read-string <span style="color: #61CE3C;">"Title: "</span>))
+          (u (read-string <span style="color: #61CE3C;">"URI(%y, %m and %d can be used to represent year, \</span>
+<span style="color: #61CE3C;">month and day): "</span> (<span style="color: #FBDE2D;">unless</span> (string= i <span style="color: #61CE3C;">""</span>)
+                    (format-spec <span style="color: #61CE3C;">"/%c/%y/%m/%d/%t"</span>
+                                 `((?c . ,(owp/get-config-option <span style="color: #FF6400;">:default-category</span>))
+                                   (?y . <span style="color: #61CE3C;">"%y"</span>)
+                                   (?m . <span style="color: #61CE3C;">"%m"</span>)
+                                   (?d . <span style="color: #61CE3C;">"%d"</span>)
+                                   (?t . ,(owp/encode-string-to-url i)))))))
+          (k (read-string <span style="color: #61CE3C;">"Keywords(separated by comma and space [, ]): "</span>))
+          (a (read-string <span style="color: #61CE3C;">"Tags(separated by comma and space [, ]): "</span>))
+          (d (read-string <span style="color: #61CE3C;">"Description: "</span>)))
+     (list i u k a d)))
+  (<span style="color: #FBDE2D;">if</span> (not (bolp)) (newline))
+  (insert (format
+           (replace-regexp-in-string
+            <span style="color: #61CE3C;">"#\\+\\+"</span> <span style="color: #61CE3C;">"#+"</span>
+            <span style="color: #61CE3C;">"# -*- coding: utf-8-unix; -*-</span>
+<span style="color: #61CE3C;">#++TITLE:       %s</span>
+<span style="color: #61CE3C;">#++AUTHOR:      %s</span>
+<span style="color: #61CE3C;">#++EMAIL:       %s</span>
+<span style="color: #61CE3C;">#++DATE:        %s</span>
+
+<span style="color: #61CE3C;"># #++URI:         %s</span>
+<span style="color: #61CE3C;"># #++KEYWORDS:    %s</span>
+<span style="color: #61CE3C;"># #++TAGS:        %s</span>
+<span style="color: #61CE3C;"># #++DESCRIPTION: %s</span>
+
+<span style="color: #61CE3C;">#++LANGUAGE:    %s</span>
+<span style="color: #61CE3C;">#++OPTIONS:     H:%d num:%s toc:%s \\n:%s ::%s |:%s ^:%s -:%s f:%s *:%s &lt;:%s</span>
+<span style="color: #61CE3C;">"</span>)
+           (<span style="color: #FBDE2D;">if</span> (string= title <span style="color: #61CE3C;">""</span>) (buffer-name) title)
+           (user-full-name)
+           user-mail-address
+           (format-time-string (substring (car org-time-stamp-formats) 1 -1))
+           (<span style="color: #FBDE2D;">if</span> (string= uri <span style="color: #61CE3C;">""</span>) <span style="color: #61CE3C;">"&lt;TODO: insert your uri here&gt;"</span> uri)
+           (<span style="color: #FBDE2D;">if</span> (string= keywords <span style="color: #61CE3C;">""</span>)
+               <span style="color: #61CE3C;">"&lt;TODO: insert your keywords here&gt;"</span>
+             keywords)
+           (<span style="color: #FBDE2D;">if</span> (string= tags <span style="color: #61CE3C;">""</span>) <span style="color: #61CE3C;">"&lt;TODO: insert your tags here&gt;"</span> tags)
+           (<span style="color: #FBDE2D;">if</span> (string= description <span style="color: #61CE3C;">""</span>)
+               <span style="color: #61CE3C;">"&lt;TODO: insert your description here&gt;"</span>
+             description)
+           org-export-default-language
+           7   <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">Set default level to 7 instead of `</span><span style="color: #4c83ff; font-style: italic;">org-export-headline-levels</span><span style="color: #8B8989; font-style: italic;">'</span>
+           nil <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">org-export-with-section-numbers</span>
+           nil <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">org-export-with-toc</span>
+           org-export-preserve-breaks
+           <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">org-export-html-expand</span>
+           org-export-with-fixed-width
+           org-export-with-tables
+           nil <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">org-export-with-sub-superscripts</span>
+           nil <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">org-export-with-special-strings</span>
+           org-export-with-footnotes
+           org-export-with-emphasize
+           org-export-with-timestamps)))
+
+(<span style="color: #FBDE2D;">defun</span> <span style="color: #ff1493;">owp/new-post</span> (<span style="color: #D8FA3C;">&amp;optional</span> project-name category filename insert-fallback-template)
+  <span style="color: #61CE3C;">"Setup a new post.</span>
+
+<span style="color: #61CE3C;">PROJECT-NAME: which project do you want to export</span>
+<span style="color: #61CE3C;">CATEGORY:     this post belongs to</span>
+<span style="color: #61CE3C;">FILENAME:     the file name of this post</span>
+
+<span style="color: #61CE3C;">Note that this function does not verify the category and filename, it is users'</span>
+<span style="color: #61CE3C;">responsibility to guarantee the two parameters are valid."</span>
+  (interactive
+   (<span style="color: #FBDE2D;">let*</span> ((p (owp/select-project-name <span style="color: #61CE3C;">"Which project do you want post? "</span>))
+          (c (read-string (format <span style="color: #61CE3C;">"Category of \"%s\" project: "</span> p)
+                          (owp/get-config-option <span style="color: #FF6400;">:default-category</span>)))
+          (f (read-string (format <span style="color: #61CE3C;">"Filename of \"%s\" project: "</span> p) <span style="color: #61CE3C;">"new-post.org"</span> p))
+          (d (yes-or-no-p <span style="color: #61CE3C;">"Insert fallback template? "</span>)))
+     (list p c f d)))
+  (<span style="color: #FBDE2D;">if</span> (string= category <span style="color: #61CE3C;">""</span>)
+      (setq category (owp/get-config-option <span style="color: #FF6400;">:default-category</span>)))
+  (<span style="color: #FBDE2D;">if</span> (string= filename <span style="color: #61CE3C;">""</span>)
+      (setq filename <span style="color: #61CE3C;">"new-post.org"</span>))
+  (<span style="color: #FBDE2D;">unless</span> (owp/string-suffix-p <span style="color: #61CE3C;">".org"</span> filename)
+    (setq filename (concat filename <span style="color: #61CE3C;">".org"</span>)))
+  (<span style="color: #FBDE2D;">let*</span> ((repo-dir (owp/get-repository-directory))
+         (dir (concat (file-name-as-directory repo-dir)
+                      (file-name-as-directory category)))
+         (path (concat dir filename)))
+    (<span style="color: #FBDE2D;">if</span> (file-exists-p path)
+        (<span style="color: #ff69b4;">error</span> <span style="color: #61CE3C;">"Post `</span><span style="color: #4c83ff;">%s</span><span style="color: #61CE3C;">' already exists."</span> path))
+    (<span style="color: #FBDE2D;">unless</span> (file-directory-p dir)
+      (mkdir dir t))
+    (switch-to-buffer (find-file path))
+    (<span style="color: #FBDE2D;">if</span> (and (not insert-fallback-template)
+             (called-interactively-p 'any))
+        (call-interactively 'owp/insert-options-template)
+      (owp/insert-options-template <span style="color: #61CE3C;">"&lt;Insert Your Title Here&gt;"</span>
+                                   (format <span style="color: #61CE3C;">"/%s/%%y/%%m/%%d/%%t/ Or /%s/%%t/"</span>
+                                           category category)
+                                   <span style="color: #61CE3C;">"keyword1, keyword2, keyword3"</span>
+                                   <span style="color: #61CE3C;">"tag1, tag2, tag3"</span>
+                                   <span style="color: #61CE3C;">"&lt;Add description here&gt;"</span>))
+    (save-buffer)))
+</pre>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2015-11-20</span>
+        <span title="last modification date" class="post-info">2015-11-20</span>
+        <span title="tags" class="post-info">N/A</span>
+        <span title="author" class="post-info">Feng Shu</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div class="ds-thread"></div>
+        <script type="text/javascript">
+          var duoshuoQuery = {short_name:'tumashu-website'};
+          (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = 'http://static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0]
+          || document.getElementsByTagName('body')[0]).appendChild(ds);
+          })();
+        </script>
+      </section>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.x(<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; <span id="footerYear"></span> <a href="mailto:tumashu &lt;at&gt; 163 &lt;dot&gt; com">Feng Shu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/tumashu/org-webpage" target="_blank">org-webpage</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+</div>
+</body>
+</html>
