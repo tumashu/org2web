@@ -294,12 +294,12 @@ set the server port.
 2. Example1: 9876
 
 
-  `:lentic-doc-source'
+  `:lentic-doc-sources'
 
 Emacs-lisp files from which org files will be generated with the
 help of lentic:
-1. Type: regexp
-2. Example: \"\\(org-webpage.el\\) \\| \\(owp-*.el\\)\"
+1. Type: regexp-list
+2. Example: (\"org-webpage.el\" \"owp-*.el\")
 
 
   `:lentic-doc-tags'
@@ -311,13 +311,14 @@ from `:lentic-doc-source'.
 
 
 
-  `:lentic-readme-source'
+  `:lentic-readme-sources'
 
 Emacs-lisp or org file from which README.md will be generated with the
 help of lentic:
-1. Type: file
-2. Example: \"org-webpage.el\"
+1. Type: file name list
+2. Example: (\"org-webpage.el\")
 
+NOTE: At the moment, *only* use the *first* element of list, NEED improve.
 
 
   `:lentic-readme-tags'
@@ -329,12 +330,14 @@ from `:lentic-readme-source'.
 
 
 
-  `:lentic-index-source'
+  `:lentic-index-sources'
 
 Emacs-lisp or org file from which index.org will be generated with the
 help of lentic:
-1. Type: file
-2. Example: \"org-webpage.el\"
+1. Type: file name list
+2. Example: (\"org-webpage.el\")
+
+NOTE: At the moment, *only* use the *first* element of list, NEED improve.
 
 
 
@@ -438,7 +441,7 @@ test publish.")
 
 (defvar owp/config-fallback
       `(:repository-directory nil
-        :ignore ("-pkg\\.org$" "-autoloads\\.org")
+        :ignore ("-pkg\\.org$" "-autoloads\\.org" "#\\..*")
         :publishing-directory nil
         :remote nil
         :site-domain nil
@@ -464,9 +467,9 @@ test publish.")
         :org-export-function owp/default-org-export
         :web-server-docroot "~/.emacs.d/org-webpage-server/default"
         :web-server-port 9876
-        :lentic-doc-source nil
-        :lentic-readme-source nil
-        :lentic-index-source nil
+        :lentic-doc-sources nil
+        :lentic-readme-sources nil
+        :lentic-index-sources nil
         :lentic-doc-tags ("README" "devel" "doc" "code")
         :lentic-readme-tags ("README")
         :lentic-index-tags ("README")

@@ -303,7 +303,7 @@ emacs-lisp files by lentic."
   (owp/select-project-name
    "Which project do you want to generate README.md? " project-name)
   (owp/lentic-generate-file
-   (owp/get-config-option :lentic-readme-source)
+   (car (owp/get-config-option :lentic-readme-sources))
    (owp/get-config-option :lentic-readme-tags)
    'gfm "README.md"))
 
@@ -312,7 +312,7 @@ emacs-lisp files by lentic."
   (owp/select-project-name
    "Which project do you want to generate index.org? " project-name)
   (owp/lentic-generate-file
-   (owp/get-config-option :lentic-index-source)
+   (car (owp/get-config-option :lentic-index-sources))
    (owp/get-config-option :lentic-index-tags)
    'org "index.org"))
 
@@ -337,21 +337,23 @@ emacs-lisp files by lentic."
   "Generate org files by lentic."
   ;; Orgify elisp files
   (let* ((repo-dir (owp/get-repository-directory))
-         (regexp (owp/get-config-option :lentic-doc-source))
-         (files (when regexp
-                  (directory-files repo-dir t regexp))))
+         (regexp-list (owp/get-config-option :lentic-doc-sources))
+         (files (when regexp-list
+                  (owp/select-matched-items
+                   (directory-files repo-dir t "\\.el$")
+                   regexp-list))))
     (when files
       (mapc #'owp/lentic-orgify-if-necessary files)))
 
   ;; Generate README.mk if necessary
-  (let ((file (owp/get-config-option :lentic-readme-source))
+  (let ((file (car (owp/get-config-option :lentic-readme-sources)))
         (tags (owp/get-config-option :lentic-readme-tags)))
     (when file
       (owp/lentic-generate-file
        file tags 'gfm "README.md")))
 
   ;; Generate index.org if necessary
-  (let ((file (owp/get-config-option :lentic-index-source))
+  (let ((file (car (owp/get-config-option :lentic-index-sources)))
         (tags (owp/get-config-option :lentic-index-tags)))
     (when file
       (owp/lentic-generate-file
