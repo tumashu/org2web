@@ -229,8 +229,7 @@
          (site-domain (owp/get-site-domain))
          (repo-files
           (sort (owp/remove-matched-items
-                 (owp/directory-files-recursively
-                  repo-dir nil "\\.org$")
+                 (owp/directory-files-recursively repo-dir "\\.org$")
                  (owp/get-config-option :ignore))
                 #'(lambda (a b)
                     (time-less-p

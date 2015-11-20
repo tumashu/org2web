@@ -340,7 +340,7 @@ emacs-lisp files by lentic."
          (regexp-list (owp/get-config-option :lentic-doc-sources))
          (files (when regexp-list
                   (owp/select-matched-items
-                   (directory-files repo-dir t "\\.el$")
+                   (owp/directory-files-recursively repo-dir "\\.el$")
                    regexp-list))))
     (when files
       (mapc #'owp/lentic-orgify-if-necessary files)))
