@@ -27,8 +27,6 @@
 ;; * org-webpage README                                                 :README:
 
 ;; ** Introduction
-;; Note: org-webpage will not add more features in the funture, suggest kuangdash's [[https://github.com/emacs-china/EGO][EGO]].
-
 ;; org-webpage is a static site generator based on [[http://orgmode.org/][org-mode]],
 ;; which code derived from Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
 
