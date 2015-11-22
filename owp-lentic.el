@@ -176,10 +176,10 @@
 
 (defun owp/lentic-switch-window ()
   (interactive)
-  (when (derived-mode-p 'emacs-lisp-mode)
+  (when (eq major-mode 'emacs-lisp-mode)
     ;; Set buffer-local variable `lentic-init'
     (setq lentic-init '(owp/lentic-el2org-init)))
-  (when (derived-mode-p 'org-mode)
+  (when (eq major-mode 'org-mode)
     ;; Set buffer-local variable `lentic-init'
     (setq lentic-init '(owp/lentic-org2el-init)))
   (lentic-mode-create-from-init)
