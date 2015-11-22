@@ -56,8 +56,8 @@
 
 ;; ** 配置 owp-lentic
 ;; #+BEGIN_EXAMPLE
-;; (require 'owp-lentic) ;; you need install lentic and gfm
-;; (owp/lentic-define-switch-window-key "\C-cj") ;; set keybinding for `owp/lentic-switch-window'
+;; (require 'owp-lentic) ;; You need install lentic and gfm
+;; (owp/lentic-mode-setup) ;; Enable `owp/lentic-mode' for `emacs-lisp-mode' and `org-mode'
 ;; #+END_EXAMPLE
 
 ;; ** 使用
@@ -191,13 +191,56 @@
     (when (window-live-p window)
       (select-window window))))
 
-(defun owp/lentic-define-switch-window-key (key)
+(defun owp/lentic-insert-begin-end ()
+  (interactive)
+  (owp/lentic-insert-boundary-string
+   "
+#++BEGIN_SRC emacs-lisp
+?
+#++END_SRC\n
+"))
+
+(defun owp/lentic-insert-end-begin ()
+  (interactive)
+  (owp/lentic-insert-boundary-string
+   "
+#++END_SRC
+?
+#++BEGIN_SRC emacs-lisp
+"))
+
+(defun owp/lentic-insert-boundary-string (str)
+  (let* ((string (replace-regexp-in-string
+                  "#\\+\\+"
+                  (case major-mode
+                    (emacs-lisp-mode ";; #+")
+                    (org-mode "#+"))
+                  str))
+         (position (cl-position ?\? string))
+         (n (when position
+              (- (length string) position))))
+    (insert (replace-regexp-in-string "\\?" "" string))
+    (when n
+      (backward-char (- n 1)))))
+
+(defvar owp/lentic-mode-map
+  (let ((keymap (make-sparse-keymap)))
+    (define-key keymap "\C-cjj" 'owp/lentic-switch-window)
+    (define-key keymap "\C-cjb" 'owp/lentic-insert-begin-end)
+    (define-key keymap "\C-cje" 'owp/lentic-insert-end-begin)
+    keymap)
+  "Keymap for `owp/lentic-mode'")
+
+(define-minor-mode owp/lentic-mode
+  "Minor for org-webpage/lentic."
+  nil " owp/lentic" 'owp/lentic-mode-map)
+
+(defun owp/lentic-mode-setup ()
+  (interactive)
   (require 'org)
   (require 'lisp-mode)
-  (define-key org-mode-map (read-kbd-macro key)
-    'owp/lentic-switch-window)
-  (define-key emacs-lisp-mode-map (read-kbd-macro key)
-    'owp/lentic-switch-window))
+  (add-hook 'org-mode-hook 'owp/lentic-mode)
+  (add-hook 'emacs-lisp-mode-hook 'owp/lentic-mode))
 ;; #+END_SRC
 
 
