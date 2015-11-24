@@ -1,9 +1,9 @@
-- [org-webpage README](#sec-1)
-  - [Installation](#sec-1-1)
-  - [Configuration](#sec-1-2)
-  - [Publication](#sec-1-3)
-  - [Dependencies](#sec-1-4)
-  - [Known issues](#sec-1-5)
+- [org-webpage README](#org-webpage-readme)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Publication](#publication)
+  - [Dependencies](#dependencies)
+  - [Known issues](#known-issues)
 
 # org-webpage README<a id="orgheadline6"></a>
 
