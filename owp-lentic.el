@@ -48,11 +48,12 @@
 ;; *** 安装 ox-gfm
 
 ;; ox-gfm (Github Flavored Markdown exporter for Org Mode) 可以将 org 文档转换为 github markdown 格式。
+;; 目前，ox-gfm 已经合并到 org-plus-contrib 包中了，而 melpa 中可以搜索到的 ox-gfm 包已经 *过期* 了。
 
 ;; 安装方式：
 
-;; 1. 配置melpa源，参考：http://melpa.org/#/getting-started
-;; 2. M-x package-install RET ox-gfm RET
+;; 1. 配置 org 源，具体请参考：http://orgmode.org/elpa.html
+;; 2. M-x package-install RET org-plus-contrib RET
 
 ;; ** 配置 owp-lentic
 ;; #+BEGIN_EXAMPLE
