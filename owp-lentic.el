@@ -359,7 +359,9 @@ emacs-lisp files by lentic."
                      (file-name-nondirectory file)))
          (directory (when file
                       (file-name-directory file))))
-    (when (and file filename directory)
+    (when (and file (string-match-p "\\.el$" file)
+               filename
+               directory)
       (owp/lentic-generate-file
        filename
        (owp/get-config-option :lentic-readme-tags)
