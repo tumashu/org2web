@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; * 说明文档
+;; * 说明文档                                                           :README:
 
 ;; 这个文件包含一些辅助工具，这些工具可以让 org-webpage 与 [[https://github.com/phillord/lentic][lentic]] 更方便的集成。
 
