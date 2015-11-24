@@ -351,8 +351,8 @@ emacs-lisp files by lentic."
    (owp/get-config-option :lentic-readme-tags)
    'gfm "README.md"))
 
-(defun owp/lentic-generate-readme-from-current-file ()
-  "Generate README.md from current elisp file."
+(defun owp/lentic-el2readme ()
+  "Generate README.md from current emacs-lisp file."
   (interactive)
   (let* ((file (buffer-file-name))
          (filename (when file
