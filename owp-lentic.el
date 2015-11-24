@@ -320,17 +320,17 @@ emacs-lisp files by lentic."
           (lentic-batch-clone-and-save-with-config
            el-file 'owp/lentic-el2org-init))))))
 
-(defun owp/lentic-generate-file (input-file-name tags backend output-file-name)
-  (let ((repo-dir (owp/get-repository-directory))
+(defun owp/lentic-generate-file (input-file-name tags backend output-file-name &optional directory)
+  (let ((directory (or directory (owp/get-repository-directory)))
         el-file org-file)
-    (when (and repo-dir input-file-name backend output-file-name)
+    (when (and directory input-file-name backend output-file-name)
       (let ((ext (file-name-extension input-file-name)))
         (cond ((equal ext "el") ;; elisp file convert to org file with lentic
-               (setq el-file (concat repo-dir input-file-name))
+               (setq el-file (concat directory input-file-name))
                (setq org-file (concat (file-name-sans-extension el-file) ".org"))
                (owp/lentic-orgify-if-necessary el-file))
               ((equal ext "org")
-               (setq org-file (concat repo-dir input-file-name)))))
+               (setq org-file (concat directory input-file-name)))))
       (if (file-exists-p org-file)
           (with-current-buffer (find-file-noselect org-file)
             (let ((org-export-filter-paragraph-functions '(owp/lentic-org-clean-space))
@@ -350,6 +350,20 @@ emacs-lisp files by lentic."
    (car (owp/get-config-option :lentic-readme-sources))
    (owp/get-config-option :lentic-readme-tags)
    'gfm "README.md"))
+
+(defun owp/lentic-generate-readme-from-current-file ()
+  "Generate README.md from current elisp file."
+  (interactive)
+  (let* ((file (buffer-file-name))
+         (filename (when file
+                     (file-name-nondirectory file)))
+         (directory (when file
+                      (file-name-directory file))))
+    (when (and file filename directory)
+      (owp/lentic-generate-file
+       filename
+       (owp/get-config-option :lentic-readme-tags)
+       'gfm "README.md" directory))))
 
 (defun owp/lentic-generate-index (&optional project-name)
   (interactive)
