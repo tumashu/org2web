@@ -81,301 +81,30 @@
 ;; ** Require
 
 ;; #+BEGIN_SRC emacs-lisp
-(require 'lentic)
-(require 'lentic-org)
-(require 'lentic-doc)
+(require 'easy-lentic)
 (require 'ox-gfm)
-(require 'ox-org)
 ;; #+END_SRC
 
-;; ** 定义一个 org-webpage 专用的 lentic el2org 转换器
-;; lentic 内置了两个 el2org 转换器函数：
-
-;; 1. `lentic-el-org-init'
-;; 2. `lentic-el-orgel-init'
-
-;; 第一个转换器太过简单，不能处理 “^;;; ”, 而第二个转换器又太复杂，稳定性不好，所以
-;; 在这里，我基于 `lentic-el-org-init' 自定义了一个转换器：`owp/lentic-el2org-init',
-;; 这个转换器和 `lentic-el-org-init' 转换器的功能类似，仅仅对 “^;;; ” 特殊处理。
-
 ;; #+BEGIN_SRC emacs-lisp
-(defclass owp/lentic-org2el-configuration
-  (lentic-unmatched-chunk-configuration
-   lentic-uncommented-chunk-configuration)
-  ())
-
-(defmethod lentic-clone
-  ((conf owp/lentic-org2el-configuration)
-   &optional start stop length-before
-   start-converted stop-converted)
-  (let ((clone-return (call-next-method conf)))
-    ;; replace all ';;; '  to ';;; '.
-    (m-buffer-replace-match
-     (m-buffer-match
-      (lentic-that conf)
-      "^ *;; ;;; ")
-     ";;; ")
-    clone-return))
-
-(defmethod lentic-invert
-  ((conf owp/lentic-org2el-configuration))
-  (lentic-m-oset
-   (owp/lentic-el2org-init)
-   :that-buffer
-   (lentic-this conf)))
-
-(defun owp/lentic-org2el-init ()
-  (lentic-org-oset
-   (owp/lentic-org2el-configuration
-    "owp-lb-org2el"
-    :lentic-file
-    (concat
-     (file-name-sans-extension
-      (buffer-file-name))
-     ".el"))))
-
-(add-to-list 'lentic-init-functions
-             'owp/lentic-org2el-init)
-
-(defclass owp/lentic-el2org-configuration
-  (lentic-unmatched-chunk-configuration
-   lentic-commented-chunk-configuration)
-  ())
-
-(defmethod lentic-create
-  ((conf owp/lentic-el2org-configuration))
-  (let ((buf (call-next-method conf)))
-    (with-current-buffer buf
-      (show-all)
-      ;; After run `show-all', the point move to
-      ;; the end of buffer, reupdate the point.
-      (lentic-update-point conf))
-    buf))
-
-(defmethod lentic-invert
-  ((conf owp/lentic-el2org-configuration))
-  (lentic-m-oset
-   (owp/lentic-org2el-init)
-   :delete-on-exit t
-   :that-buffer (lentic-this conf)))
-
-(defun owp/lentic-el2org-init ()
-  (lentic-org-oset
-   (owp/lentic-el2org-configuration
-    "owp-lb-el2org"
-    ;; we don't really need a file and could cope without, but org mode assumes
-    ;; that the buffer is file name bound when it exports. As it happens, this
-    ;; also means that file saving is possible which in turn saves the el file
-    :lentic-file
-    (concat
-     (file-name-sans-extension
-      (buffer-file-name))
-     ".org"))))
-
-(add-to-list 'lentic-init-functions
-             'owp/lentic-el2org-init)
-
-(defun owp/lentic-switch-window ()
-  (interactive)
-  (when (eq major-mode 'emacs-lisp-mode)
-    ;; Set buffer-local variable `lentic-init'
-    (setq lentic-init '(owp/lentic-el2org-init)))
-  (when (eq major-mode 'org-mode)
-    ;; Set buffer-local variable `lentic-init'
-    (setq lentic-init '(owp/lentic-org2el-init)))
-  (lentic-mode-create-from-init)
-  (lentic-mode-split-window-below)
-  (let ((window
-         (get-buffer-window
-          (lentic-mode-find-next-visible-lentic-buffer
-           (current-buffer)))))
-    (when (window-live-p window)
-      (select-window window))))
-
-(defun owp/lentic-insert-begin-end ()
-  (interactive)
-  (owp/lentic-insert-boundary-string
-   "
-#++BEGIN_SRC emacs-lisp
-?
-#++END_SRC\n
-"))
-
-(defun owp/lentic-insert-end-begin ()
-  (interactive)
-  (owp/lentic-insert-boundary-string
-   "
-#++END_SRC
-?
-#++BEGIN_SRC emacs-lisp
-"))
-
-(defun owp/lentic-insert-boundary-string (str)
-  (let* ((string (replace-regexp-in-string
-                  "#\\+\\+"
-                  (case major-mode
-                    (emacs-lisp-mode ";; #+")
-                    (org-mode "#+"))
-                  str))
-         (position (cl-position ?\? string))
-         (n (when position
-              (- (length string) position))))
-    (insert (replace-regexp-in-string "\\?" "" string))
-    (when n
-      (backward-char (- n 1)))))
-
-(defvar owp/lentic-mode-map
-  (let ((keymap (make-sparse-keymap)))
-    (define-key keymap "\C-cjj" 'owp/lentic-switch-window)
-    (define-key keymap "\C-cjb" 'owp/lentic-insert-begin-end)
-    (define-key keymap "\C-cje" 'owp/lentic-insert-end-begin)
-    keymap)
-  "Keymap for `owp/lentic-mode'")
-
-(define-minor-mode owp/lentic-mode
-  "Minor for org-webpage/lentic."
-  nil " owp/lentic" 'owp/lentic-mode-map)
-
-(defun owp/lentic-mode-setup ()
-  (interactive)
-  (require 'org)
-  (require 'lisp-mode)
-  (add-hook 'org-mode-hook 'owp/lentic-mode)
-  (add-hook 'emacs-lisp-mode-hook 'owp/lentic-mode))
-;; #+END_SRC
-
-
-;; ** 定义一个 org export 过滤器，处理中文文档中的多余空格
-
-;; org 文档导出为 HTML 文档时，中文与中文之间的回车符默认会转化为空格符，
-;; 这些空格对于中文而言是多余的。所以我们定义了一个过滤器，当 org 文档导
-;; 出为 HTML 或者 markdown 文档时，自动清除中文与中文之间不必要的空格。
-
-;; #+BEGIN_SRC emacs-lisp
-(defun owp/lentic-org-clean-space (text backend info)
-  "在export为HTML时，删除中文之间不必要的空格"
-  (when (org-export-derived-backend-p backend 'html)
-    (let ((regexp "[[:multibyte:]]")
-          (string text))
-      ;; org默认将一个换行符转换为空格，但中文不需要这个空格，删除。
-      (setq string
-            (replace-regexp-in-string
-             (format "\\(%s\\) *\n *\\(%s\\)" regexp regexp)
-             "\\1\\2" string))
-      ;; 删除粗体之前的空格
-      (setq string
-            (replace-regexp-in-string
-             (format "\\(%s\\) +\\(<\\)" regexp)
-             "\\1\\2" string))
-      ;; 删除粗体之后的空格
-      (setq string
-            (replace-regexp-in-string
-             (format "\\(>\\) +\\(%s\\)" regexp)
-             "\\1\\2" string))
-      string)))
-;; #+END_SRC
-
-;; ** 清洗 lentic 转换得到的 org 文件
-
-;; 在编辑 emacs-lisp 文件时，有许多 *约定俗成* 的东西，而许多相关工具，
-;; 又依赖这些 *约定俗成* , 比较常见的有：
-
-;; 1. 文档说明的开始，添加；“;;; Commentary:” 注释
-;; 2. 代码部份的开始，添加：“;;; Code:” 注释
-
-;; 这些书写习惯在 lentic 转换阶段处理起来非常麻烦，所以我将其原样输出
-;; 到 org 文件，然后在 org 导出的时候用 `org-export-before-processing-hook'
-;; 做处理，这样处理起来相对简单，下面是这个 hook 的定义：
-
-;; #+BEGIN_SRC emacs-lisp
-(defun owp/lentic-org-export-preprocess (backend)
-  "This function delete useless strings in org files which are converted from
-emacs-lisp files by lentic."
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "^;;; +Commentary:.*" nil t)
-      (replace-match "" nil t))
-    (goto-char (point-min))
-    (while (re-search-forward "^;;; +Code:.*" nil t)
-      (replace-match "" nil t))))
-
-;; #+END_SRC
-
-;; ** 根据 elisp 文件的 Commentary，生成 README 文件
-
-;; #+BEGIN_SRC emacs-lisp
-(defun owp/lentic-orgify-if-necessary (el-file)
-  (let* ((el-buffer (get-file-buffer el-file))
-         (org-file (concat (file-name-sans-extension el-file) ".org"))
-         (org-buffer (get-file-buffer org-file))
-         (locked (or (file-locked-p el-file)
-                     (file-locked-p org-file))))
-    (when el-buffer
-      (kill-buffer el-buffer))
-    (when org-buffer
-      (kill-buffer org-buffer))
-    (unless locked
-      (when (file-newer-than-file-p el-file org-file)
-        (let ((lentic-kill-retain t))
-          (lentic-batch-clone-and-save-with-config
-           el-file 'owp/lentic-el2org-init))))))
-
-(defun owp/lentic-generate-file (input-file-name tags backend output-file-name &optional directory)
-  (let ((directory (or directory (owp/get-repository-directory)))
-        el-file org-file)
-    (when (and directory input-file-name backend output-file-name)
-      (let ((ext (file-name-extension input-file-name)))
-        (cond ((equal ext "el") ;; elisp file convert to org file with lentic
-               (setq el-file (concat directory input-file-name))
-               (setq org-file (concat (file-name-sans-extension el-file) ".org"))
-               (owp/lentic-orgify-if-necessary el-file))
-              ((equal ext "org")
-               (setq org-file (concat directory input-file-name)))))
-      (if (file-exists-p org-file)
-          (with-current-buffer (find-file-noselect org-file)
-            (let ((org-export-filter-paragraph-functions '(owp/lentic-org-clean-space))
-                  (org-export-before-processing-hook '(owp/lentic-org-export-preprocess))
-                  (org-export-select-tags tags)
-                  (org-export-with-tags nil)
-                  (indent-tabs-mode nil)
-                  (tab-width 4))
-              (org-export-to-file backend output-file-name)))
-        (message "Generate %s fail!!!" output-file-name)))))
-
 (defun owp/lentic-generate-readme (&optional project-name)
   (interactive)
   (owp/select-project-name
    "Which project do you want to generate README.md? " project-name)
-  (owp/lentic-generate-file
+  (easy-lentic-generate-file
+   (owp/get-repository-directory)
    (car (owp/get-config-option :lentic-readme-sources))
    (owp/get-config-option :lentic-readme-tags)
    'gfm "README.md"))
-
-(defun owp/lentic-el2readme ()
-  "Generate README.md from current emacs-lisp file."
-  (interactive)
-  (let* ((file (buffer-file-name))
-         (filename (when file
-                     (file-name-nondirectory file)))
-         (directory (when file
-                      (file-name-directory file))))
-    (when (and file (string-match-p "\\.el$" file)
-               filename
-               directory)
-      (owp/lentic-generate-file
-       filename
-       (owp/get-config-option :lentic-readme-tags)
-       'gfm "README.md" directory))))
 
 (defun owp/lentic-generate-index (&optional project-name)
   (interactive)
   (owp/select-project-name
    "Which project do you want to generate index.org? " project-name)
-  (owp/lentic-generate-file
+  (easy-lentic-generate-file
+   (owp/get-repository-directory)
    (car (owp/get-config-option :lentic-index-sources))
    (owp/get-config-option :lentic-index-tags)
    'org "index.org"))
-
 ;; #+END_SRC
 
 ;; ** org-webpage 导出函数（支持 lentic）
@@ -384,9 +113,9 @@ emacs-lisp files by lentic."
 (defun owp/lentic-org-export-function ()
   "A function with can export org file to html."
   (let ((org-export-before-processing-hook
-         '(owp/lentic-org-export-preprocess))
+         '(easy-lentic-org-export-preprocess))
         (org-export-filter-paragraph-functions
-         '(owp/lentic-org-clean-space))
+         '(easy-lentic-org-clean-space))
         (org-export-select-tags (owp/get-config-option :lentic-doc-tags))
         (org-export-headline-levels 7)
         (indent-tabs-mode nil)
@@ -403,21 +132,23 @@ emacs-lisp files by lentic."
                    (owp/directory-files-recursively repo-dir "\\.el$")
                    regexp-list))))
     (when files
-      (mapc #'owp/lentic-orgify-if-necessary files)))
+      (mapc #'easy-lentic-orgify-if-necessary files)))
 
   ;; Generate README.mk if necessary
-  (let ((file (car (owp/get-config-option :lentic-readme-sources)))
+  (let ((repo-dir (owp/get-repository-directory))
+        (file (car (owp/get-config-option :lentic-readme-sources)))
         (tags (owp/get-config-option :lentic-readme-tags)))
     (when file
-      (owp/lentic-generate-file
-       file tags 'gfm "README.md")))
+      (easy-lentic-generate-file
+       repo-dir file tags 'gfm "README.md")))
 
   ;; Generate index.org if necessary
-  (let ((file (car (owp/get-config-option :lentic-index-sources)))
+  (let ((repo-dir (owp/get-repository-directory))
+        (file (car (owp/get-config-option :lentic-index-sources)))
         (tags (owp/get-config-option :lentic-index-tags)))
     (when file
-      (owp/lentic-generate-file
-       file tags 'org "index.org"))))
+      (easy-lentic-generate-file
+       repo-dir file tags 'org "index.org"))))
 ;; #+END_SRC
 
 ;; * Footer
