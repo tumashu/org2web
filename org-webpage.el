@@ -278,9 +278,12 @@
             (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" upload-script t t)))
            ((and (string-equal system-type "gnu/linux")
                  owp/terminal-emulater)
-            (shell-command (format "%s -e 'bash %s'"
-                                   owp/terminal-emulater
-                                   (expand-file-name upload-script)))))
+            (start-process-shell-command
+             "org-webpage-upload-script"
+             nil
+             (format "%s -e 'bash %s'"
+                     owp/terminal-emulater
+                     (expand-file-name upload-script)))))
         (message "Can't run upload script file!
 
 User should install 'bash' and 'git' correctly:
