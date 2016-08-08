@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -e
+
+echo '###########################################################'
+echo '##         Org-webpage upload script using rclone        ##'
+echo '###########################################################'
+
+echo ''
+echo 'Export     Directory: {{export-dir}}'
+echo 'Publish    Directory: {{publish-dir}}'
+echo 'Remote location name: {{remote-name}}'
+echo 'Remote location path: {{remote-path}}'
+
+# check if rclone even exists
+echo 'Checking of rclone is installed and can be found in $PATH'
+command -v rclone >/dev/null 2>&1 || {
+    echo >&2 "I require rclone but it's not installed.";
+    echo >&2 "Install Go from https://golang.org/dl/ and then";
+    echo >&2 "Install rclone with:";
+    echo >&2 " go get github.com/ncw/rclone";
+    echo >&2 "An alternative to this would be downloading rclone";
+    echo >&2 "directly from http://rclone.org/downloads/. Aborting upload.";
+    exit 1;
+}
+
+# Just upload the stuff, for now
+echo 'Uploading'
+if [ "{{remote-name}}" == "local" ]; then
+    rclone sync '{{export-dir}}' '{{remote-path}}'
+else
+    rclone sync '{{export-dir}}' {{remote-name}}:'{{remote-path}}'
+fi
