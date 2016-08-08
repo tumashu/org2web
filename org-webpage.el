@@ -1,10 +1,12 @@
 ;;; org-webpage.el --- static site generator based on org mode
 
 ;; * Header
-;; Copyright (C)  2015 Feng Shu
+;; Copyright (C)  2016 Feng Shu, Jorge Javier Araya Navarro
+;;                2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
 
 ;; Author: Feng Shu  <tumashu AT 163.com>
+;;         Jorge Javier Araya Navarro <elcorreo AT deshackra.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: org-mode, convenience, beautify
 ;; Homepage: https://github.com/tumashu/org-webpage
