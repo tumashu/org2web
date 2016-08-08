@@ -51,6 +51,7 @@ you can adjust and paste it to your `.emacs` file:
     (owp/add-project-config
      '("tumashu.github.com"
        :repository-directory "~/project/emacs-packages/tumashu.github.com"
+       ;; you can use `rclone` with `:remote (rclone "remote-name" "/remote/path")` instead.
        :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
        :site-domain "http://tumashu.github.com/"
        :site-main-title "Tumashu 的个人小站"
