@@ -10,7 +10,6 @@ echo ''
 echo 'Export     Directory: {{export-dir}}'
 echo 'Publish    Directory: {{publish-dir}}'
 echo 'Remote location name: {{remote-name}}'
-echo 'Remote location path: {{remote-path}}'
 
 # check if rclone even exists
 echo 'Checking of rclone is installed and can be found in $PATH'
@@ -27,7 +26,7 @@ command -v rclone >/dev/null 2>&1 || {
 # Just upload the stuff, for now
 echo 'Uploading'
 if [ "{{remote-name}}" == "local" ]; then
-    rclone sync '{{export-dir}}' '{{remote-path}}'
+    rclone sync '{{export-dir}}' '{{publish-dir}}'
 else
-    rclone sync '{{export-dir}}' {{remote-name}}:'{{remote-path}}'
+    rclone sync '{{export-dir}}' {{remote-name}}:'{{publish-dir}}'
 fi
