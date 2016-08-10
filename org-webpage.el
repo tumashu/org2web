@@ -186,9 +186,11 @@
                    '((1 . "Full publish")
                      (2 . "Partial publish")
                      (3 . "Test full publish")
-                     (4 . "Test partial publish"))
+                     (4 . "Test partial publish")
+                     (5 . "Upload latest publish"))
                  '((1 . "Full publish")
-                   (2 . "Test full publish"))))
+                   (2 . "Test full publish")
+                   (3 . "Upload latest publish"))))
          (job-used (completing-read
                     "Which job do you want to active: "
                     (mapcar #'cdr jobs)))
@@ -200,6 +202,9 @@
          (partial-update (and support-partial-update
                               (or (= job-number 2)
                                   (= job-number 4))))
+         (upload-latest-publish (if support-partial-update
+                                    (= job-number 5)
+                                  (= job-number 3)))
          (repo-dir (owp/get-repository-directory))
          (publish-root-dir
           (file-name-as-directory owp/temporary-directory))
@@ -262,10 +267,14 @@
                             (cl-subseq repo-files 0 (min update-top-n length-repo-files))
                           repo-files)))
 
-    (when (file-directory-p publish-root-dir)
-      (delete-directory publish-root-dir t))
+    (if upload-latest-publish
+        (progn (delete-directory history-dir t)
+               (delete-directory publish-dir t)
+               (delete-directory test-publish-dir t))
+      (when (file-directory-p publish-root-dir)
+        (delete-directory publish-root-dir t))
+      (make-directory export-dir t))
 
-    (make-directory export-dir t)
     (make-directory history-dir t)
     (make-directory publish-dir t)
     (make-directory test-publish-dir t)
@@ -280,8 +289,9 @@
                                         (* (random 9) 100)
                                         (* (random 9) 10)
                                         (* (random 9) 1)))))
-      (owp/prepare-theme-resources export-dir)
-      (owp/publish-changes repo-files changed-files export-dir)
+      (unless upload-latest-publish
+        (owp/prepare-theme-resources export-dir)
+        (owp/publish-changes repo-files changed-files export-dir))
       (owp/generate-and-run-uploader
        uploader-file remote export-dir history-dir publish-dir partial-update))))
 
