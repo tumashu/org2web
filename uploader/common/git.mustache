@@ -12,7 +12,7 @@ partial_update='{{partial-update}}'
 
 
 echo '###########################################################'
-echo '##              Org-webpage upload script                ##'
+echo '##            Org-webpage uploader using git             ##'
 echo '###########################################################'
 
 echo ''
@@ -27,13 +27,13 @@ echo "Git Remote branch:    $git_branch"
 echo ''
 if [[ $git_branch = "master" ]]
 then
-    read -p "Type \"branch-name\" to run this upload-script: " -r
+    read -p "Type \"branch-name\" to run this uploader: " -r
     if [[ ! $REPLY = "master" ]]
     then
         exit 1
     fi
 else
-    read -p 'Run this upload-script? [y/n]' -n 1 -r
+    read -p 'Run this uploader? [y/n]' -n 1 -r
     if [[ ! $REPLY = "y" ]]
     then
         exit 1

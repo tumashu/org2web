@@ -179,44 +179,57 @@
       (run-hooks 'preparation-function)))
 
   (owp/verify-configuration)
-  (let* ((jobs '((1 . "Full publish")
-                 (2 . "Partial publish")
-                 (3 . "Test full publish")
-                 (4 . "Test partial publish")))
+  (let* ((remote (owp/get-config-option :remote))
+         (uploader-config (cdr (assoc (nth 0 remote) owp/uploader-config-alist)))
+         (support-partial-update (plist-get uploader-config :support-partial-update))
+         (jobs (if support-partial-update
+                   '((1 . "Full publish")
+                     (2 . "Partial publish")
+                     (3 . "Test full publish")
+                     (4 . "Test partial publish"))
+                 '((1 . "Full publish")
+                   (2 . "Test full publish"))))
          (job-used (completing-read
                     "Which job do you want to active: "
                     (mapcar #'cdr jobs)))
          (job-number (car (rassoc job-used jobs)))
-         (test-publish (or (= job-number 3)
-                           (= job-number 4)))
-         (partial-update (or (= job-number 2)
-                             (= job-number 4)))
+         (test-publish (if support-partial-update
+                           (or (= job-number 3)
+                               (= job-number 4))
+                         (= job-number 2)))
+         (partial-update (and support-partial-update
+                              (or (= job-number 2)
+                                  (= job-number 4))))
          (repo-dir (owp/get-repository-directory))
          (publish-root-dir
           (file-name-as-directory owp/temporary-directory))
          (export-dir
-          (concat (file-name-as-directory
-                   (concat publish-root-dir project-name))
-                  "export/"))
+          (expand-file-name
+           (concat (file-name-as-directory
+                    (concat publish-root-dir project-name))
+                   "export/")))
          (history-dir
-          (concat (file-name-as-directory
-                   (concat publish-root-dir project-name))
-                  "history/"))
+          (expand-file-name
+           (concat (file-name-as-directory
+                    (concat publish-root-dir project-name))
+                   "history/")))
          (publish-dir
-          (or publishing-directory
-              (concat (file-name-as-directory
-                       (concat publish-root-dir project-name))
-                      "publish/")
-              (owp/get-publishing-directory)))
+          (expand-file-name
+           (or publishing-directory
+               (concat (file-name-as-directory
+                        (concat publish-root-dir project-name))
+                       "publish/")
+               (owp/get-publishing-directory))))
          (test-publish-dir
-          (concat (file-name-as-directory
-                   (concat publish-root-dir project-name))
-                  "test/"))
-         (upload-script
-          (concat (file-name-as-directory
-                   (concat publish-root-dir project-name))
-                  "owp-upload-script.sh"))
-         (remote (owp/get-config-option :remote))
+          (expand-file-name
+           (concat (file-name-as-directory
+                    (concat publish-root-dir project-name))
+                   "test/")))
+         (uploader-file
+          (expand-file-name
+           (concat (file-name-as-directory
+                    (concat publish-root-dir project-name))
+                   "owp-uploader.sh")))
          (site-domain (owp/get-site-domain))
          (repo-files
           (sort (owp/remove-matched-items
@@ -269,53 +282,55 @@
                                         (* (random 9) 1)))))
       (owp/prepare-theme-resources export-dir)
       (owp/publish-changes repo-files changed-files export-dir)
-      (owp/generate-upload-script upload-script
-                                  export-dir history-dir publish-dir
-                                  remote
-                                  partial-update)
-      (if (and (file-exists-p upload-script)
-               (executable-find "bash"))
-          (cond
-           ((string-equal system-type "windows-nt")
-            (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" upload-script t t)))
-           ((and (string-equal system-type "gnu/linux")
-                 owp/terminal-emulater)
-            (start-process-shell-command
-             "org-webpage-upload-script"
-             nil
-             (format "%s -e 'bash %s'"
-                     owp/terminal-emulater
-                     (expand-file-name upload-script)))))
-        (message "Can't run upload script file!
+      (owp/generate-and-run-uploader
+       uploader-file remote export-dir history-dir publish-dir partial-update))))
 
-User should install 'bash' and 'git' correctly:
-1. In Linux/Unix system, user can install 'bash' and 'git' with package manager.
-2. In Window system, user can install 'msysgit',
-   then add '<INSTALL-PATH>/bin' to envirment variable '$PATH'")))))
-
-(defun owp/generate-upload-script (script-file export-dir history-dir publish-dir remote &optional partial-update)
-  "Generate a shell script file, which used to upload html files
-generated by org-webpage to remote."
-  (if (not (and script-file export-dir history-dir publish-dir remote))
-      (message "Can't generate org-webpage upload script.")
-    (if (not (or (eq (nth 0 remote) 'git) (eq (nth 0 remote) 'rclone)))
-        (message (format "symbol in :remote named %s not recognized! use either 'git or 'rclone" (symbol-name (nth 0 remote))))
-      (owp/string-to-file
-       (mustache-render
-        (owp/file-to-string (owp/get-upload-script-file
-                             (concat (symbol-name (nth 0 remote)) ".mustache")))
-        (if (eq (nth 0 remote) 'git)
-            (ht ("export-dir" (expand-file-name export-dir))
-                ("history-dir" (expand-file-name history-dir))
-                ("publish-dir" (expand-file-name publish-dir))
-                ("remote-url" (nth 1 remote))
-                ("remote-branch" (nth 2 remote))
-                ("partial-update" (if partial-update "yes" "no")))
-          (ht ("export-dir" (expand-file-name export-dir))
-              ("publish-dir" (expand-file-name publish-dir))
-              ("remote-name" (nth 1 remote))
-              ("remote-path" (nth 2 remote)))))
-       script-file))))
+(defun owp/generate-and-run-uploader (uploader-file remote export-dir history-dir publish-dir partial-update)
+  "Generate shell script UPLOADER-FILE then RUN it, the uploader is used to upload html files
+generated by org-webpage to REMOTE."
+  (if (not (and uploader-file remote export-dir history-dir publish-dir))
+      (message "Can't generate org-webpage uploader file.")
+    (let* ((uploader-name (nth 0 remote))
+           (uploader-names (mapcar #'car owp/uploader-config-alist))
+           (uploader-config (cdr (assoc uploader-name owp/uploader-config-alist)))
+           (uploader-requires (plist-get uploader-config :requires))
+           (uploader-help-info (plist-get uploader-config :help-info))
+           (uploader-template
+            (owp/file-to-string
+             (owp/get-uploader-template
+              (or (plist-get uploader-config :template)
+                  (concat (symbol-name uploader-name) ".mustache")))))
+           (uploader-template-settings
+            (plist-get uploader-config :template-settings)))
+      (if (not (member uploader-name uploader-names))
+          (message (format "Uploader name %S in :remote is not recognized, please choice one from %S."
+                           uploader-name uploader-names))
+        (if (cl-some #'(lambda (x)
+                         (not (executable-find x)))
+                     uploader-requires)
+            (message uploader-help-info)
+          ;; Generate uploader file
+          (owp/string-to-file
+           (mustache-render
+            uploader-template
+            (funcall uploader-template-settings ; it's a function.
+                     remote export-dir history-dir publish-dir partial-update))
+           uploader-file)
+          ;; Run Uploader file
+          (if (and (file-exists-p uploader-file)
+                   (executable-find "bash"))
+              (cond
+               ((string-equal system-type "windows-nt")
+                (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" uploader-file t t)))
+               ((and (string-equal system-type "gnu/linux")
+                     owp/terminal-emulater)
+                (start-process-shell-command
+                 "owp/uploader-script"
+                 nil
+                 (format "%s -e 'bash %s'"
+                         owp/terminal-emulater
+                         uploader-file))))
+            (message "Can't run org-webpage uploader, user should install 'bash' correctly.")))))))
 
 (defun owp/verify-configuration ()
   "Ensure all required configuration fields are properly configured, include:

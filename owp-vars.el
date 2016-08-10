@@ -58,6 +58,35 @@ and `owp/new-post' will directly add new post to this project."
   :group 'org-webpage
   :type 'string)
 
+(defcustom owp/uploader-config-alist
+  '((git :requires ("bash" "git")
+         :template "git.mustache"
+         :template-settings
+         (lambda (remote export-dir history-dir publish-dir partial-update)
+           (ht ("export-dir" export-dir)
+               ("history-dir" history-dir)
+               ("publish-dir" publish-dir)
+               ("remote-url" (nth 1 remote))
+               ("remote-branch" (nth 2 remote))
+               ("partial-update" (if partial-update "yes" "no"))))
+         :support-partial-update t
+         :help-info "You should install 'git' in linux system or 'msysgit' in window system!")
+    (rclone :requires ("bash" "rclone")
+            :template "rclone.mustache"
+            :template-settings
+            (lambda (remote export-dir history-dir publish-dir partial-update)
+              (ht ("export-dir" export-dir)
+                  ("publish-dir" publish-dir)
+                  ("remote-name" (nth 1 remote))
+                  ("remote-path" (nth 2 remote))))
+            :support-partial-update nil
+            :help-info "You should install 'rclone':
+1. Install Go from 'https://golang.org/dl/'
+2. Install rclone with command 'go get github.com/ncw/rclone'
+   or download and install rclone from 'http://rclone.org/downloads/' directly."))
+  "The uploader configure of org-webpage."
+  :group 'org-webpage)
+
 (defcustom owp/project-config-alist nil
   "Association list to control org-webpage publishing behavior.
 
