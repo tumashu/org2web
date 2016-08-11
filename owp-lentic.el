@@ -114,8 +114,6 @@
   "A function with can export org file to html."
   (let ((org-export-before-processing-hook
          '(easy-lentic-org-export-preprocess))
-        (org-export-filter-paragraph-functions
-         '(easy-lentic-org-clean-space))
         (org-export-select-tags (owp/get-config-option :lentic-doc-tags))
         (org-export-headline-levels 7)
         (indent-tabs-mode nil)
