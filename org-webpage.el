@@ -67,7 +67,7 @@
 ;; you can adjust and paste it to your =.emacs= file:
 
 ;; #+BEGIN_EXAMPLE
-;; the following is only needed if you install org-page manually
+;; ;; the following is only needed if you install org-page manually
 ;; (add-to-list 'load-path "path/to/org-webpage")
 
 ;; (require 'org-webpage)
