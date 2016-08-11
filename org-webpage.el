@@ -268,15 +268,12 @@
      history-dir publish-dir test-publish-dir)
 
     (if test-publish
-        (let ((owp/always-use-relative-url t)) ; Local test website, can't use absolute path.
+        (let ((owp/always-use-relative-url t) ; Local test website, can't use absolute path.
+              (port (or (owp/get-config-option :web-server-port)
+                        (owp/get-random-number 4))))
           (owp/prepare-theme-resources test-publish-dir)
           (owp/publish-changes repo-files changed-files test-publish-dir)
-          (owp/web-server-browse test-publish-dir
-                                 (or (owp/get-config-option :web-server-port)
-                                     (+ (* (random 9) 1000)
-                                        (* (random 9) 100)
-                                        (* (random 9) 10)
-                                        (* (random 9) 1)))))
+          (owp/web-server-browse test-publish-dir port))
       (unless upload-latest-publish
         (owp/prepare-theme-resources export-dir)
         (owp/publish-changes repo-files changed-files export-dir))

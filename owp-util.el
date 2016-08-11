@@ -76,6 +76,13 @@
              "\n\n"
              prompt))))
 
+(defun owp/get-random-number (n)
+  (let ((result 0))
+    (dotimes (i n)
+      (setq result
+            (+ result (* (random 9) (expt 10 i)))))
+    result))
+
 (defun owp/compare-standard-date (date1 date2)
   "Compare two standard ISO 8601 format dates, format is as below:
 2012-08-17
