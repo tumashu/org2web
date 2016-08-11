@@ -80,7 +80,7 @@ You can find more config options and theirs default values by commands:
 2.  [org mode](http://orgmode.org/): v8.0 is required, please use `M-x org-version <RET>` to make sure you org mode version is not less than 8.0
 3.  [bash](http://www.gnu.org/software/bash/): the GNU Project's shell
 4.  [git](http://git-scm.com): a free and open source version control system
-5.  (Optional)[rclone](http://rclone.org/downloads/): support to other remote locations, see rclone's overview for more information.
+5.  [rclone](http://rclone.org/downloads/): support to other remote locations, see rclone's overview for more information. (Optional)
 6.  [mustache.el](https://github.com/Wilfred/mustache.el): a mustache templating library for Emacs
 7.  [htmlize.el](http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi): a library for syntax highlighting (usually this library is shipped with emacs)
 8.  [dash.el](https://github.com/magnars/dash.el): a modern list library for Emacs

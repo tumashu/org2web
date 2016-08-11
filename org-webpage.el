@@ -108,7 +108,7 @@
 ;; 2. [[http://orgmode.org/][org mode]]: v8.0 is required, please use =M-x org-version <RET>= to make sure you org mode version is not less than 8.0
 ;; 3. [[http://www.gnu.org/software/bash/][bash]]: the GNU Project's shell
 ;; 4. [[http://git-scm.com][git]]: a free and open source version control system
-;; 5. (Optional)[[http://rclone.org/downloads/][rclone]]: support to other remote locations, see rclone's overview for more information.
+;; 5. [[http://rclone.org/downloads/][rclone]]: support to other remote locations, see rclone's overview for more information. (Optional)
 ;; 6. [[https://github.com/Wilfred/mustache.el][mustache.el]]: a mustache templating library for Emacs
 ;; 7. [[http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi][htmlize.el]]: a library for syntax highlighting (usually this library is shipped with emacs)
 ;; 8. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
