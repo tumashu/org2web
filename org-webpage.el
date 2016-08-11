@@ -173,10 +173,6 @@
   (interactive)
   (setq project-name (owp/select-project-name "Which project do you want to publish? " project-name))
   (setq owp/item-cache nil)
-  (let ((preparation-function
-         (owp/get-config-option :preparation-function)))
-    (when preparation-function
-      (run-hooks 'preparation-function)))
 
   (owp/verify-configuration)
   (let* ((remote (owp/get-config-option :remote))
@@ -236,14 +232,19 @@
                     (concat publish-root-dir project-name))
                    "owp-uploader.sh")))
          (site-domain (owp/get-site-domain))
+         (preparation-function
+          (owp/get-config-option :preparation-function))
          (repo-files
-          (sort (owp/remove-matched-items
-                 (owp/directory-files-recursively repo-dir "\\.org$")
-                 (owp/get-config-option :ignore))
-                #'(lambda (a b)
-                    (time-less-p
-                     (cl-sixth (file-attributes b))
-                     (cl-sixth (file-attributes a))))))
+          (unless upload-latest-publish
+            (when preparation-function
+              (run-hooks 'preparation-function))
+            (sort (owp/remove-matched-items
+                   (owp/directory-files-recursively repo-dir "\\.org$")
+                   (owp/get-config-option :ignore))
+                  #'(lambda (a b)
+                      (time-less-p
+                       (cl-sixth (file-attributes b))
+                       (cl-sixth (file-attributes a)))))))
          (length-repo-files (length repo-files))
          (update-top-n
           (cond ((and partial-update (numberp update-top-n)) update-top-n)
