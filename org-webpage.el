@@ -48,7 +48,8 @@
 ;; 3. org-website find theme-files from a *themes-list* in sequence and same theme-file
 ;;    first found will be used. User can set *fallback theme* with the help of this feature.
 ;; 4. org-website include a tiny emacs web server, which can be used to test publish.
-;; 5. ...
+;; 5. org-website can use other uploaders to upload website, for example: rclone.
+;; 6. ...
 
 ;; ** Installation
 
@@ -75,6 +76,7 @@
 ;;  '("tumashu.github.com"
 ;;    :repository-directory "~/project/emacs-packages/tumashu.github.com"
 ;;    :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
+;;    ;; you can use `rclone` with `:remote (rclone "remote-name" "/remote/path/location")` instead.
 ;;    :site-domain "http://tumashu.github.com/"
 ;;    :site-main-title "Tumashu 的个人小站"
 ;;    :site-sub-title "(九天十地，太上忘情！！！)"
@@ -106,11 +108,12 @@
 ;; 2. [[http://orgmode.org/][org mode]]: v8.0 is required, please use =M-x org-version <RET>= to make sure you org mode version is not less than 8.0
 ;; 3. [[http://www.gnu.org/software/bash/][bash]]: the GNU Project's shell
 ;; 4. [[http://git-scm.com][git]]: a free and open source version control system
-;; 5. [[https://github.com/Wilfred/mustache.el][mustache.el]]: a mustache templating library for Emacs
-;; 6. [[http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi][htmlize.el]]: a library for syntax highlighting (usually this library is shipped with emacs)
-;; 7. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
-;; 8. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
-;; 9. [[https://github.com/eschulte/emacs-web-server][web-server]]: a web server library for Emacs
+;; 5. (Optional)[[http://rclone.org/downloads/][rclone]]: support to other remote locations, see rclone's overview for more information.
+;; 6. [[https://github.com/Wilfred/mustache.el][mustache.el]]: a mustache templating library for Emacs
+;; 7. [[http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi][htmlize.el]]: a library for syntax highlighting (usually this library is shipped with emacs)
+;; 8. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
+;; 9. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
+;; 10. [[https://github.com/eschulte/emacs-web-server][web-server]]: a web server library for Emacs
 
 ;; ** Known issues
 

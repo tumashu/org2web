@@ -25,7 +25,8 @@ The main differents of two projects are as follow:
 3.  org-website find theme-files from a **themes-list** in sequence and same theme-file
     first found will be used. User can set **fallback theme** with the help of this feature.
 4.  org-website include a tiny emacs web server, which can be used to test publish.
-5.  &#x2026;
+5.  org-website can use other uploaders to upload website, for example: rclone.
+6.  &#x2026;
 
 ## Installation<a id="orgheadline1"></a>
 
@@ -51,8 +52,8 @@ you can adjust and paste it to your `.emacs` file:
     (owp/add-project-config
      '("tumashu.github.com"
        :repository-directory "~/project/emacs-packages/tumashu.github.com"
-       ;; you can use `rclone` with `:remote (rclone "remote-name" "/remote/path/location")` instead.
        :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
+       ;; you can use `rclone` with `:remote (rclone "remote-name" "/remote/path/location")` instead.
        :site-domain "http://tumashu.github.com/"
        :site-main-title "Tumashu 的个人小站"
        :site-sub-title "(九天十地，太上忘情！！！)"
@@ -78,8 +79,8 @@ You can find more config options and theirs default values by commands:
 1.  [emacs](http://www.gnu.org/software/emacs/): this is an "of-course" dependency
 2.  [org mode](http://orgmode.org/): v8.0 is required, please use `M-x org-version <RET>` to make sure you org mode version is not less than 8.0
 3.  [bash](http://www.gnu.org/software/bash/): the GNU Project's shell
-4.  [rclone](http://rclone.org/downloads/): support to other remote locations, see [rclone's overview](http://rclone.org/overview/) for more information.
-5.  [git](http://git-scm.com): a free and open source version control system
+4.  [git](http://git-scm.com): a free and open source version control system
+5.  (Optional)[rclone](http://rclone.org/downloads/): support to other remote locations, see rclone's overview for more information.
 6.  [mustache.el](https://github.com/Wilfred/mustache.el): a mustache templating library for Emacs
 7.  [htmlize.el](http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi): a library for syntax highlighting (usually this library is shipped with emacs)
 8.  [dash.el](https://github.com/magnars/dash.el): a modern list library for Emacs
