@@ -53,12 +53,15 @@
                                             uploader-template-name)))
                           (when (file-exists-p file)
                             file)))
-                    (list (concat (file-name-as-directory owp/load-directory)
+                    (list (concat (owp/get-repository-directory) "uploaders/")
+                          (concat (file-name-as-directory owp/load-directory)
                                   "uploaders/"
                                   (replace-regexp-in-string "/" "-" (symbol-name system-type))
                                   "/")
                           (concat (file-name-as-directory owp/load-directory)
-                                  "uploaders/common/"))))))
+                                  "uploaders/common/")
+                          (concat (file-name-as-directory owp/load-directory)
+                                  "uploaders/"))))))
 
 (defun owp/get-title (org-file)
   "Get the title of org file."
