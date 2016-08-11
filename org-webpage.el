@@ -218,8 +218,7 @@
          (test-publish-dir (owp/get-uploader-directory project-name "test-publish"))
          (uploader-file (concat publish-root-dir "owp-uploader.sh"))
          (site-domain (owp/get-site-domain))
-         (preparation-function
-          (owp/get-config-option :preparation-function))
+         (preparation-function (owp/get-config-option :preparation-function))
          (repo-files
           (unless upload-latest-publish
             (when preparation-function
@@ -227,7 +226,6 @@
             (owp/sort-files (owp/remove-matched-items
                              (owp/directory-files-recursively repo-dir "\\.org$")
                              (owp/get-config-option :ignore)))))
-         (length-repo-files (length repo-files))
          (update-top-n
           (cond ((and partial-update (numberp update-top-n)) update-top-n)
                 (partial-update (owp/read-top-n
