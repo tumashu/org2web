@@ -272,16 +272,13 @@
                           repo-files)))
 
     (if upload-latest-publish
-        (progn (delete-directory history-dir t)
-               (delete-directory publish-dir t)
-               (delete-directory test-publish-dir t))
-      (when (file-directory-p publish-root-dir)
-        (delete-directory publish-root-dir t))
-      (make-directory export-dir t))
+        (owp/delete-directory
+         history-dir publish-dir test-publish-dir)
+      (owp/delete-directory publish-root-dir)
+      (owp/make-directory export-dir t))
 
-    (make-directory history-dir t)
-    (make-directory publish-dir t)
-    (make-directory test-publish-dir t)
+    (owp/make-directory
+     history-dir publish-dir test-publish-dir)
 
     (if test-publish
         (let ((owp/always-use-relative-url t)) ; Local test website, can't use absolute path.

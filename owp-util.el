@@ -48,6 +48,15 @@
              nconc (owp/directory-files-recursively file regexp) into ret
              finally return ret)))
 
+(defun owp/delete-directory (&rest dir-list)
+  (dolist (dir dir-list)
+    (when (file-directory-p dir)
+      (delete-directory dir t))))
+
+(defun owp/make-directory (&rest dir-list)
+  (dolist (dir dir-list)
+    (make-directory dir t)))
+
 (defun owp/compare-standard-date (date1 date2)
   "Compare two standard ISO 8601 format dates, format is as below:
 2012-08-17
