@@ -76,6 +76,12 @@
              "\n\n"
              prompt))))
 
+(defun owp/sort-files (files)
+  (sort files #'(lambda (a b)
+                  (time-less-p
+                   (cl-sixth (file-attributes b))
+                   (cl-sixth (file-attributes a))))))
+
 (defun owp/get-random-number (n)
   (let ((result 0))
     (dotimes (i n)

@@ -241,13 +241,9 @@
           (unless upload-latest-publish
             (when preparation-function
               (run-hooks 'preparation-function))
-            (sort (owp/remove-matched-items
-                   (owp/directory-files-recursively repo-dir "\\.org$")
-                   (owp/get-config-option :ignore))
-                  #'(lambda (a b)
-                      (time-less-p
-                       (cl-sixth (file-attributes b))
-                       (cl-sixth (file-attributes a)))))))
+            (owp/sort-files (owp/remove-matched-items
+                             (owp/directory-files-recursively repo-dir "\\.org$")
+                             (owp/get-config-option :ignore)))))
          (length-repo-files (length repo-files))
          (update-top-n
           (cond ((and partial-update (numberp update-top-n)) update-top-n)
