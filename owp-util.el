@@ -57,6 +57,14 @@
   (dolist (dir dir-list)
     (make-directory dir t)))
 
+(defun owp/get-uploader-directory (project-name &optional subdir)
+  (expand-file-name
+   (file-name-as-directory
+    (concat (file-name-as-directory
+             (concat (file-name-as-directory owp/temporary-directory)
+                     project-name))
+            (or subdir "")))))
+
 (defun owp/read-top-n (prompt files base &optional max)
   (let* ((max-mini-window-height 0.9)
          (length (length files))

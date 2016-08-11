@@ -205,35 +205,18 @@
                                     (= job-number 5)
                                   (= job-number 3)))
          (repo-dir (owp/get-repository-directory))
-         (publish-root-dir
-          (file-name-as-directory owp/temporary-directory))
-         (export-dir
-          (expand-file-name
-           (concat (file-name-as-directory
-                    (concat publish-root-dir project-name))
-                   "export/")))
-         (history-dir
-          (expand-file-name
-           (concat (file-name-as-directory
-                    (concat publish-root-dir project-name))
-                   "history/")))
+         (publish-root-dir (owp/get-uploader-directory project-name))
+         (export-dir (owp/get-uploader-directory project-name "export"))
+         (history-dir (owp/get-uploader-directory project-name "history"))
+         (publishing-directory
+          (when publishing-directory
+            (expand-file-name publishing-directory)))
          (publish-dir
-          (expand-file-name
-           (or publishing-directory
-               (concat (file-name-as-directory
-                        (concat publish-root-dir project-name))
-                       "publish/")
-               (owp/get-publishing-directory))))
-         (test-publish-dir
-          (expand-file-name
-           (concat (file-name-as-directory
-                    (concat publish-root-dir project-name))
-                   "test/")))
-         (uploader-file
-          (expand-file-name
-           (concat (file-name-as-directory
-                    (concat publish-root-dir project-name))
-                   "owp-uploader.sh")))
+          (or publishing-directory
+              (owp/get-uploader-directory project-name "publish")
+              (owp/get-publishing-directory)))
+         (test-publish-dir (owp/get-uploader-directory project-name "test"))
+         (uploader-file (concat publish-root-dir "owp-uploader.sh"))
          (site-domain (owp/get-site-domain))
          (preparation-function
           (owp/get-config-option :preparation-function))
