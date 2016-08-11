@@ -251,22 +251,9 @@
          (length-repo-files (length repo-files))
          (update-top-n
           (cond ((and partial-update (numberp update-top-n)) update-top-n)
-                (partial-update
-                 (let ((max-mini-window-height 0.9)
-                       (max-line (min length-repo-files 20)))
-                   (read-number
-                    (concat (let ((i 1))
-                              (mapconcat
-                               #'(lambda (file)
-                                   (prog1 (format "%2s. %s"
-                                                  (number-to-string i)
-                                                  (file-relative-name file repo-dir))
-                                     (setq i (+ i 1))))
-                               (append (cl-subseq repo-files 0 max-line)
-                                       (when (> length-repo-files max-line)
-                                         '("## Hide others ... ##")))
-                               "\n"))
-                            "\n\nOrg-webpage will update TOP (N) org-files, Please type N: "))))))
+                (partial-update (owp/read-top-n
+                                 "Org-webpage will update TOP (N) org-files, Please type N: "
+                                 repo-files repo-dir))))
          (changed-files (if (numberp update-top-n)
                             (cl-subseq repo-files 0 (min update-top-n length-repo-files))
                           repo-files)))

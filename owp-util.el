@@ -57,6 +57,25 @@
   (dolist (dir dir-list)
     (make-directory dir t)))
 
+(defun owp/read-top-n (prompt files base &optional max)
+  (let* ((max-mini-window-height 0.9)
+         (length (length files))
+         (max-line (min length (or max 20))))
+    (read-number
+     (concat (let ((i 1))
+               (mapconcat
+                #'(lambda (file)
+                    (prog1 (format "%2s. %s"
+                                   (number-to-string i)
+                                   (file-relative-name file base))
+                      (setq i (+ i 1))))
+                (append (cl-subseq files 0 max-line)
+                        (when (> length max-line)
+                          '("## Hide others ... ##")))
+                "\n"))
+             "\n\n"
+             prompt))))
+
 (defun owp/compare-standard-date (date1 date2)
   "Compare two standard ISO 8601 format dates, format is as below:
 2012-08-17
