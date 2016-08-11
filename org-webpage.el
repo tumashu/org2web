@@ -215,7 +215,7 @@
           (or publishing-directory
               (owp/get-uploader-directory project-name "publish")
               (owp/get-publishing-directory)))
-         (test-publish-dir (owp/get-uploader-directory project-name "test"))
+         (test-publish-dir (owp/get-uploader-directory project-name "test-publish"))
          (uploader-file (concat publish-root-dir "owp-uploader.sh"))
          (site-domain (owp/get-site-domain))
          (preparation-function
@@ -241,7 +241,7 @@
         (owp/delete-directory
          history-dir publish-dir test-publish-dir)
       (owp/delete-directory publish-root-dir)
-      (owp/make-directory export-dir t))
+      (owp/make-directory export-dir))
 
     (owp/make-directory
      history-dir publish-dir test-publish-dir)
