@@ -36,22 +36,23 @@
 ;; 1. org-webpage's core *don't hard code git*, its process is like below:
 ;;    #+BEGIN_EXAMPLE
 
-;;    [ Org files in repository]  [ org-webpage configure ]
+;;   [ Org files in repository]  [ Website project configure ]
 
 ;;                |                           |
-;;       <Export> |                           | <Generate>
+;;           < Export >                 < Generate >
 ;;                |                           |
 
-;;          [ HTML files ]               [ Uploader ]
+;;          [ HTML files ]               [ Uploader ]  <- ( Uploader is a bash script )
 
 ;;                |                           |
 ;;                |                           |
-;;                +---------------------------+
+;;                +-------------+-------------+
 ;;                              |
 ;;                              |
-;;                              | <Run Uploader (git, rclone or others)>
+;;                      < Run Uploader >  <- ( For example: git uploader, rclone uploader or others )
 ;;                              |
 ;;                              |
+
 ;;                          [ REMOTE ]
 
 ;;    #+END_EXAMPLE

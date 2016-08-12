@@ -14,23 +14,24 @@ The main differents of two projects are as follow:
 
 1.  org-webpage's core **don't hard code git**, its process is like below:
 
-        [ Org files in repository]  [ org-webpage configure ]
+        [ Org files in repository]  [ Website project configure ]
 
-                    |                           |
-           <Export> |                           | <Generate>
-                    |                           |
+                     |                           |
+                < Export >                 < Generate >
+                     |                           |
 
-              [ HTML files ]               [ Uploader ]
+               [ HTML files ]               [ Uploader ]  <- ( Uploader is a bash script )
 
-                    |                           |
-                    |                           |
-                    +---------------------------+
-                                  |
-                                  |
-                                  | <Run Uploader (git, rclone or others)>
-                                  |
-                                  |
-                              [ REMOTE ]
+                     |                           |
+                     |                           |
+                     +-------------+-------------+
+                                   |
+                                   |
+                           < Run Uploader >  <- ( For example: git uploader, rclone uploader or others )
+                                   |
+                                   |
+
+                               [ REMOTE ]
 
 2.  org-webpage's default config is \`org-publish-project-alist' style alist,
     which can manage multi-site configs in an emacs session easily.
