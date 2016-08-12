@@ -14,11 +14,23 @@ The main differents of two projects are as follow:
 
 1.  org-webpage's core **don't hard code git**, its process is like below:
 
-        [ Org files ] --( Export )--> [ Html files ] -------
-              \                                             \
-               \--------(Generate)--> [ Upload bash script] ---> ( Git repos )--\
-                                             \                                   \
-                                              \------------------------------------( Upload )---> Remote
+        [ Org files in repository]  [ org-webpage configure ]
+
+                    |                           |
+           <Export> |                           | <Generate>
+                    |                           |
+
+              [ Html files ]               [ Uploader ]
+
+                    |                           |
+                    |                           |
+                    +---------------------------+
+                                  |
+                                  |
+                                  | <Run Uploader>
+                                  |
+                                  |
+              [ Upload to Remove: git, rclone or others ]
 
 2.  org-webpage's default config is \`org-publish-project-alist' style alist,
     which can manage multi-site configs in an emacs session easily.
@@ -44,7 +56,7 @@ using \`owp/add-project-config' function.
 The follow code is [my website](http://tumashu.github.com)'s [config](https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el),
 you can adjust and paste it to your `.emacs` file:
 
-    ;; the following is only needed if you install org-page manually
+    the following is only needed if you install org-page manually
     (add-to-list 'load-path "path/to/org-webpage")
 
     (require 'org-webpage)

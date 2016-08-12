@@ -35,11 +35,24 @@
 
 ;; 1. org-webpage's core *don't hard code git*, its process is like below:
 ;;    #+BEGIN_EXAMPLE
-;;    [ Org files ] --( Export )--> [ Html files ] -------
-;;          \                                             \
-;;           \--------(Generate)--> [ Upload bash script] ---> ( Git repos )--\
-;;                                         \                                   \
-;;                                          \------------------------------------( Upload )---> Remote
+
+;;    [ Org files in repository]  [ org-webpage configure ]
+
+;;                |                           |
+;;       <Export> |                           | <Generate>
+;;                |                           |
+
+;;          [ Html files ]               [ Uploader ]
+
+;;                |                           |
+;;                |                           |
+;;                +---------------------------+
+;;                              |
+;;                              |
+;;                              | <Run Uploader>
+;;                              |
+;;                              |
+;;          [ Upload to Remove: git, rclone or others ]
 
 ;;    #+END_EXAMPLE
 
@@ -67,7 +80,7 @@
 ;; you can adjust and paste it to your =.emacs= file:
 
 ;; #+BEGIN_EXAMPLE
-;; ;; the following is only needed if you install org-page manually
+;; the following is only needed if you install org-page manually
 ;; (add-to-list 'load-path "path/to/org-webpage")
 
 ;; (require 'org-webpage)
