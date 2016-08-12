@@ -57,8 +57,7 @@ using \`owp/add-project-config' function.
 The follow code is [my website](http://tumashu.github.com)'s [config](https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el),
 you can adjust and paste it to your `.emacs` file:
 
-    the following is only needed if you install org-page manually
-    (add-to-list 'load-path "path/to/org-webpage")
+    (add-to-list 'load-path "path/to/org-webpage") ; Only needed if you install org-webpage manually
 
     (require 'org-webpage)
 
