@@ -42,17 +42,17 @@
 ;;       <Export> |                           | <Generate>
 ;;                |                           |
 
-;;          [ Html files ]               [ Uploader ]
+;;          [ HTML files ]               [ Uploader ]
 
 ;;                |                           |
 ;;                |                           |
 ;;                +---------------------------+
 ;;                              |
 ;;                              |
-;;                              | <Run Uploader>
+;;                              | <Run Uploader (git, rclone or others)>
 ;;                              |
 ;;                              |
-;;          [ Upload to Remove: git, rclone or others ]
+;;                          [ REMOTE ]
 
 ;;    #+END_EXAMPLE
 

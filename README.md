@@ -20,17 +20,17 @@ The main differents of two projects are as follow:
            <Export> |                           | <Generate>
                     |                           |
 
-              [ Html files ]               [ Uploader ]
+              [ HTML files ]               [ Uploader ]
 
                     |                           |
                     |                           |
                     +---------------------------+
                                   |
                                   |
-                                  | <Run Uploader>
+                                  | <Run Uploader (git, rclone or others)>
                                   |
                                   |
-              [ Upload to Remove: git, rclone or others ]
+                              [ REMOTE ]
 
 2.  org-webpage's default config is \`org-publish-project-alist' style alist,
     which can manage multi-site configs in an emacs session easily.
