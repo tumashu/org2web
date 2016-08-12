@@ -63,11 +63,23 @@ The main differents of two projects are as follow:
 org-webpage's core <b>don't hard code git</b>, its process is like below:
 </p>
 <pre class="example">
-[ Org files ] --( Export )--&gt; [ Html files ] -------
-      \                                             \
-       \--------(Generate)--&gt; [ Upload bash script] ---&gt; ( Git repos )--\
-                                     \                                   \
-                                      \------------------------------------( Upload )---&gt; Remote
+[ Org files in repository]  [ org-webpage configure ]
+
+            |                           |
+   &lt;Export&gt; |                           | &lt;Generate&gt;
+            |                           |
+
+      [ HTML files ]               [ Uploader ]
+
+            |                           |
+            |                           |
+            +---------------------------+
+                          |
+                          |
+                          | &lt;Run Uploader (git, rclone or others)&gt;
+                          |
+                          |
+                      [ REMOTE ]
 </pre></li>
 
 <li>org-webpage's default config is `org-publish-project-alist' style alist,
@@ -107,7 +119,7 @@ you can adjust and paste it to your <code>.emacs</code> file:
 </p>
 
 <pre class="example">
-;; the following is only needed if you install org-page manually
+the following is only needed if you install org-page manually
 (add-to-list 'load-path "path/to/org-webpage")
 
 (require 'org-webpage)

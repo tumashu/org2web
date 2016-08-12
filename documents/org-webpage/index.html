@@ -64,11 +64,23 @@ The main differents of two projects are as follow:
 org-webpage's core <b>don't hard code git</b>, its process is like below:
 </p>
 <pre class="example">
-[ Org files ] --( Export )--&gt; [ Html files ] -------
-      \                                             \
-       \--------(Generate)--&gt; [ Upload bash script] ---&gt; ( Git repos )--\
-                                     \                                   \
-                                      \------------------------------------( Upload )---&gt; Remote
+[ Org files in repository]  [ org-webpage configure ]
+
+            |                           |
+   &lt;Export&gt; |                           | &lt;Generate&gt;
+            |                           |
+
+      [ HTML files ]               [ Uploader ]
+
+            |                           |
+            |                           |
+            +---------------------------+
+                          |
+                          |
+                          | &lt;Run Uploader (git, rclone or others)&gt;
+                          |
+                          |
+                      [ REMOTE ]
 </pre></li>
 
 <li>org-webpage's default config is `org-publish-project-alist' style alist,
@@ -108,7 +120,7 @@ you can adjust and paste it to your <code>.emacs</code> file:
 </p>
 
 <pre class="example">
-;; the following is only needed if you install org-page manually
+the following is only needed if you install org-page manually
 (add-to-list 'load-path "path/to/org-webpage")
 
 (require 'org-webpage)
@@ -192,7 +204,7 @@ the old URI manually.</li>
 
 
 <div id="outline-container-orgheadline7" class="outline-2">
-<h2 id="orgheadline7"><span class="section-number-2">2</span>代码说明</h2>
+<h2 id="orgheadline7"><span class="section-number-2">2</span> 代码说明</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 
@@ -267,94 +279,52 @@ the old URI manually.</li>
                                     (= job-number 5)
                                   (= job-number 3)))
          (repo-dir (owp/get-repository-directory))
-         (publish-root-dir
-          (file-name-as-directory owp/temporary-directory))
-         (export-dir
-          (expand-file-name
-           (concat (file-name-as-directory
-                    (concat publish-root-dir project-name))
-                   <span style="color: #61CE3C;">"export/"</span>)))
-         (history-dir
-          (expand-file-name
-           (concat (file-name-as-directory
-                    (concat publish-root-dir project-name))
-                   <span style="color: #61CE3C;">"history/"</span>)))
+         (publish-root-dir (owp/get-uploader-directory project-name))
+         (export-dir (owp/get-uploader-directory project-name <span style="color: #61CE3C;">"export"</span>))
+         (history-dir (owp/get-uploader-directory project-name <span style="color: #61CE3C;">"history"</span>))
+         (publishing-directory
+          (<span style="color: #4c83ff;">when</span> publishing-directory
+            (expand-file-name publishing-directory)))
          (publish-dir
-          (expand-file-name
-           (<span style="color: #4c83ff;">or</span> publishing-directory
-               (concat (file-name-as-directory
-                        (concat publish-root-dir project-name))
-                       <span style="color: #61CE3C;">"publish/"</span>)
-               (owp/get-publishing-directory))))
-         (test-publish-dir
-          (expand-file-name
-           (concat (file-name-as-directory
-                    (concat publish-root-dir project-name))
-                   <span style="color: #61CE3C;">"test/"</span>)))
-         (uploader-file
-          (expand-file-name
-           (concat (file-name-as-directory
-                    (concat publish-root-dir project-name))
-                   <span style="color: #61CE3C;">"owp-uploader.sh"</span>)))
+          (<span style="color: #4c83ff;">or</span> publishing-directory
+              (owp/get-uploader-directory project-name <span style="color: #61CE3C;">"publish"</span>)
+              (owp/get-publishing-directory)))
+         (test-publish-dir (owp/get-uploader-directory project-name <span style="color: #61CE3C;">"test-publish"</span>))
+         (uploader-file (concat publish-root-dir <span style="color: #61CE3C;">"owp-uploader.sh"</span>))
          (site-domain (owp/get-site-domain))
-         (preparation-function
-          (owp/get-config-option <span style="color: #4c83ff;">:preparation-function</span>))
+         (preparation-function (owp/get-config-option <span style="color: #4c83ff;">:preparation-function</span>))
          (repo-files
           (<span style="color: #4c83ff;">unless</span> upload-latest-publish
             (<span style="color: #4c83ff;">when</span> preparation-function
               (run-hooks 'preparation-function))
-            (sort (owp/remove-matched-items
-                   (owp/directory-files-recursively repo-dir <span style="color: #61CE3C;">"\\.org$"</span>)
-                   (owp/get-config-option <span style="color: #4c83ff;">:ignore</span>))
-                  #'(lambda (a b)
-                      (time-less-p
-                       (cl-sixth (file-attributes b))
-                       (cl-sixth (file-attributes a)))))))
-         (length-repo-files (length repo-files))
+            (owp/sort-files (owp/remove-matched-items
+                             (owp/directory-files-recursively repo-dir <span style="color: #61CE3C;">"\\.org$"</span>)
+                             (owp/get-config-option <span style="color: #4c83ff;">:ignore</span>)))))
          (update-top-n
           (<span style="color: #4c83ff;">cond</span> ((<span style="color: #4c83ff;">and</span> partial-update (numberp update-top-n)) update-top-n)
-                (partial-update
-                 (<span style="color: #4c83ff;">let</span> ((max-mini-window-height 0.9)
-                       (max-line (min length-repo-files 20)))
-                   (read-number
-                    (concat (<span style="color: #4c83ff;">let</span> ((i 1))
-                              (mapconcat
-                               #'(lambda (file)
-                                   (<span style="color: #4c83ff;">prog1</span> (format <span style="color: #61CE3C;">"%2s. %s"</span>
-                                                  (number-to-string i)
-                                                  (file-relative-name file repo-dir))
-                                     (<span style="color: #4c83ff;">setq</span> i (+ i 1))))
-                               (append (cl-subseq repo-files 0 max-line)
-                                       (<span style="color: #4c83ff;">when</span> (&gt; length-repo-files max-line)
-                                         '(<span style="color: #61CE3C;">"## Hide others ... ##"</span>)))
-                               <span style="color: #61CE3C;">"\n"</span>))
-                            <span style="color: #61CE3C;">"\n\nOrg-webpage will update TOP (N) org-files, Please type N: "</span>))))))
+                (partial-update (owp/read-top-n
+                                 <span style="color: #61CE3C;">"Org-webpage will update TOP (N) org-files, Please type N: "</span>
+                                 repo-files repo-dir))))
          (changed-files (<span style="color: #4c83ff;">if</span> (numberp update-top-n)
                             (cl-subseq repo-files 0 (min update-top-n length-repo-files))
                           repo-files)))
 
     (<span style="color: #4c83ff;">if</span> upload-latest-publish
-        (<span style="color: #4c83ff;">progn</span> (delete-directory history-dir t)
-               (delete-directory publish-dir t)
-               (delete-directory test-publish-dir t))
-      (<span style="color: #4c83ff;">when</span> (file-directory-p publish-root-dir)
-        (delete-directory publish-root-dir t))
-      (make-directory export-dir t))
+        (owp/delete-directory
+         history-dir publish-dir test-publish-dir)
+      (owp/delete-directory publish-root-dir)
+      (owp/make-directory export-dir))
 
-    (make-directory history-dir t)
-    (make-directory publish-dir t)
-    (make-directory test-publish-dir t)
+    (owp/make-directory
+     history-dir publish-dir test-publish-dir)
 
     (<span style="color: #4c83ff;">if</span> test-publish
-        (<span style="color: #4c83ff;">let</span> ((owp/always-use-relative-url t)) <span style="color: #8B8989; font-style: italic;">; </span><span style="color: #8B8989; font-style: italic;">Local test website, can't use absolute path.</span>
+        (<span style="color: #4c83ff;">let</span> ((owp/always-use-relative-url t) <span style="color: #8B8989; font-style: italic;">; </span><span style="color: #8B8989; font-style: italic;">Local test website, can't use absolute path.</span>
+              (port (<span style="color: #4c83ff;">or</span> (owp/get-config-option <span style="color: #4c83ff;">:web-server-port</span>)
+                        (owp/get-random-number 4))))
           (owp/prepare-theme-resources test-publish-dir)
           (owp/publish-changes repo-files changed-files test-publish-dir)
-          (owp/web-server-browse test-publish-dir
-                                 (<span style="color: #4c83ff;">or</span> (owp/get-config-option <span style="color: #4c83ff;">:web-server-port</span>)
-                                     (+ (* (random 9) 1000)
-                                        (* (random 9) 100)
-                                        (* (random 9) 10)
-                                        (* (random 9) 1)))))
+          (owp/web-server-browse test-publish-dir port))
       (<span style="color: #4c83ff;">unless</span> upload-latest-publish
         (owp/prepare-theme-resources export-dir)
         (owp/publish-changes repo-files changed-files export-dir))
@@ -584,8 +554,8 @@ the old URI manually.</li>
 </div>
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2016-08-11</span>
-        <span title="last modification date" class="post-info">2016-08-11</span>
+        <span title="post date" class="post-info">2016-08-12</span>
+        <span title="last modification date" class="post-info">2016-08-12</span>
         <span title="tags" class="post-info">N/A</span>
         <span title="author" class="post-info">Feng Shu</span>
       </div>
