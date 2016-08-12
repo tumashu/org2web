@@ -64,23 +64,24 @@ The main differents of two projects are as follow:
 org-webpage's core <b>don't hard code git</b>, its process is like below:
 </p>
 <pre class="example">
-[ Org files in repository]  [ org-webpage configure ]
+[ Org files in repository]  [ Website project configure ]
 
-            |                           |
-   &lt;Export&gt; |                           | &lt;Generate&gt;
-            |                           |
+             |                           |
+        &lt; Export &gt;                 &lt; Generate &gt;
+             |                           |
 
-      [ HTML files ]               [ Uploader ]
+       [ HTML files ]               [ Uploader ]  &lt;- ( Uploader is a bash script )
 
-            |                           |
-            |                           |
-            +---------------------------+
-                          |
-                          |
-                          | &lt;Run Uploader (git, rclone or others)&gt;
-                          |
-                          |
-                      [ REMOTE ]
+             |                           |
+             |                           |
+             +-------------+-------------+
+                           |
+                           |
+                   &lt; Run Uploader &gt;  &lt;- ( For example: git uploader, rclone uploader or others )
+                           |
+                           |
+
+                       [ REMOTE ]
 </pre></li>
 
 <li>org-webpage's default config is `org-publish-project-alist' style alist,
