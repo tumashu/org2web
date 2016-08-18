@@ -469,7 +469,10 @@ publication directory."
                                              ("post-thumb"
                                               (or (plist-get plist :thumb) ""))))
                                      (cdr cell)))))
-                   sort-alist)))))
+                   (cl-remove-if
+                    #'(lambda (cell)
+                        (string= (car cell) "about"))
+                    sort-alist))))))
            ("footer"
             (owp/render-footer
              (ht ("show-meta" nil)
