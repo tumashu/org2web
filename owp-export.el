@@ -455,7 +455,7 @@ publication directory."
                   (mapcar
                    #'(lambda (cell)
                        (ht ("id" (setq id (+ id 1)))
-                           ("category" (car cell))
+                           ("category" (capitalize (car cell)))
                            ("posts" (mapcar
                                      #'(lambda (plist)
                                          (ht ("post-uri"
