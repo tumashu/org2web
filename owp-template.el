@@ -121,7 +121,8 @@ a hash table accordint to current buffer."
 and pushed into cache from template. PARAM-TABLE is the hash table for mustache
 to render the template. If it is not set or nil, this function will try to
 render from a default hash table."
-  (let ((site-domain (owp/get-site-domain)))
+  (let ((site-domain (owp/get-site-domain))
+        (category-ignore-list (owp/get-config-option :category-ignore-list)))
     (owp/get-cache-create
      :nav-bar-html
      (message "Render navigation bar from template")
@@ -142,7 +143,8 @@ render from a default hash table."
                 (sort (cl-remove-if
                        #'(lambda (cat)
                            (or (string= cat "index")
-                               (string= cat "about")))
+                               (string= cat "about")
+                               (member cat category-ignore-list)))
                        (owp/get-category nil))
                       'string-lessp)))
               ("nav-summary"
