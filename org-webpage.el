@@ -239,6 +239,7 @@
             (owp/sort-files (owp/remove-matched-items
                              (owp/directory-files-recursively repo-dir "\\.org$")
                              (owp/get-config-option :ignore)))))
+         (length-repo-files (length repo-files))
          (update-top-n
           (cond ((and partial-update (numberp update-top-n)) update-top-n)
                 (partial-update (owp/read-top-n
