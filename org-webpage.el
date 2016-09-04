@@ -126,7 +126,7 @@
 ;; 7. [[http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi][htmlize.el]]: a library for syntax highlighting (usually this library is shipped with emacs)
 ;; 8. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
 ;; 9. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
-;; 10. [[https://github.com/eschulte/emacs-web-server][web-server]]: a web server library for Emacs
+;; 10. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: Extensible Emacs HTTP 1.1 server
 
 ;; ** Known issues
 

@@ -97,7 +97,7 @@ You can find more config options and theirs default values by commands:
 7.  [htmlize.el](http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi): a library for syntax highlighting (usually this library is shipped with emacs)
 8.  [dash.el](https://github.com/magnars/dash.el): a modern list library for Emacs
 9.  [ht.el](https://github.com/Wilfred/ht.el): a modern hash-table library for Emacs
-10. [web-server](https://github.com/eschulte/emacs-web-server): a web server library for Emacs
+10. [simple-httpd](https://github.com/skeeto/emacs-web-server): Extensible Emacs HTTP 1.1 server
 
 ## Known issues<a id="orgheadline5"></a>
 
