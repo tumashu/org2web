@@ -33,31 +33,32 @@
 
 (defvar owp/last-web-server-docroot nil)
 (defvar owp/last-web-server-port nil)
+(defvar owp/current-project-name)
 
 (defun owp/web-server-start (docroot port)
-  (let ((httpd-root docroot)) ; *override* `http-root' variable
-    (owp/web-server-stop)
-    (httpd-log `(start ,(format "org-webpage: start web-server at %s"
-                                (current-time-string))))
-    (make-network-process
-     :name     "owp-httpd"
-     :service  port
-     :server   t
-     :host     httpd-host
-     :family   httpd-ip-family
-     :filter   'httpd--filter
-     :filter-multibyte nil
-     :coding   'utf-8-unix  ; *should* be ISO-8859-1 but that doesn't work
-     :log      'httpd--log)
-    (run-hooks 'httpd-start-hook)))
+  (owp/web-server-stop)
+  (httpd-log `(start ,(format "org-webpage: start web-server at %s"
+                              (current-time-string))))
+  (make-network-process
+   :name     (or owp/current-project-name "owp-httpd")
+   :service  port
+   :server   t
+   :host     httpd-host
+   :family   httpd-ip-family
+   :filter   `(lambda (proc string)
+                (let ((httpd-root ,docroot)) ; *override* `http-root' variable
+                  (httpd--filter proc string)))
+   :filter-multibyte nil
+   :coding   'utf-8-unix  ; *should* be ISO-8859-1 but that doesn't work
+   :log      'httpd--log))
 
 (defun owp/web-server-stop ()
   (interactive)
-  (when (process-status "owp-httpd")
-    (delete-process "owp-httpd")
-    (httpd-log `(stop ,(format "org-webpage: stop web-server at %s"
-                               (current-time-string))))
-    (run-hooks 'httpd-stop-hook)))
+  (let ((name (or owp/current-project-name "owp-httpd")))
+    (when (process-status name)
+      (delete-process name)
+      (httpd-log `(stop ,(format "org-webpage: stop web-server at %s"
+                                 (current-time-string)))))))
 
 (defun owp/web-server-browse (&optional docroot port)
   (interactive)
