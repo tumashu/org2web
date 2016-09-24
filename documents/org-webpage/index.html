@@ -121,8 +121,7 @@ you can adjust and paste it to your <code>.emacs</code> file:
 </p>
 
 <pre class="example">
-the following is only needed if you install org-page manually
-(add-to-list 'load-path "path/to/org-webpage")
+(add-to-list 'load-path "path/to/org-webpage") ; Only needed if you install org-webpage manually
 
 (require 'org-webpage)
 
@@ -178,7 +177,7 @@ M-x owp/do-publication
 <li><a href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi">htmlize.el</a>: a library for syntax highlighting (usually this library is shipped with emacs)</li>
 <li><a href="https://github.com/magnars/dash.el">dash.el</a>: a modern list library for Emacs</li>
 <li><a href="https://github.com/Wilfred/ht.el">ht.el</a>: a modern hash-table library for Emacs</li>
-<li><a href="https://github.com/eschulte/emacs-web-server">web-server</a>: a web server library for Emacs</li>
+<li><a href="https://github.com/skeeto/emacs-web-server">simple-httpd</a>: Extensible Emacs HTTP 1.1 server</li>
 </ol>
 </div>
 </div>
@@ -205,7 +204,7 @@ the old URI manually.</li>
 
 
 <div id="outline-container-orgheadline7" class="outline-2">
-<h2 id="orgheadline7"><span class="section-number-2">2</span> 代码说明</h2>
+<h2 id="orgheadline7"><span class="section-number-2">2</span>代码说明</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 
@@ -301,6 +300,7 @@ the old URI manually.</li>
             (owp/sort-files (owp/remove-matched-items
                              (owp/directory-files-recursively repo-dir <span style="color: #61CE3C;">"\\.org$"</span>)
                              (owp/get-config-option <span style="color: #4c83ff;">:ignore</span>)))))
+         (length-repo-files (length repo-files))
          (update-top-n
           (<span style="color: #4c83ff;">cond</span> ((<span style="color: #4c83ff;">and</span> partial-update (numberp update-top-n)) update-top-n)
                 (partial-update (owp/read-top-n
@@ -555,8 +555,8 @@ the old URI manually.</li>
 </div>
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2016-08-12</span>
-        <span title="last modification date" class="post-info">2016-08-12</span>
+        <span title="post date" class="post-info">2016-09-24</span>
+        <span title="last modification date" class="post-info">2016-09-04</span>
         <span title="tags" class="post-info">N/A</span>
         <span title="author" class="post-info">Feng Shu</span>
       </div>
