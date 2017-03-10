@@ -34,21 +34,21 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline6">1. org-webpage README</a>
+<li><a href="#org863ea61">1. org-webpage README&#xa0;&#xa0;&#xa0;<span class="tag"><span class="README">README</span></span></a>
 <ul>
-<li><a href="#orgheadline1">1.1. Installation</a></li>
-<li><a href="#orgheadline2">1.2. Configuration</a></li>
-<li><a href="#orgheadline3">1.3. Publication</a></li>
-<li><a href="#orgheadline4">1.4. Dependencies</a></li>
-<li><a href="#orgheadline5">1.5. Known issues</a></li>
+<li><a href="#org162f382">1.1. Installation</a></li>
+<li><a href="#orgb399a8e">1.2. Configuration</a></li>
+<li><a href="#org66beda2">1.3. Publication</a></li>
+<li><a href="#orgc3e8f1e">1.4. Dependencies</a></li>
+<li><a href="#org6f02cba">1.5. Known issues</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline7">2. 代码说明</a></li>
+<li><a href="#orgf1f0e1b">2. 代码说明&#xa0;&#xa0;&#xa0;<span class="tag"><span class="code">code</span></span></a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgheadline6" class="outline-2">
-<h2 id="orgheadline6"><span class="section-number-2">1</span> org-webpage README</h2>
+<div id="outline-container-org863ea61" class="outline-2">
+<h2 id="org863ea61"><span class="section-number-2">1</span> org-webpage README&#xa0;&#xa0;&#xa0;<span class="tag"><span class="README">README</span></span></h2>
 <div class="outline-text-2" id="text-1">
 <p>
 org-webpage is a static site generator based on <a href="http://orgmode.org/">org-mode</a>,
@@ -94,8 +94,8 @@ first found will be used. User can set <b>fallback theme</b> with the help of th
 </ol>
 </div>
 
-<div id="outline-container-orgheadline1" class="outline-3">
-<h3 id="orgheadline1"><span class="section-number-3">1.1</span> Installation</h3>
+<div id="outline-container-org162f382" class="outline-3">
+<h3 id="org162f382"><span class="section-number-3">1.1</span> Installation</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 org-webpage is now available from the famous emacs package repo <a href="http://melpa.milkbox.net/">melpa</a>
@@ -106,8 +106,8 @@ management system. For more info about installation, please see
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-3">
-<h3 id="orgheadline2"><span class="section-number-3">1.2</span> Configuration</h3>
+<div id="outline-container-orgb399a8e" class="outline-3">
+<h3 id="orgb399a8e"><span class="section-number-3">1.2</span> Configuration</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 org-webpage use variable `owp/project-config-alist' to store all projects's configures, user
@@ -155,8 +155,8 @@ C-h v owp/config-fallback
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3"><span class="section-number-3">1.3</span> Publication</h3>
+<div id="outline-container-org66beda2" class="outline-3">
+<h3 id="org66beda2"><span class="section-number-3">1.3</span> Publication</h3>
 <div class="outline-text-3" id="text-1-3">
 <pre class="example">
 M-x owp/do-publication
@@ -164,8 +164,8 @@ M-x owp/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4"><span class="section-number-3">1.4</span> Dependencies</h3>
+<div id="outline-container-orgc3e8f1e" class="outline-3">
+<h3 id="orgc3e8f1e"><span class="section-number-3">1.4</span> Dependencies</h3>
 <div class="outline-text-3" id="text-1-4">
 <ol class="org-ol">
 <li><a href="http://www.gnu.org/software/emacs/">emacs</a>: this is an "of-course" dependency</li>
@@ -182,8 +182,8 @@ M-x owp/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5"><span class="section-number-3">1.5</span> Known issues</h3>
+<div id="outline-container-org6f02cba" class="outline-3">
+<h3 id="org6f02cba"><span class="section-number-3">1.5</span> Known issues</h3>
 <div class="outline-text-3" id="text-1-5">
 <ol class="org-ol">
 <li>Currently the deletion change handler has not been implemented so
@@ -203,25 +203,54 @@ the old URI manually.</li>
 
 
 
-<div id="outline-container-orgheadline7" class="outline-2">
-<h2 id="orgheadline7"><span class="section-number-2">2</span>代码说明</h2>
+<div id="outline-container-orgf1f0e1b" class="outline-2">
+<h2 id="orgf1f0e1b"><span class="section-number-2">2</span>代码说明&#xa0;&#xa0;&#xa0;<span class="tag"><span class="code">code</span></span></h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
-
 <pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ox</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ht</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-util</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-vars</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-config</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-resource</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-export</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-web-server</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">cl-lib</span>)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ht</span>)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-util</span>)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-vars</span>)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-config</span>)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-resource</span>)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-export</span>)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-web-server</span>)
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">cl-lib</span>)
+</pre>
+</div>
 
 
-(<span style="color: #4c83ff;">defconst</span> <span style="color: #ff69b4;">org-webpage-version</span> <span style="color: #61CE3C;">"0.1"</span>)
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defconst</span> <span style="color: #ff69b4;">org-webpage-version</span> <span style="color: #61CE3C;">"0.1"</span>)
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/add-project-config</span> (project-config)
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/add-project-config</span> (project-config)
   <span style="color: #FBDE2D;">"Add `</span><span style="color: #96CBFE;">project-config</span><span style="color: #FBDE2D;">' to `</span><span style="color: #96CBFE;">owp/project-config-alist</span><span style="color: #FBDE2D;">'"</span>
   (<span style="color: #4c83ff;">if</span> (listp project-config)
       (<span style="color: #4c83ff;">let</span> ((project-name (car project-config)))
@@ -231,8 +260,11 @@ the old URI manually.</li>
                         owp/project-config-alist)))
         (add-to-list 'owp/project-config-alist project-config))
     (message <span style="color: #61CE3C;">"Invalid project config!"</span>)))
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/select-project-name</span> (prompt <span style="color: #afd8af;">&amp;optional</span> project-name)
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/select-project-name</span> (prompt <span style="color: #afd8af;">&amp;optional</span> project-name)
   <span style="color: #FBDE2D;">"Let user select a project then return its name."</span>
   (<span style="color: #4c83ff;">setq</span> owp/current-project-name nil)
   (<span style="color: #4c83ff;">setq</span> project-name
@@ -245,8 +277,11 @@ the old URI manually.</li>
   (<span style="color: #4c83ff;">setq</span> owp/current-project-name project-name
         owp/last-project-name project-name)
   project-name)
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/do-publication</span> (<span style="color: #afd8af;">&amp;optional</span> project-name publishing-directory job-number update-top-n)
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/do-publication</span> (<span style="color: #afd8af;">&amp;optional</span> project-name publishing-directory job-number update-top-n)
   (<span style="color: #4c83ff;">interactive</span>)
   (<span style="color: #4c83ff;">setq</span> project-name (owp/select-project-name <span style="color: #61CE3C;">"Which project do you want to publish? "</span> project-name))
   (<span style="color: #4c83ff;">setq</span> owp/item-cache nil)
@@ -331,8 +366,11 @@ the old URI manually.</li>
         (owp/publish-changes repo-files changed-files export-dir))
       (owp/generate-and-run-uploader
        uploader-file remote export-dir history-dir publish-dir partial-update))))
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-and-run-uploader</span> (uploader-file remote export-dir history-dir publish-dir partial-update)
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-and-run-uploader</span> (uploader-file remote export-dir history-dir publish-dir partial-update)
   <span style="color: #FBDE2D;">"Generate shell script UPLOADER-FILE then RUN it, the uploader is used to upload html files</span>
 <span style="color: #FBDE2D;">generated by org-webpage to REMOTE."</span>
   (<span style="color: #4c83ff;">if</span> (not (<span style="color: #4c83ff;">and</span> uploader-file remote export-dir history-dir publish-dir))
@@ -378,8 +416,11 @@ the old URI manually.</li>
                          owp/terminal-emulater
                          uploader-file))))
             (message <span style="color: #61CE3C;">"Can't run org-webpage uploader, user should install 'bash' correctly."</span>)))))))
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/verify-configuration</span> ()
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/verify-configuration</span> ()
   <span style="color: #FBDE2D;">"Ensure all required configuration fields are properly configured, include:</span>
 <span style="color: #FBDE2D;">1.  `</span><span style="color: #96CBFE;">:repository-directory</span><span style="color: #FBDE2D;">': &lt;required&gt;</span>
 <span style="color: #FBDE2D;">2.  `</span><span style="color: #96CBFE;">:site-domain</span><span style="color: #FBDE2D;">': &lt;required&gt;</span>
@@ -399,8 +440,11 @@ the old URI manually.</li>
       (<span style="color: #ff69b4;">error</span> <span style="color: #61CE3C;">"Repository directory is not properly configured."</span>))
     (<span style="color: #4c83ff;">unless</span> site-domain
       (<span style="color: #ff69b4;">error</span> <span style="color: #61CE3C;">"Site domain is not properly configured."</span>))))
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-readme</span> (save-dir)
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-readme</span> (save-dir)
   <span style="color: #FBDE2D;">"Generate README for `</span><span style="color: #96CBFE;">owp/new-repository</span><span style="color: #FBDE2D;">'. SAVE-DIR is the directory where to</span>
 <span style="color: #FBDE2D;">save generated README."</span>
   (owp/string-to-file
@@ -412,8 +456,11 @@ the old URI manually.</li>
 <span style="color: #61CE3C;">function, it is only used for demonstrating how the git branches and directory \</span>
 <span style="color: #61CE3C;">structure are organized by org-webpage."</span>)
    (expand-file-name <span style="color: #61CE3C;">"README"</span> save-dir)))
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-index</span> (save-dir)
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-index</span> (save-dir)
   <span style="color: #FBDE2D;">"Generate index.org for `</span><span style="color: #96CBFE;">owp/new-repository</span><span style="color: #FBDE2D;">'. SAVE-DIR is the directory where</span>
 <span style="color: #FBDE2D;">to save generated index.org."</span>
   (owp/string-to-file
@@ -421,8 +468,11 @@ the old URI manually.</li>
            (format <span style="color: #61CE3C;">"This is the home page of %s."</span>
                    (<span style="color: #4c83ff;">or</span> user-full-name <span style="color: #61CE3C;">"[Author]"</span>)))
    (expand-file-name <span style="color: #61CE3C;">"index.org"</span> save-dir)))
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-about</span> (save-dir)
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-about</span> (save-dir)
   <span style="color: #FBDE2D;">"Generate about.org for `</span><span style="color: #96CBFE;">owp/new-repository</span><span style="color: #FBDE2D;">'. SAVE-DIR is the directory where</span>
 <span style="color: #FBDE2D;">to save generated about.org."</span>
   (owp/string-to-file
@@ -430,8 +480,11 @@ the old URI manually.</li>
            (format <span style="color: #61CE3C;">"* About %s"</span> (<span style="color: #4c83ff;">or</span> user-full-name <span style="color: #61CE3C;">"[Author]"</span>)) <span style="color: #61CE3C;">"\n\n"</span>
            <span style="color: #61CE3C;">"  This file is automatically generated by org-webpage."</span>)
    (expand-file-name <span style="color: #61CE3C;">"about.org"</span> save-dir)))
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/insert-options-template</span> (<span style="color: #afd8af;">&amp;optional</span> title uri
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/insert-options-template</span> (<span style="color: #afd8af;">&amp;optional</span> title uri
                                               keywords tags description)
   <span style="color: #FBDE2D;">"Insert a template into current buffer with information for exporting.</span>
 
@@ -504,8 +557,11 @@ the old URI manually.</li>
            org-export-with-footnotes
            org-export-with-emphasize
            org-export-with-timestamps)))
+</pre>
+</div>
 
-(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/new-post</span> (<span style="color: #afd8af;">&amp;optional</span> project-name category filename insert-fallback-template)
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/new-post</span> (<span style="color: #afd8af;">&amp;optional</span> project-name category filename insert-fallback-template)
   <span style="color: #FBDE2D;">"Setup a new post.</span>
 
 <span style="color: #FBDE2D;">PROJECT-NAME: which project do you want to export</span>
@@ -555,8 +611,8 @@ the old URI manually.</li>
 </div>
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2016-09-24</span>
-        <span title="last modification date" class="post-info">2016-09-04</span>
+        <span title="post date" class="post-info">2017-03-10</span>
+        <span title="last modification date" class="post-info">2017-03-10</span>
         <span title="tags" class="post-info">N/A</span>
         <span title="author" class="post-info">Feng Shu</span>
       </div>
@@ -576,7 +632,7 @@ the old URI manually.</li>
         </script>
       </section>
       <div class="footer">
-        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 9.x)</p>
         <p>
           Copyright &copy; <span id="footerYear"></span> <a href="mailto:tumashu &lt;at&gt; 163 &lt;dot&gt; com">Feng Shu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
