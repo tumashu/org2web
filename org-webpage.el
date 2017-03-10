@@ -145,7 +145,6 @@
 
 ;; * 代码说明                                                             :code:
 
-;; #+BEGIN_SRC emacs-lisp
 
 (require 'ox)
 (require 'ht)
@@ -488,11 +487,8 @@ responsibility to guarantee the two parameters are valid."
 
 
 
-;; #+END_SRC
 
 ;; * Footer
-;; #+BEGIN_SRC emacs-lisp
 (provide 'org-webpage)
 
 ;;; org-webpage.el ends here
-;; #+END_SRC

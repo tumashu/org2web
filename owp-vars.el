@@ -323,46 +323,46 @@ set the server port.
 2. Example1: 9876
 
 
-  `:lentic-doc-sources'
+  `:el2org-doc-sources'
 
 Emacs-lisp files from which org files will be generated with the
-help of lentic:
+help of el2org:
 1. Type: regexp-list
 2. Example: (\"org-webpage.el\" \"owp-*.el\")
 
 
-  `:lentic-doc-tags'
+  `:el2org-doc-tags'
 
 The content with these tags will be considered when generate org files
-from `:lentic-doc-source'.
+from `:el2org-doc-source'.
 1. Type: list
 2. Example: (\"tag1\" \"tag2\" \"tag3\")
 
 
 
-  `:lentic-readme-sources'
+  `:el2org-readme-sources'
 
 Emacs-lisp or org file from which README.md will be generated with the
-help of lentic:
+help of el2org:
 1. Type: file name list
 2. Example: (\"org-webpage.el\")
 
 NOTE: At the moment, *only* use the *first* element of list, NEED improve.
 
 
-  `:lentic-readme-tags'
+  `:el2org-readme-tags'
 
 The content with these tags will be considered when generate README.md
-from `:lentic-readme-source'.
+from `:el2org-readme-source'.
 1. Type: list
 2. Example: (\"tag1\" \"tag2\" \"tag3\")
 
 
 
-  `:lentic-index-sources'
+  `:el2org-index-sources'
 
 Emacs-lisp or org file from which index.org will be generated with the
-help of lentic:
+help of el2org:
 1. Type: file name list
 2. Example: (\"org-webpage.el\")
 
@@ -370,10 +370,10 @@ NOTE: At the moment, *only* use the *first* element of list, NEED improve.
 
 
 
-  `:lentic-index-tags'
+  `:el2org-index-tags'
 
 The content with these tags will be considered when generate index.org
-from `:lentic-index-source'.
+from `:el2org-index-source'.
 1. Type: list
 2. Example: (\"tag1\" \"tag2\" \"tag3\")
 
@@ -469,40 +469,41 @@ test publish.")
   "Template for RSS rendering.")
 
 (defvar owp/config-fallback
-      `(:repository-directory nil
-        :ignore ("-pkg\\.org$" "-autoloads\\.org" "#\\..*")
-        :publishing-directory nil
-        :remote nil
-        :site-domain nil
-        :site-main-title "org-webpage"
-        :site-sub-title "static site generator"
-        :theme-root-directory nil
-        :theme (default)
-        :source-browse-url nil
-        :personal-avatar nil
-        :personal-disqus-shortname nil
-        :personal-duoshuo-shortname nil
-        :personal-google-analytics-id nil
-        :default-category "blog"
-        :about ("About" "/about/")
-        :rss ("RSS" "/rss.xml")
-        :category-ignore-list ("themes" "assets" "uploaders")
-        :summary (("tags" :tags))
-        :confound-email t
-        :force-absolute-url t
-        :preparation-function nil
-        :get-title-function owp/get-title
-        :retrieve-category-function owp/get-file-category
-        :org-export-function owp/default-org-export
-        :web-server-docroot "~/.emacs.d/org-webpage-server/default"
-        :web-server-port 9876
-        :lentic-doc-sources nil
-        :lentic-readme-sources nil
-        :lentic-index-sources nil
-        :lentic-doc-tags ("README" "devel" "doc" "code")
-        :lentic-readme-tags ("README")
-        :lentic-index-tags ("README")
-        :html-creator-string ,(format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\
+  `(:repository-directory
+    nil
+    :ignore ("-pkg\\.org$" "-autoloads\\.org" "#\\..*")
+    :publishing-directory nil
+    :remote nil
+    :site-domain nil
+    :site-main-title "org-webpage"
+    :site-sub-title "static site generator"
+    :theme-root-directory nil
+    :theme (default)
+    :source-browse-url nil
+    :personal-avatar nil
+    :personal-disqus-shortname nil
+    :personal-duoshuo-shortname nil
+    :personal-google-analytics-id nil
+    :default-category "blog"
+    :about ("About" "/about/")
+    :rss ("RSS" "/rss.xml")
+    :category-ignore-list ("themes" "assets" "uploaders")
+    :summary (("tags" :tags))
+    :confound-email t
+    :force-absolute-url t
+    :preparation-function nil
+    :get-title-function owp/get-title
+    :retrieve-category-function owp/get-file-category
+    :org-export-function owp/default-org-export
+    :web-server-docroot "~/.emacs.d/org-webpage-server/default"
+    :web-server-port 9876
+    :el2org-doc-sources nil
+    :el2org-readme-sources nil
+    :el2org-index-sources nil
+    :el2org-doc-tags ("README" "devel" "doc" "code")
+    :el2org-readme-tags ("README")
+    :el2org-index-tags ("README")
+    :html-creator-string ,(format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\
 (<a href=\"http://orgmode.org\">Org mode</a> %s)"
 (format "%s.x" emacs-major-version)
 (if (fboundp 'org-version)
