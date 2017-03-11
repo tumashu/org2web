@@ -79,7 +79,12 @@
                    (owp/directory-files-recursively repo-dir "\\.el$")
                    regexp-list))))
     (when files
-      (mapc #'el2org-orgify-if-necessary files)))
+      (mapc
+       #'(lambda (file)
+           (when (file-exists-p file)
+             (let ((org-file (concat (file-name-sans-extension file) ".org")))
+               (el2org-generate-file file nil 'org org-file nil t))))
+       files)))
 
   ;; Generate README.mk if necessary
   (let* ((repo-dir (owp/get-repository-directory))
