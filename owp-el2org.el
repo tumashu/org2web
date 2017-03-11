@@ -39,21 +39,25 @@
   (interactive)
   (owp/select-project-name
    "Which project do you want to generate README.md? " project-name)
-  (el2org-generate-file
-   (owp/get-repository-directory)
-   (car (owp/get-config-option :el2org-readme-sources))
-   (owp/get-config-option :el2org-readme-tags)
-   'gfm "README.md"))
+  (let* ((repo-dir (owp/get-repository-repo-directory))
+         (el-file (concat
+                   (file-name-as-repo-directory repo-dir)
+                   (car (owp/get-config-option :el2org-readme-sources))))
+         (readme-file (concat (file-name-as-repo-directory repo-dir) "README.md"))
+         (tags (owp/get-config-option :el2org-readme-tags)))
+    (el2org-generate-file el-file tags 'gfm readme-file)))
 
 (defun owp/el2org-generate-index (&optional project-name)
   (interactive)
   (owp/select-project-name
    "Which project do you want to generate index.org? " project-name)
-  (el2org-generate-file
-   (owp/get-repository-directory)
-   (car (owp/get-config-option :el2org-index-sources))
-   (owp/get-config-option :el2org-index-tags)
-   'org "index.org"))
+  (let* ((repo-dir (owp/get-repository-repo-directory))
+         (el-file (concat
+                   (file-name-as-repo-directory repo-dir)
+                   (car (owp/get-config-option :el2org-readme-sources))))
+         (index-file (concat (file-name-as-repo-directory repo-dir) "index.org"))
+         (tags (owp/get-config-option :el2org-readme-tags)))
+    (el2org-generate-file el-file tags 'org index-file)))
 
 ;; ** org-webpage 导出函数（支持 el2org）
 
@@ -78,20 +82,24 @@
       (mapc #'el2org-orgify-if-necessary files)))
 
   ;; Generate README.mk if necessary
-  (let ((repo-dir (owp/get-repository-directory))
-        (file (car (owp/get-config-option :el2org-readme-sources)))
-        (tags (owp/get-config-option :el2org-readme-tags)))
-    (when file
-      (el2org-generate-file
-       repo-dir file tags 'gfm "README.md")))
+  (let* ((repo-dir (owp/get-repository-directory))
+         (filename (car (owp/get-config-option :el2org-readme-sources)))
+         (file (when filename
+                 (concat (file-name-as-directory repo-dir) filename)))
+         (readme-file (concat (file-name-as-directory repo-dir) "README.md"))
+         (tags (owp/get-config-option :el2org-readme-tags)))
+    (when (file-exists-p file)
+      (el2org-generate-file file tags 'gfm readme-file)))
 
   ;; Generate index.org if necessary
-  (let ((repo-dir (owp/get-repository-directory))
-        (file (car (owp/get-config-option :el2org-index-sources)))
-        (tags (owp/get-config-option :el2org-index-tags)))
-    (when file
-      (el2org-generate-file
-       repo-dir file tags 'org "index.org"))))
+  (let* ((repo-dir (owp/get-repository-directory))
+         (filename (car (owp/get-config-option :el2org-index-sources)))
+         (file (when filename
+                 (concat (file-name-as-directory repo-dir) filename)))
+         (index-file (concat (file-name-as-directory repo-dir) "index.org"))
+         (tags (owp/get-config-option :el2org-index-tags)))
+    (when (file-exists-p file)
+      (el2org-generate-file file tags 'org index-file))))
 
 ;; * Footer
 

@@ -1,14 +1,16 @@
-- [org-webpage README](#org-webpage-readme)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
-  - [Publication](#publication)
-  - [Dependencies](#dependencies)
-  - [Known issues](#known-issues)
+- [org-webpage README](#org3a6cccf)
+  - [Installation](#org6b4e658)
+  - [Configuration](#orgea7b962)
+  - [Publication](#org1c1dd03)
+  - [Dependencies](#org41e7360)
+  - [Known issues](#orgfeb85e5)
 
-# org-webpage README<a id="orgheadline6"></a>
 
-org-webpage is a static site generator based on [org-mode](http://orgmode.org/),
-which code derived from Kelvin H's [org-page](https://github.com/kelvinh/org-page).
+<a id="org3a6cccf"></a>
+
+# org-webpage README
+
+org-webpage is a static site generator based on [org-mode](http://orgmode.org/), which code derived from Kelvin H's [org-page](https://github.com/kelvinh/org-page).
 
 The main differents of two projects are as follow:
 
@@ -33,29 +35,27 @@ The main differents of two projects are as follow:
 
                                [ REMOTE ]
 
-2.  org-webpage's default config is \`org-publish-project-alist' style alist,
-    which can manage multi-site configs in an emacs session easily.
-3.  org-website find theme-files from a **themes-list** in sequence and same theme-file
-    first found will be used. User can set **fallback theme** with the help of this feature.
+2.  org-webpage's default config is \`org-publish-project-alist' style alist, which can manage multi-site configs in an emacs session easily.
+3.  org-website find theme-files from a **themes-list** in sequence and same theme-file first found will be used. User can set **fallback theme** with the help of this feature.
 4.  org-website include a tiny emacs web server, which can be used to test publish.
 5.  org-website can use other uploaders to upload website, for example: rclone.
 6.  &#x2026;
 
-## Installation<a id="orgheadline1"></a>
 
-org-webpage is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/)
-so the recommended way is to install it through emacs package
-management system. For more info about installation, please see
-**tips.org** in the "doc" folder.
+<a id="org6b4e658"></a>
 
-## Configuration<a id="orgheadline2"></a>
+## Installation
 
-org-webpage use variable \`owp/project-config-alist' to store all projects's configures, user
-can add a project with the help of \`add-to-list' function, but the easiest way is
-using \`owp/add-project-config' function.
+org-webpage is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/) so the recommended way is to install it through emacs package management system. For more info about installation, please see **tips.org** in the "doc" folder.
 
-The follow code is [my website](http://tumashu.github.com)'s [config](https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el),
-you can adjust and paste it to your `.emacs` file:
+
+<a id="orgea7b962"></a>
+
+## Configuration
+
+org-webpage use variable \`owp/project-config-alist' to store all projects's configures, user can add a project with the help of \`add-to-list' function, but the easiest way is using \`owp/add-project-config' function.
+
+The follow code is [my website](http://tumashu.github.com)'s [config](https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el), you can adjust and paste it to your `.emacs` file:
 
     (add-to-list 'load-path "path/to/org-webpage") ; Only needed if you install org-webpage manually
 
@@ -82,11 +82,17 @@ You can find more config options and theirs default values by commands:
     C-h v owp/project-config-alist
     C-h v owp/config-fallback
 
-## Publication<a id="orgheadline3"></a>
+
+<a id="org1c1dd03"></a>
+
+## Publication
 
     M-x owp/do-publication
 
-## Dependencies<a id="orgheadline4"></a>
+
+<a id="org41e7360"></a>
+
+## Dependencies
 
 1.  [emacs](http://www.gnu.org/software/emacs/): this is an "of-course" dependency
 2.  [org mode](http://orgmode.org/): v8.0 is required, please use `M-x org-version <RET>` to make sure you org mode version is not less than 8.0
@@ -99,14 +105,10 @@ You can find more config options and theirs default values by commands:
 9.  [ht.el](https://github.com/Wilfred/ht.el): a modern hash-table library for Emacs
 10. [simple-httpd](https://github.com/skeeto/emacs-web-server): Extensible Emacs HTTP 1.1 server
 
-## Known issues<a id="orgheadline5"></a>
 
-1.  Currently the deletion change handler has not been implemented so
-    if you deleted some org sources, you may have to manually delete
-    corresponding generated html files.
-2.  URI path change detection is not available. That is, if you make a
-    post with the URI "/blog/2013/03/25/the-old-post-name" and then
-    change this value in your org source, org-webpage would be unable to
-    detect that this has happened. it will only publish a new html
-    file for you so you need to delete the old html file related to
-    the old URI manually.
+<a id="orgfeb85e5"></a>
+
+## Known issues
+
+1.  Currently the deletion change handler has not been implemented so if you deleted some org sources, you may have to manually delete corresponding generated html files.
+2.  URI path change detection is not available. That is, if you make a post with the URI "/blog/2013/03/25/the-old-post-name" and then change this value in your org source, org-webpage would be unable to detect that this has happened. it will only publish a new html file for you so you need to delete the old html file related to the old URI manually.
