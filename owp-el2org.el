@@ -93,8 +93,7 @@
                  (concat (file-name-as-directory repo-dir) filename)))
          (readme-file (concat (file-name-as-directory repo-dir) "README.md"))
          (tags (owp/get-config-option :el2org-readme-tags)))
-    (when (file-exists-p file)
-      (el2org-generate-file file tags 'gfm readme-file)))
+    (el2org-generate-file file tags 'gfm readme-file))
 
   ;; Generate index.org if necessary
   (let* ((repo-dir (owp/get-repository-directory))
@@ -103,8 +102,7 @@
                  (concat (file-name-as-directory repo-dir) filename)))
          (index-file (concat (file-name-as-directory repo-dir) "index.org"))
          (tags (owp/get-config-option :el2org-index-tags)))
-    (when (file-exists-p file)
-      (el2org-generate-file file tags 'org index-file))))
+    (el2org-generate-file file tags 'org index-file)))
 
 ;; * Footer
 
