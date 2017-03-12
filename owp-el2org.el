@@ -63,8 +63,7 @@
 
 (defun owp/el2org-org-export-function ()
   "A function with can export org file to html."
-  (let ((org-export-select-tags (owp/get-config-option :el2org-doc-tags))
-        (org-export-headline-levels 7)
+  (let ((org-export-headline-levels 7)
         (indent-tabs-mode nil)
         (tab-width 4))
     (org-export-as 'html nil nil t nil)))
@@ -73,6 +72,7 @@
   "Generate org files by el2org."
   ;; Orgify elisp files
   (let* ((repo-dir (owp/get-repository-directory))
+         (tags (owp/get-config-option :el2org-doc-tags))
          (regexp-list (owp/get-config-option :el2org-doc-sources))
          (files (when regexp-list
                   (owp/select-matched-items
@@ -83,7 +83,7 @@
        #'(lambda (file)
            (when (file-exists-p file)
              (let ((org-file (concat (file-name-sans-extension file) ".org")))
-               (el2org-generate-file file nil 'org org-file nil t))))
+               (el2org-generate-file file tags 'org org-file))))
        files)))
 
   ;; Generate README.mk if necessary
