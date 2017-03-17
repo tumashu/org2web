@@ -64,9 +64,11 @@ if `option' is not found, get fallback value from
       (file-name-as-directory
        (expand-file-name dir)))))
 
-(defun owp/get-site-domain ()
+(defun owp/get-site-domain (&optional old-site-domain)
   "The function, which can return site-domain string."
-  (let ((site-domain (owp/get-config-option :site-domain)))
+  (let ((site-domain (if old-site-domain
+                         (owp/get-config-option :old-site-domain)
+                       (owp/get-config-option :site-domain))))
     (when site-domain
       (if (or (string-prefix-p "http://"  site-domain)
               (string-prefix-p "https://" site-domain))

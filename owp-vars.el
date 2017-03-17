@@ -135,6 +135,13 @@ http:// or https://, http will be considered if not assigned.
 1. Type: string
 2. Example1: \"http://tumashu.github.com\"
 
+  `:old-site-domain'
+
+The domain name which is used before `:site-domain', It may be useful to comment
+system, such as: duoshuo.
+1. Type: string
+2. Example1: \"http://tumashu.github.com\"
+
 
   `:site-main-title'
 
@@ -475,6 +482,7 @@ test publish.")
     :publishing-directory nil
     :remote nil
     :site-domain nil
+    :old-site-domain nil
     :site-main-title "org-webpage"
     :site-sub-title "static site generator"
     :theme-root-directory nil
