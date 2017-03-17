@@ -211,7 +211,8 @@ similar to `owp/render-header'."
     (message "Read footer.mustache from file")
     (owp/file-to-string (owp/get-template-file "footer.mustache")))
    (or param-table
-       (let* ((title (funcall (owp/get-config-option :get-title-function) org-file))
+       (let* ((site-domain (owp/get-site-domain))
+              (title (funcall (owp/get-config-option :get-title-function) org-file))
               (default-category (owp/get-config-option :default-category))
               (date (owp/fix-timestamp-string
                      (or (owp/read-org-option "DATE")
@@ -254,7 +255,9 @@ similar to `owp/render-header'."
              ("disqus-url" (owp/get-full-url uri))
              ("disqus-comment" (owp/get-config-option :personal-disqus-shortname))
              ("disqus-shortname" (owp/get-config-option :personal-disqus-shortname))
-             ("duoshuo-thread-key" (md5 (owp/get-full-url uri)))
+             ("duoshuo-thread-key" (md5 (concat site-domain
+                                                (replace-regexp-in-string
+                                                 " " "" title))))
              ("duoshuo-title" title)
              ("duoshuo-url" (owp/get-full-url uri))
              ("duoshuo-comment" (owp/get-config-option :personal-duoshuo-shortname))
