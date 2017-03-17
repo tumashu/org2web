@@ -29,18 +29,19 @@
         <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
         {{/disqus-comment}}
         {{#duoshuo-comment}}
-        <div class="ds-thread"></div>
+        <div class="ds-thread" data-thread-key="{{duoshuo-thread-key}}"
+                               data-title="{{duoshuo-title}}" data-url="{{duoshuo-url}}"></div>
         <script type="text/javascript">
-          var duoshuoQuery = {short_name:'{{duoshuo-shortname}}'};
-          (function() {
-          var ds = document.createElement('script');
-          ds.type = 'text/javascript';ds.async = true;
-          ds.src = 'https://static.duoshuo.com/embed.js';
-          ds.charset = 'UTF-8';
-          (document.getElementsByTagName('head')[0]
-          || document.getElementsByTagName('body')[0]).appendChild(ds);
-          })();
-        </script>
+        var duoshuoQuery = {short_name:"{{duoshuo-shortname}}"};
+	    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	    })();
+	    </script>
         {{/duoshuo-comment}}
       </section>
       {{/show-comment}}

@@ -33,6 +33,7 @@
 (require 'owp-util)
 (require 'owp-vars)
 (require 'owp-config)
+(require 'md5)
 
 
 (defun owp/get-template-file (template-file-name)
@@ -253,6 +254,9 @@ similar to `owp/render-header'."
              ("disqus-url" (owp/get-full-url uri))
              ("disqus-comment" (owp/get-config-option :personal-disqus-shortname))
              ("disqus-shortname" (owp/get-config-option :personal-disqus-shortname))
+             ("duoshuo-thread-key" (md5 (owp/get-full-url uri)))
+             ("duoshuo-title" title)
+             ("duoshuo-url" (owp/get-full-url uri))
              ("duoshuo-comment" (owp/get-config-option :personal-duoshuo-shortname))
              ("duoshuo-shortname" (owp/get-config-option :personal-duoshuo-shortname))
              ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
