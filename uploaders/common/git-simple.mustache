@@ -1,0 +1,48 @@
+#!/bin/bash
+
+set -e
+
+git_cmd=`which git`
+export_dir='{{export-dir}}'
+history_dir='{{history-dir}}'
+publish_dir='{{publish-dir}}'
+git_url='{{remote-url}}'
+git_branch='{{remote-branch}}'
+partial_update='{{partial-update}}'
+
+
+echo '###########################################################'
+echo '##            Org-webpage uploader using git-simple      ##'
+echo '###########################################################'
+
+echo ''
+echo "Export  Directory:    $export_dir"
+echo "Publish Directory:    $publish_dir"
+echo "History Directory:    $history_dir"
+
+echo ''
+echo "Git Remote url:       $git_url"
+echo "Git Remote branch:    $git_branch"
+echo ''
+
+$git_cmd clone --depth=1 --branch "$git_branch"  "$git_url" "$history_dir"
+
+cd "$publish_dir"
+cp -r "$history_dir"/.git  "$publish_dir"
+
+$git_cmd config core.autocrlf false
+
+if [[ $partial_update = "yes" ]]
+then
+    $git_cmd reset --hard
+    echo "NOTE: Enable Partial upload, reset to HEAD with command: '$git_cmd reset --hard' ..."
+fi
+
+cp -r "$export_dir"/*  "$publish_dir"
+
+$git_cmd add --all .
+$git_cmd commit -m 'Update published html files, committed by org-webpage.'
+
+$git_cmd push origin $git_branch
+
+exit 0

@@ -71,6 +71,18 @@ and `owp/new-post' will directly add new post to this project."
                ("partial-update" (if partial-update "yes" "no"))))
          :support-partial-update t
          :help-info "You should install 'git' in linux system or 'msysgit' in window system!")
+    (git-simple :requires ("bash" "git")
+                :template "git-simple.mustache"
+                :template-settings
+                (lambda (remote export-dir history-dir publish-dir partial-update)
+                  (ht ("export-dir" export-dir)
+                      ("history-dir" history-dir)
+                      ("publish-dir" publish-dir)
+                      ("remote-url" (nth 1 remote))
+                      ("remote-branch" (nth 2 remote))
+                      ("partial-update" (if partial-update "yes" "no"))))
+                :support-partial-update t
+                :help-info "You should install 'git' in linux system or 'msysgit' in window system!")
     (rclone :requires ("bash" "rclone")
             :template "rclone.mustache"
             :template-settings
