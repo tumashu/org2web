@@ -108,13 +108,16 @@ a hash table accordint to current buffer."
     :header-template
     (message "Read header.mustache from file")
     (owp/file-to-string (owp/get-template-file "header.mustache")))
-   (or param-table
-       (ht ("page-title" (concat (funcall (owp/get-config-option :get-title-function) org-file)
-                                 " - " (owp/get-config-option :site-main-title)))
-           ("author" (or (owp/read-org-option "AUTHOR")
-                         user-full-name "Unknown Author"))
-           ("description" (owp/read-org-option "DESCRIPTION"))
-           ("keywords" (owp/read-org-option "KEYWORDS"))))))
+   (ht-merge
+    (or param-table
+        (ht ("page-title" (concat (funcall (owp/get-config-option :get-title-function) org-file)
+                                  " - " (owp/get-config-option :site-main-title)))
+            ("author" (or (owp/read-org-option "AUTHOR")
+                          user-full-name "Unknown Author"))
+            ("description" (owp/read-org-option "DESCRIPTION"))
+            ("keywords" (owp/read-org-option "KEYWORDS"))))
+    (or (owp/get-config-option :header-context)
+        (make-hash-table)))))
 
 (defun owp/render-navigation-bar (&optional param-table org-file)
   "Render the navigation bar on each page. it will be read firstly from
@@ -132,50 +135,53 @@ render from a default hash table."
        :nav-bar-template
        (message "Read nav.mustache from file")
        (owp/file-to-string (owp/get-template-file "nav.mustache")))
-      (or param-table
-          (ht ("site-main-title" (owp/get-config-option :site-main-title))
-              ("site-sub-title" (owp/get-config-option :site-sub-title))
-              ("nav-categories"
-               (mapcar
-                #'(lambda (cat)
-                    (ht ("category-uri"
-                         (concat "/" (owp/encode-string-to-url cat) "/"))
-                        ("category-name" (capitalize cat))))
-                (sort (cl-remove-if
-                       #'(lambda (cat)
-                           (or (string= cat "index")
-                               (string= cat "about")
-                               (member cat category-ignore-list)))
-                       (owp/get-category nil))
-                      'string-lessp)))
-              ("nav-summary"
-               (mapcar
-                #'(lambda (cat)
-                    (ht ("summary-item-uri"
-                         (concat "/" (owp/encode-string-to-url cat) "/"))
-                        ("summary-item-name" (capitalize cat))))
-                (mapcar #'car (owp/get-config-option :summary))))
-              ("nav-source-browse"
-               (let ((list (owp/get-config-option :source-browse-url)))
-                 (when list
-                   (ht ("source-browse-name" (car list))
-                       ("source-browse-uri" (car (cdr list)))))))
-              ("nav-about"
-               (let ((list (owp/get-config-option :about)))
-                 (when list
-                   (ht ("about-name" (car list))
-                       ("about-uri" (car (cdr list)))))))
-              ("nav-rss"
-               (let ((list (owp/get-config-option :rss)))
-                 (when list
-                   (ht ("rss-name" (car list))
-                       ("rss-uri" (car (cdr list)))))))
-              ("avatar" (owp/get-config-option :personal-avatar))
-              ("site-domain" (if (string-match
-                                  "\\`https?://\\(.*[a-zA-Z]\\)/?\\'"
-                                  site-domain)
-                                 (match-string 1 site-domain)
-                               site-domain))))))))
+      (ht-merge
+       (or param-table
+           (ht ("site-main-title" (owp/get-config-option :site-main-title))
+               ("site-sub-title" (owp/get-config-option :site-sub-title))
+               ("nav-categories"
+                (mapcar
+                 #'(lambda (cat)
+                     (ht ("category-uri"
+                          (concat "/" (owp/encode-string-to-url cat) "/"))
+                         ("category-name" (capitalize cat))))
+                 (sort (cl-remove-if
+                        #'(lambda (cat)
+                            (or (string= cat "index")
+                                (string= cat "about")
+                                (member cat category-ignore-list)))
+                        (owp/get-category nil))
+                       'string-lessp)))
+               ("nav-summary"
+                (mapcar
+                 #'(lambda (cat)
+                     (ht ("summary-item-uri"
+                          (concat "/" (owp/encode-string-to-url cat) "/"))
+                         ("summary-item-name" (capitalize cat))))
+                 (mapcar #'car (owp/get-config-option :summary))))
+               ("nav-source-browse"
+                (let ((list (owp/get-config-option :source-browse-url)))
+                  (when list
+                    (ht ("source-browse-name" (car list))
+                        ("source-browse-uri" (car (cdr list)))))))
+               ("nav-about"
+                (let ((list (owp/get-config-option :about)))
+                  (when list
+                    (ht ("about-name" (car list))
+                        ("about-uri" (car (cdr list)))))))
+               ("nav-rss"
+                (let ((list (owp/get-config-option :rss)))
+                  (when list
+                    (ht ("rss-name" (car list))
+                        ("rss-uri" (car (cdr list)))))))
+               ("avatar" (owp/get-config-option :personal-avatar))
+               ("site-domain" (if (string-match
+                                   "\\`https?://\\(.*[a-zA-Z]\\)/?\\'"
+                                   site-domain)
+                                  (match-string 1 site-domain)
+                                site-domain))))
+       (or (owp/get-config-option :navigation-bar-context)
+           (make-hash-table)))))))
 
 (defun owp/render-content (&optional template param-table org-file)
   "Render the content on each page. TEMPLATE is the template name for rendering,
@@ -189,14 +195,17 @@ similar to `owp/render-header'."
     (message (concat "Read " (or template "post.mustache") " from file"))
     (owp/file-to-string (owp/get-template-file
                          (or template "post.mustache"))))
-   (or param-table
-       (ht ("title" (funcall (owp/get-config-option :get-title-function) org-file))
-           ("content" (cl-flet ((org-html-fontify-code
-                                 (code lang)
-                                 (when code (org-html-encode-plain-text code))))
-                        (let ((org-export-function (owp/get-config-option :org-export-function)))
-                          (when (functionp org-export-function)
-                            (funcall org-export-function)))))))))
+   (ht-merge
+    (or param-table
+        (ht ("title" (funcall (owp/get-config-option :get-title-function) org-file))
+            ("content" (cl-flet ((org-html-fontify-code
+                                  (code lang)
+                                  (when code (org-html-encode-plain-text code))))
+                         (let ((org-export-function (owp/get-config-option :org-export-function)))
+                           (when (functionp org-export-function)
+                             (funcall org-export-function)))))))
+    (or (owp/get-config-option :content-context)
+        (make-hash-table)))))
 
 (defun owp/default-org-export ()
   "A function with can export org file to html."
@@ -210,66 +219,68 @@ similar to `owp/render-header'."
     :footer-template
     (message "Read footer.mustache from file")
     (owp/file-to-string (owp/get-template-file "footer.mustache")))
-   (or param-table
-       (let* ((site-domain (owp/get-site-domain))
-              (old-site-domain (owp/get-site-domain t))
-              (title (funcall (owp/get-config-option :get-title-function) org-file))
-              (default-category (owp/get-config-option :default-category))
-              (date (owp/fix-timestamp-string
-                     (or (owp/read-org-option "DATE")
-                         (format-time-string "%Y-%m-%d"))))
-              (tags (owp/read-org-option "TAGS"))
-              (tags (if tags  ;; Bug: when set option `:summary' to `nil', can't deal with.
-                        (mapcar
-                         #'(lambda (tag-name)
-                             (ht ("link" (owp/generate-summary-uri
-                                          (or (car (rassoc '(:tags) (owp/get-config-option :summary)))
-                                              "tags") tag-name))
-                                 ("name" tag-name)))
-                         (delete "" (mapcar 'owp/trim-string (split-string tags "[:,]+" t))))))
-              (category (owp/get-category org-file))
-              (config (cdr (or (assoc category owp/category-config-alist)
-                               (owp/get-category-setting default-category))))
-              (uri (funcall (plist-get config :uri-generator)
-                            (plist-get config :uri-template) date title)))
-         (ht ("show-meta" (plist-get config :show-meta))
-             ("show-comment" (and (plist-get config :show-comment)
-                                  (or (owp/get-config-option :personal-disqus-shortname)
-                                      (owp/get-config-option :personal-duoshuo-shortname))))
-             ("date" date)
-             ("mod-date" (if (not org-file)
-                             (format-time-string "%Y-%m-%d")
-                           (format-time-string
-                            "%Y-%m-%d"
-                            (nth 5 (file-attributes org-file)))))
-             ("tags" tags)
-             ("tag-links" (if (not tags) "N/A"
-                            (mapconcat
-                             #'(lambda (tag)
-                                 (mustache-render
-                                  "<a href=\"{{link}}\">{{name}}</a>" tag))
-                             tags " ")))
-             ("author" (or (owp/read-org-option "AUTHOR")
-                           user-full-name
-                           "Unknown Author"))
-             ("disqus-id" uri)
-             ("disqus-url" (owp/get-full-url uri))
-             ("disqus-comment" (owp/get-config-option :personal-disqus-shortname))
-             ("disqus-shortname" (owp/get-config-option :personal-disqus-shortname))
-             ("duoshuo-thread-key" (md5 (concat
-                                         (or old-site-domain site-domain)
-                                         (replace-regexp-in-string " " "" title))))
-             ("duoshuo-title" title)
-             ("duoshuo-url" (owp/get-full-url uri))
-             ("duoshuo-comment" (owp/get-config-option :personal-duoshuo-shortname))
-             ("duoshuo-shortname" (owp/get-config-option :personal-duoshuo-shortname))
-             ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
-             ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
-             ("creator-info" (owp/get-html-creator-string))
-             ("email" (owp/confound-email-address (or (owp/read-org-option "EMAIL")
-                                                      user-mail-address
-                                                      "Unknown Email"))))))))
-
+   (ht-merge
+    (or param-table
+        (let* ((site-domain (owp/get-site-domain))
+               (old-site-domain (owp/get-site-domain t))
+               (title (funcall (owp/get-config-option :get-title-function) org-file))
+               (default-category (owp/get-config-option :default-category))
+               (date (owp/fix-timestamp-string
+                      (or (owp/read-org-option "DATE")
+                          (format-time-string "%Y-%m-%d"))))
+               (tags (owp/read-org-option "TAGS"))
+               (tags (if tags ;; Bug: when set option `:summary' to `nil', can't deal with.
+                         (mapcar
+                          #'(lambda (tag-name)
+                              (ht ("link" (owp/generate-summary-uri
+                                           (or (car (rassoc '(:tags) (owp/get-config-option :summary)))
+                                               "tags") tag-name))
+                                  ("name" tag-name)))
+                          (delete "" (mapcar 'owp/trim-string (split-string tags "[:,]+" t))))))
+               (category (owp/get-category org-file))
+               (config (cdr (or (assoc category owp/category-config-alist)
+                                (owp/get-category-setting default-category))))
+               (uri (funcall (plist-get config :uri-generator)
+                             (plist-get config :uri-template) date title)))
+          (ht ("show-meta" (plist-get config :show-meta))
+              ("show-comment" (and (plist-get config :show-comment)
+                                   (or (owp/get-config-option :personal-disqus-shortname)
+                                       (owp/get-config-option :personal-duoshuo-shortname))))
+              ("date" date)
+              ("mod-date" (if (not org-file)
+                              (format-time-string "%Y-%m-%d")
+                            (format-time-string
+                             "%Y-%m-%d"
+                             (nth 5 (file-attributes org-file)))))
+              ("tags" tags)
+              ("tag-links" (if (not tags) "N/A"
+                             (mapconcat
+                              #'(lambda (tag)
+                                  (mustache-render
+                                   "<a href=\"{{link}}\">{{name}}</a>" tag))
+                              tags " ")))
+              ("author" (or (owp/read-org-option "AUTHOR")
+                            user-full-name
+                            "Unknown Author"))
+              ("disqus-id" uri)
+              ("disqus-url" (owp/get-full-url uri))
+              ("disqus-comment" (owp/get-config-option :personal-disqus-shortname))
+              ("disqus-shortname" (owp/get-config-option :personal-disqus-shortname))
+              ("duoshuo-thread-key" (md5 (concat
+                                          (or old-site-domain site-domain)
+                                          (replace-regexp-in-string " " "" title))))
+              ("duoshuo-title" title)
+              ("duoshuo-url" (owp/get-full-url uri))
+              ("duoshuo-comment" (owp/get-config-option :personal-duoshuo-shortname))
+              ("duoshuo-shortname" (owp/get-config-option :personal-duoshuo-shortname))
+              ("google-analytics" (owp/get-config-option :personal-google-analytics-id))
+              ("google-analytics-id" (owp/get-config-option :personal-google-analytics-id))
+              ("creator-info" (owp/get-html-creator-string))
+              ("email" (owp/confound-email-address (or (owp/read-org-option "EMAIL")
+                                                       user-mail-address
+                                                       "Unknown Email"))))))
+    (or (owp/get-config-option :footer-context)
+        (make-hash-table)))))
 
 (provide 'owp-template)
 
