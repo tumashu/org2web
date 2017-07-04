@@ -396,6 +396,17 @@ from `:el2org-index-source'.
 1. Type: list
 2. Example: (\"tag1\" \"tag2\" \"tag3\")
 
+  `:injector'
+
+Function used to retrieve additional context for a given
+moustache template. Available templates are `:header-template',
+`:navigation-bar-template', `:content-template' and
+`:footer-template'.
+1. Example: (lambda (template)
+                    (cl-case template
+                      (:footer-template
+                       (list :key1 val1
+                             :key2 val2))))
 
 You can see fallback value of above option in `owp/config-fallback'
 

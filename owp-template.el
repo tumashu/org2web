@@ -116,8 +116,7 @@ a hash table accordint to current buffer."
                           user-full-name "Unknown Author"))
             ("description" (owp/read-org-option "DESCRIPTION"))
             ("keywords" (owp/read-org-option "KEYWORDS"))))
-    (or (owp/get-config-option :header-context)
-        (make-hash-table)))))
+    (owp/get-injected-template :header-template))))
 
 (defun owp/render-navigation-bar (&optional param-table org-file)
   "Render the navigation bar on each page. it will be read firstly from
@@ -180,8 +179,7 @@ render from a default hash table."
                                    site-domain)
                                   (match-string 1 site-domain)
                                 site-domain))))
-       (or (owp/get-config-option :navigation-bar-context)
-           (make-hash-table)))))))
+       (owp/get-injected-template :navigation-bar-template))))))
 
 (defun owp/render-content (&optional template param-table org-file)
   "Render the content on each page. TEMPLATE is the template name for rendering,
@@ -204,8 +202,7 @@ similar to `owp/render-header'."
                          (let ((org-export-function (owp/get-config-option :org-export-function)))
                            (when (functionp org-export-function)
                              (funcall org-export-function)))))))
-    (or (owp/get-config-option :content-context)
-        (make-hash-table)))))
+    (owp/get-injected-template :content-template))))
 
 (defun owp/default-org-export ()
   "A function with can export org file to html."
@@ -279,8 +276,7 @@ similar to `owp/render-header'."
               ("email" (owp/confound-email-address (or (owp/read-org-option "EMAIL")
                                                        user-mail-address
                                                        "Unknown Email"))))))
-    (or (owp/get-config-option :footer-context)
-        (make-hash-table)))))
+    (owp/get-injected-template :footer-template))))
 
 (provide 'owp-template)
 

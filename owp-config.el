@@ -136,6 +136,24 @@ multi path."
         :sort-by :date
         :category-index t)))
 
+(defun owp/get-injected-template (key)
+  "The function, which can return template from injector for a
+given KEY.
+
+Example of key is :footer-template."
+  (when-let ((func (owp/get-config-option :injector)))
+    (ht<-alist
+     (ht-map
+      (lambda (key val)
+        (cons
+         (cl-typecase key
+           (keyword (string-remove-prefix ":" (symbol-name key)))
+           (symbol (symbol-name key))
+           (t key))
+         val))
+      (ht<-plist
+       (funcall func key))))))
+
 (provide 'owp-config)
 
 ;;; owp-config.el ends here
