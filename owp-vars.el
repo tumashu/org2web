@@ -396,17 +396,42 @@ from `:el2org-index-source'.
 1. Type: list
 2. Example: (\"tag1\" \"tag2\" \"tag3\")
 
-  `:injector'
 
-Function used to retrieve additional context for a given
-moustache template. Available templates are `:header-template',
-`:navigation-bar-template', `:content-template' and
-`:footer-template'.
-1. Example: (lambda (template)
-                    (cl-case template
-                      (:footer-template
-                       (list :key1 val1
-                             :key2 val2))))
+  `:template-context'
+
+Global plist containing context for site templates.
+1. Type: plist
+2. Example: (\"key1\" \"value1\"
+             \"key2\" \"value2\")
+
+
+  `:header-template-context'
+
+Header plist containing context for site templates. Overrides
+values from `:template-contex'. Checkout `:template-context' for
+examples.
+
+
+  `:navigation-bar-template-context'
+
+Navigation bar plist containing context for site templates.
+Overrides values from `:template-contex'. Checkout
+`:template-context' for examples.
+
+
+  `:content-template-context'
+
+Content plist containing context for site templates. Overrides
+values from `:template-contex'. Checkout `:template-context' for
+examples.
+
+
+  `:footer-template-context'
+
+Footer plist containing context for site templates. Overrides
+values from `:template-contex'. Checkout `:template-context' for
+examples.
+
 
 You can see fallback value of above option in `owp/config-fallback'
 

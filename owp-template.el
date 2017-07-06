@@ -108,15 +108,15 @@ a hash table accordint to current buffer."
     :header-template
     (message "Read header.mustache from file")
     (owp/file-to-string (owp/get-template-file "header.mustache")))
-   (ht-merge
+   (owp/get-template-context
+    :header-template-context
     (or param-table
         (ht ("page-title" (concat (funcall (owp/get-config-option :get-title-function) org-file)
                                   " - " (owp/get-config-option :site-main-title)))
             ("author" (or (owp/read-org-option "AUTHOR")
                           user-full-name "Unknown Author"))
             ("description" (owp/read-org-option "DESCRIPTION"))
-            ("keywords" (owp/read-org-option "KEYWORDS"))))
-    (owp/get-injected-template :header-template))))
+            ("keywords" (owp/read-org-option "KEYWORDS")))))))
 
 (defun owp/render-navigation-bar (&optional param-table org-file)
   "Render the navigation bar on each page. it will be read firstly from
@@ -134,7 +134,8 @@ render from a default hash table."
        :nav-bar-template
        (message "Read nav.mustache from file")
        (owp/file-to-string (owp/get-template-file "nav.mustache")))
-      (ht-merge
+      (owp/get-template-context
+       :navigation-bar-template-context
        (or param-table
            (ht ("site-main-title" (owp/get-config-option :site-main-title))
                ("site-sub-title" (owp/get-config-option :site-sub-title))
@@ -178,8 +179,7 @@ render from a default hash table."
                                    "\\`https?://\\(.*[a-zA-Z]\\)/?\\'"
                                    site-domain)
                                   (match-string 1 site-domain)
-                                site-domain))))
-       (owp/get-injected-template :navigation-bar-template))))))
+                                site-domain)))))))))
 
 (defun owp/render-content (&optional template param-table org-file)
   "Render the content on each page. TEMPLATE is the template name for rendering,
@@ -193,7 +193,8 @@ similar to `owp/render-header'."
     (message (concat "Read " (or template "post.mustache") " from file"))
     (owp/file-to-string (owp/get-template-file
                          (or template "post.mustache"))))
-   (ht-merge
+   (owp/get-template-context
+    :content-template-context
     (or param-table
         (ht ("title" (funcall (owp/get-config-option :get-title-function) org-file))
             ("content" (cl-flet ((org-html-fontify-code
@@ -201,8 +202,7 @@ similar to `owp/render-header'."
                                   (when code (org-html-encode-plain-text code))))
                          (let ((org-export-function (owp/get-config-option :org-export-function)))
                            (when (functionp org-export-function)
-                             (funcall org-export-function)))))))
-    (owp/get-injected-template :content-template))))
+                             (funcall org-export-function))))))))))
 
 (defun owp/default-org-export ()
   "A function with can export org file to html."
@@ -216,7 +216,8 @@ similar to `owp/render-header'."
     :footer-template
     (message "Read footer.mustache from file")
     (owp/file-to-string (owp/get-template-file "footer.mustache")))
-   (ht-merge
+   (owp/get-template-context
+    :footer-template-context
     (or param-table
         (let* ((site-domain (owp/get-site-domain))
                (old-site-domain (owp/get-site-domain t))
@@ -275,8 +276,17 @@ similar to `owp/render-header'."
               ("creator-info" (owp/get-html-creator-string))
               ("email" (owp/confound-email-address (or (owp/read-org-option "EMAIL")
                                                        user-mail-address
-                                                       "Unknown Email"))))))
-    (owp/get-injected-template :footer-template))))
+                                                       "Unknown Email")))))))))
+
+(defun owp/get-template-context (key &optional base-context)
+  "Returns template context for KEY based on BASE-CONTEXT."
+  (let ((map (or base-context (ht-create)))
+        (context (append (owp/get-config-option :template-context)
+                         (owp/get-config-option key))))
+    (cl-loop for (key value) on context by 'cddr
+             do
+             (ht-set map key value))
+    map))
 
 (provide 'owp-template)
 
