@@ -1,12 +1,12 @@
-- [org-webpage README](#org3a6cccf)
-  - [Installation](#org6b4e658)
-  - [Configuration](#orgea7b962)
-  - [Publication](#org1c1dd03)
-  - [Dependencies](#org41e7360)
-  - [Known issues](#orgfeb85e5)
+- [org-webpage README](#orga6b86d9)
+  - [Installation](#orgb24df57)
+  - [Configuration](#org303581d)
+  - [Publication](#org23d524f)
+  - [Dependencies](#org6224b40)
+  - [Known issues](#orgcbbaa05)
 
 
-<a id="org3a6cccf"></a>
+<a id="orga6b86d9"></a>
 
 # org-webpage README
 
@@ -15,6 +15,7 @@ org-webpage is a static site generator based on [org-mode](http://orgmode.org/),
 The main differents of two projects are as follow:
 
 1.  org-webpage's core **don't hard code git**, its process is like below:
+
 
         [ Org files in repository]  [ Website project configure ]
 
@@ -42,14 +43,14 @@ The main differents of two projects are as follow:
 6.  &#x2026;
 
 
-<a id="org6b4e658"></a>
+<a id="orgb24df57"></a>
 
 ## Installation
 
 org-webpage is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/) so the recommended way is to install it through emacs package management system. For more info about installation, please see **tips.org** in the "doc" folder.
 
 
-<a id="orgea7b962"></a>
+<a id="org303581d"></a>
 
 ## Configuration
 
@@ -83,14 +84,14 @@ You can find more config options and theirs default values by commands:
     C-h v owp/config-fallback
 
 
-<a id="org1c1dd03"></a>
+<a id="org23d524f"></a>
 
 ## Publication
 
     M-x owp/do-publication
 
 
-<a id="org41e7360"></a>
+<a id="org6224b40"></a>
 
 ## Dependencies
 
@@ -106,9 +107,12 @@ You can find more config options and theirs default values by commands:
 10. [simple-httpd](https://github.com/skeeto/emacs-web-server): Extensible Emacs HTTP 1.1 server
 
 
-<a id="orgfeb85e5"></a>
+<a id="orgcbbaa05"></a>
 
 ## Known issues
 
 1.  Currently the deletion change handler has not been implemented so if you deleted some org sources, you may have to manually delete corresponding generated html files.
 2.  URI path change detection is not available. That is, if you make a post with the URI "/blog/2013/03/25/the-old-post-name" and then change this value in your org source, org-webpage would be unable to detect that this has happened. it will only publish a new html file for you so you need to delete the old html file related to the old URI manually.
+
+
+Converted from org-webpage.el by [el2org](https://github.com/tumashu/el2org) .
