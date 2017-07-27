@@ -75,7 +75,7 @@ The follow code is [my website](http://tumashu.github.com)'s [config](https://gi
        :personal-duoshuo-shortname "tumashu-website"
        :web-server-port 7654))
 
-[Chinese-pyim](https://github.com/tumashu/chinese-pyim) 's org-webpage [config](https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el) is a more complex example.
+[pyim](https://github.com/tumashu/pyim) 's org-webpage [config](https://github.com/tumashu/pyim/blob/master/pyim-devtools.el) is a more complex example.
 
 You can find more config options and theirs default values by commands:
 

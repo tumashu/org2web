@@ -100,7 +100,7 @@
 ;;    :web-server-port 7654))
 ;; #+END_EXAMPLE
 
-;; [[https://github.com/tumashu/chinese-pyim][Chinese-pyim]] 's org-webpage [[https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el][config]] is a more complex example.
+;; [[https://github.com/tumashu/pyim][pyim]] 's org-webpage [[https://github.com/tumashu/pyim/blob/master/pyim-devtools.el][config]] is a more complex example.
 
 ;; You can find more config options and theirs default values by commands:
 
