@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>org-webpage - Org-webpage</title>
+    <title>org-webpage.el --- static site generator based on org mode - Org-webpage</title>
     <meta charset="utf-8" />
     <meta name="author" content="Feng Shu" />
     <link rel="stylesheet" href="http://tumashu.github.com/org-webpage/media/css/main.css" type="text/css">
@@ -29,26 +29,26 @@
 <div class="content-and-footer">
 <div>
 <div class="post">
-<h1 class="post-title">org-webpage</h1>
+<h1 class="post-title">org-webpage.el --- static site generator based on org mode</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org863ea61">1. org-webpage README&#xa0;&#xa0;&#xa0;<span class="tag"><span class="README">README</span></span></a>
+<li><a href="#orgfbfee4d">1. org-webpage README</a>
 <ul>
-<li><a href="#org162f382">1.1. Installation</a></li>
-<li><a href="#orgb399a8e">1.2. Configuration</a></li>
-<li><a href="#org66beda2">1.3. Publication</a></li>
-<li><a href="#orgc3e8f1e">1.4. Dependencies</a></li>
-<li><a href="#org6f02cba">1.5. Known issues</a></li>
+<li><a href="#orgc44c4e0">1.1. Installation</a></li>
+<li><a href="#orga91a511">1.2. Configuration</a></li>
+<li><a href="#org3597940">1.3. Publication</a></li>
+<li><a href="#orgbae5938">1.4. Dependencies</a></li>
+<li><a href="#orgae7b980">1.5. Known issues</a></li>
 </ul>
 </li>
-<li><a href="#orgf1f0e1b">2. 代码说明&#xa0;&#xa0;&#xa0;<span class="tag"><span class="code">code</span></span></a></li>
+<li><a href="#org859a121">2. 代码说明</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org863ea61" class="outline-2">
-<h2 id="org863ea61"><span class="section-number-2">1</span> org-webpage README&#xa0;&#xa0;&#xa0;<span class="tag"><span class="README">README</span></span></h2>
+<div id="outline-container-orgfbfee4d" class="outline-2">
+<h2 id="orgfbfee4d"><span class="section-number-2">1</span> org-webpage README</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 org-webpage is a static site generator based on <a href="http://orgmode.org/">org-mode</a>,
@@ -64,6 +64,7 @@ The main differents of two projects are as follow:
 org-webpage's core <b>don't hard code git</b>, its process is like below:
 </p>
 <pre class="example">
+
 [ Org files in repository]  [ Website project configure ]
 
              |                           |
@@ -94,8 +95,8 @@ first found will be used. User can set <b>fallback theme</b> with the help of th
 </ol>
 </div>
 
-<div id="outline-container-org162f382" class="outline-3">
-<h3 id="org162f382"><span class="section-number-3">1.1</span> Installation</h3>
+<div id="outline-container-orgc44c4e0" class="outline-3">
+<h3 id="orgc44c4e0"><span class="section-number-3">1.1</span> Installation</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 org-webpage is now available from the famous emacs package repo <a href="http://melpa.milkbox.net/">melpa</a>
@@ -106,8 +107,8 @@ management system. For more info about installation, please see
 </div>
 </div>
 
-<div id="outline-container-orgb399a8e" class="outline-3">
-<h3 id="orgb399a8e"><span class="section-number-3">1.2</span> Configuration</h3>
+<div id="outline-container-orga91a511" class="outline-3">
+<h3 id="orga91a511"><span class="section-number-3">1.2</span> Configuration</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 org-webpage use variable `owp/project-config-alist' to store all projects's configures, user
@@ -141,7 +142,7 @@ you can adjust and paste it to your <code>.emacs</code> file:
 </pre>
 
 <p>
-<a href="https://github.com/tumashu/chinese-pyim">Chinese-pyim</a> 's org-webpage <a href="https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el">config</a> is a more complex example.
+<a href="https://github.com/tumashu/pyim">pyim</a> 's org-webpage <a href="https://github.com/tumashu/pyim/blob/master/pyim-devtools.el">config</a> is a more complex example.
 </p>
 
 <p>
@@ -155,8 +156,8 @@ C-h v owp/config-fallback
 </div>
 </div>
 
-<div id="outline-container-org66beda2" class="outline-3">
-<h3 id="org66beda2"><span class="section-number-3">1.3</span> Publication</h3>
+<div id="outline-container-org3597940" class="outline-3">
+<h3 id="org3597940"><span class="section-number-3">1.3</span> Publication</h3>
 <div class="outline-text-3" id="text-1-3">
 <pre class="example">
 M-x owp/do-publication
@@ -164,8 +165,8 @@ M-x owp/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgc3e8f1e" class="outline-3">
-<h3 id="orgc3e8f1e"><span class="section-number-3">1.4</span> Dependencies</h3>
+<div id="outline-container-orgbae5938" class="outline-3">
+<h3 id="orgbae5938"><span class="section-number-3">1.4</span> Dependencies</h3>
 <div class="outline-text-3" id="text-1-4">
 <ol class="org-ol">
 <li><a href="http://www.gnu.org/software/emacs/">emacs</a>: this is an "of-course" dependency</li>
@@ -182,8 +183,8 @@ M-x owp/do-publication
 </div>
 </div>
 
-<div id="outline-container-org6f02cba" class="outline-3">
-<h3 id="org6f02cba"><span class="section-number-3">1.5</span> Known issues</h3>
+<div id="outline-container-orgae7b980" class="outline-3">
+<h3 id="orgae7b980"><span class="section-number-3">1.5</span> Known issues</h3>
 <div class="outline-text-3" id="text-1-5">
 <ol class="org-ol">
 <li>Currently the deletion change handler has not been implemented so
@@ -200,46 +201,19 @@ the old URI manually.</li>
 </div>
 </div>
 
-
-
-
-<div id="outline-container-orgf1f0e1b" class="outline-2">
-<h2 id="orgf1f0e1b"><span class="section-number-2">2</span>代码说明&#xa0;&#xa0;&#xa0;<span class="tag"><span class="code">code</span></span></h2>
+<div id="outline-container-org859a121" class="outline-2">
+<h2 id="org859a121"><span class="section-number-2">2</span> 代码说明</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ox</span>)
-</pre>
-</div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ht</span>)
-</pre>
-</div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-util</span>)
-</pre>
-</div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-vars</span>)
-</pre>
-</div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-config</span>)
-</pre>
-</div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-resource</span>)
-</pre>
-</div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-export</span>)
-</pre>
-</div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-web-server</span>)
-</pre>
-</div>
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">cl-lib</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ht</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-util</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-vars</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-config</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-resource</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-export</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-web-server</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">cl-lib</span>)
 </pre>
 </div>
 
@@ -611,25 +585,26 @@ the old URI manually.</li>
 </div>
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2017-03-10</span>
-        <span title="last modification date" class="post-info">2017-03-10</span>
+        <span title="post date" class="post-info">2017-07-27</span>
+        <span title="last modification date" class="post-info">2017-07-27</span>
         <span title="tags" class="post-info">N/A</span>
         <span title="author" class="post-info">Feng Shu</span>
       </div>
       <section>
         <h1>Comments</h1>
-        <div class="ds-thread"></div>
+        <div class="ds-thread" data-thread-key="56e34223f0458633590e1f51c9f681d5"
+                               data-title="org-webpage.el --- static site generator based on org mode" data-url="http://tumashu.github.com/org-webpage/documents/org-webpage.el-----static-site-generator-based-on-org-mode/"></div>
         <script type="text/javascript">
-          var duoshuoQuery = {short_name:'tumashu-website'};
-          (function() {
-          var ds = document.createElement('script');
-          ds.type = 'text/javascript';ds.async = true;
-          ds.src = 'http://static.duoshuo.com/embed.js';
-          ds.charset = 'UTF-8';
-          (document.getElementsByTagName('head')[0]
-          || document.getElementsByTagName('body')[0]).appendChild(ds);
-          })();
-        </script>
+        var duoshuoQuery = {short_name:"tumashu-website"};
+	    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	    })();
+	    </script>
       </section>
       <div class="footer">
         <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 9.x)</p>
