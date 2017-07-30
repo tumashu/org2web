@@ -44,7 +44,7 @@
 which can read `option' from `owp-projects'
 if `option' is not found, get fallback value from
 `owp-config-fallback'."
-  (let ((project-plist (cdr (assoc owp-current-project-name
+  (let ((project-plist (cdr (assoc owp-current-project
                                    owp-projects))))
     (if (plist-member project-plist option)
         (plist-get project-plist option)

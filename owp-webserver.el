@@ -33,14 +33,14 @@
 
 (defvar owp-webserver-last-docroot nil)
 (defvar owp-webserver-last-port nil)
-(defvar owp-current-project-name)
+(defvar owp-current-project)
 
 (defun owp-webserver-start (docroot port)
   (owp-webserver-stop)
   (httpd-log `(start ,(format "org-webpage: start webserver at %s"
                               (current-time-string))))
   (make-network-process
-   :name     (or owp-current-project-name "owp-webserver")
+   :name     (or owp-current-project "owp-webserver")
    :service  port
    :server   t
    :host     httpd-host
@@ -54,7 +54,7 @@
 
 (defun owp-webserver-stop ()
   (interactive)
-  (let ((name (or owp-current-project-name "owp-webserver")))
+  (let ((name (or owp-current-project "owp-webserver")))
     (when (process-status name)
       (delete-process name)
       (httpd-log `(stop ,(format "org-webpage: stop webserver at %s"

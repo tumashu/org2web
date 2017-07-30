@@ -451,7 +451,7 @@ This feature is very useful in certain case."
      :category-index nil))
   "Configurations for different categories, can and should be customized.")
 
-(defvar owp-current-project-name nil)
+(defvar owp-current-project nil)
 (defvar owp-last-project-name nil)
 (defvar owp-buffer-name " *org-webpage buffer*")
 
