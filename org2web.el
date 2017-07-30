@@ -27,7 +27,7 @@
 ;;; Commentary:
 
 ;; * ORG2WEB README                                                 :README:
-;; org2web is the new name of org2web, the reason of renaming org-webpage to org2web
+;; org2web is the new name of org-webpage, the reason of renaming org-webpage to org2web
 ;; is: [[https://github.com/purcell/package-lint/issues/75]]
 
 ;; org2web is a static site generator based on [[http://orgmode.org/][org-mode]],
