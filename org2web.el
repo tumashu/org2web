@@ -26,7 +26,7 @@
 
 ;;; Commentary:
 
-;; * ORG2WEB README                                                 :README:
+;; * org2web README                                                 :README:
 ;; org2web is the new name of org-webpage, the reason of renaming org-webpage to org2web
 ;; is: [[https://github.com/purcell/package-lint/issues/75]]
 

@@ -1,14 +1,14 @@
-- [ORG2WEB README](#org980f032)
-  - [Installation](#org45c70c7)
-  - [Configuration](#org4c69eea)
-  - [Publication](#orga5c3750)
-  - [Dependencies](#org2e23b84)
-  - [Known issues](#orgb2e3711)
+- [org2web README](#org697befd)
+  - [Installation](#orgdc8ac05)
+  - [Configuration](#org317e73f)
+  - [Publication](#orgfce7a55)
+  - [Dependencies](#orgbe671e3)
+  - [Known issues](#org60e1ee1)
 
 
-<a id="org980f032"></a>
+<a id="org697befd"></a>
 
-# ORG2WEB README
+# org2web README
 
 org2web is the new name of org-webpage, the reason of renaming org-webpage to org2web is: <https://github.com/purcell/package-lint/issues/75>
 
@@ -45,14 +45,14 @@ The main differents of two projects are as follow:
 6.  &#x2026;
 
 
-<a id="org45c70c7"></a>
+<a id="orgdc8ac05"></a>
 
 ## Installation
 
 org2web is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/) so the recommended way is to install it through emacs package management system. For more info about installation, please see **tips.org** in the "doc" folder.
 
 
-<a id="org4c69eea"></a>
+<a id="org317e73f"></a>
 
 ## Configuration
 
@@ -86,14 +86,14 @@ You can find more config options and theirs default values by commands:
     C-h v org2web-config-fallback
 
 
-<a id="orga5c3750"></a>
+<a id="orgfce7a55"></a>
 
 ## Publication
 
     M-x org2web-publish
 
 
-<a id="org2e23b84"></a>
+<a id="orgbe671e3"></a>
 
 ## Dependencies
 
@@ -109,7 +109,7 @@ You can find more config options and theirs default values by commands:
 10. [simple-httpd](https://github.com/skeeto/emacs-web-server): Extensible Emacs HTTP 1.1 server
 
 
-<a id="orgb2e3711"></a>
+<a id="org60e1ee1"></a>
 
 ## Known issues
 
