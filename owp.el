@@ -77,7 +77,7 @@
 ;; ** Configuration
 ;; OWP use variable `owp-projects' to store all projects's configures, user
 ;; can add a project with the help of `add-to-list' function, but the easiest way is
-;; using `owp-add-project-config' function.
+;; using `owp-add-project' function.
 
 ;; The follow code is [[http://tumashu.github.com][my website]]'s [[https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el][config]],
 ;; you can adjust and paste it to your =.emacs= file:
@@ -87,7 +87,7 @@
 
 ;; (require 'owp)
 
-;; (owp-add-project-config
+;; (owp-add-project
 ;;  '("tumashu.github.com"
 ;;    :repository-directory "~/project/emacs-packages/tumashu.github.com"
 ;;    :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
@@ -161,7 +161,7 @@
 
 (defconst owp-version "0.1")
 
-(defun owp-add-project-config (project-config)
+(defun owp-add-project (project-config)
   "Add `project-config' to `owp-projects'"
   (if (listp project-config)
       (let ((project-name (car project-config)))

@@ -33,7 +33,7 @@
 (defvar owp-devtools-repository-directory
   "~/project/emacs-packages/org-webpage/")
 
-(owp-add-project-config
+(owp-add-project
  '("org-webpage"
    :repository-directory (:eval owp-devtools-repository-directory)
    :remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
