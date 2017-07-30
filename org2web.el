@@ -1,4 +1,4 @@
-;;; owp.el --- static site generator based on org mode (org-webpage)
+;;; org2web.el --- static site generator based on org mode (org-webpage)
 
 ;; * Header
 ;; Copyright (C)  2016 Feng Shu, Jorge Javier Araya Navarro
