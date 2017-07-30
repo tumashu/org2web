@@ -42,7 +42,7 @@ and `org2web-new-post' will directly add new post to this project."
   :group 'org-webpage
   :type 'string)
 
-(defcustom org2web-temporary-directory "~/.emacs.d/owp/tmp/"
+(defcustom org2web-temporary-directory "~/.emacs.d/org2web/tmp/"
   "Temporary directory used by org-webpage."
   :group 'org-webpage
   :type 'string)
