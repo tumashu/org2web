@@ -179,7 +179,7 @@
   (setq owp-current-project-name nil)
   (setq project-name
         (or project-name
-            owp-default-project-name
+            owp-default-project
             (completing-read prompt
                              (delete-dups
                               (mapcar 'car owp-projects))

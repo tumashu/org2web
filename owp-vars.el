@@ -36,7 +36,7 @@
   :tag "Org static page generator"
   :group 'org)
 
-(defcustom owp-default-project-name nil
+(defcustom owp-default-project nil
   "If set, `owp-publish' will directly publish this project
 and `owp-new-post' will directly add new post to this project."
   :group 'org-webpage
