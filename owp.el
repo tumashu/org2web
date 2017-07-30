@@ -161,6 +161,7 @@
 
 (defconst owp-version "0.1")
 
+;;;###autoload
 (defun owp-add-project (project-config)
   "Add `project-config' to `owp-projects'"
   (if (listp project-config)
@@ -172,6 +173,7 @@
         (add-to-list 'owp-projects project-config))
     (message "Invalid project config!")))
 
+;;;###autoload
 (defun owp-select-project (prompt &optional project-name)
   "Let user select a project then return its name."
   (setq owp-current-project-name nil)
@@ -186,6 +188,7 @@
         owp-last-project-name project-name)
   project-name)
 
+;;;###autoload
 (defun owp-publish (&optional project-name publishing-directory job-number update-top-n)
   (interactive)
   (setq project-name (owp-select-project "Which project do you want to publish? " project-name))
@@ -445,6 +448,7 @@ month and day): " (unless (string= i "")
            org-export-with-emphasize
            org-export-with-timestamps)))
 
+;;;###autoload
 (defun owp-new-post (&optional project-name category filename insert-fallback-template)
   "Setup a new post.
 
