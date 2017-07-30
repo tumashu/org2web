@@ -27,7 +27,7 @@
 ;;; Commentary:
 
 ;; * OWP README                                                 :README:
-;; OWP is the old name of org-webpage, the reason of rename org-webpage to OWP
+;; OWP is the new name of org-webpage, the reason of renaming org-webpage to OWP
 ;; is: [[https://github.com/purcell/package-lint/issues/75]]
 
 ;; OWP is a static site generator based on [[http://orgmode.org/][org-mode]],

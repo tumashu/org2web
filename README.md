@@ -1,20 +1,22 @@
-- [org-webpage README](#orga6b86d9)
-  - [Installation](#orgb24df57)
-  - [Configuration](#org303581d)
-  - [Publication](#org23d524f)
-  - [Dependencies](#org6224b40)
-  - [Known issues](#orgcbbaa05)
+- [OWP README](#org85442a7)
+  - [Installation](#orgd9e21d2)
+  - [Configuration](#org8d0d6fd)
+  - [Publication](#org2c76f04)
+  - [Dependencies](#org039c031)
+  - [Known issues](#orgb78e717)
 
 
-<a id="orga6b86d9"></a>
+<a id="org85442a7"></a>
 
-# org-webpage README
+# OWP README
 
-org-webpage is a static site generator based on [org-mode](http://orgmode.org/), which code derived from Kelvin H's [org-page](https://github.com/kelvinh/org-page).
+OWP is the new name of org-webpage, the reason of renaming org-webpage to OWP is: <https://github.com/purcell/package-lint/issues/75>
+
+OWP is a static site generator based on [org-mode](http://orgmode.org/), which code derived from Kelvin H's [org-page](https://github.com/kelvinh/org-page).
 
 The main differents of two projects are as follow:
 
-1.  org-webpage's core **don't hard code git**, its process is like below:
+1.  OWP's core **don't hard code git**, its process is like below:
 
 
         [ Org files in repository]  [ Website project configure ]
@@ -36,31 +38,31 @@ The main differents of two projects are as follow:
 
                                [ REMOTE ]
 
-2.  org-webpage's default config is \`org-publish-project-alist' style alist, which can manage multi-site configs in an emacs session easily.
+2.  OWP's default config is \`org-publish-project-alist' style alist, which can manage multi-site configs in an emacs session easily.
 3.  org-website find theme-files from a **themes-list** in sequence and same theme-file first found will be used. User can set **fallback theme** with the help of this feature.
 4.  org-website include a tiny emacs web server, which can be used to test publish.
 5.  org-website can use other uploaders to upload website, for example: rclone.
 6.  &#x2026;
 
 
-<a id="orgb24df57"></a>
+<a id="orgd9e21d2"></a>
 
 ## Installation
 
-org-webpage is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/) so the recommended way is to install it through emacs package management system. For more info about installation, please see **tips.org** in the "doc" folder.
+OWP is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/) so the recommended way is to install it through emacs package management system. For more info about installation, please see **tips.org** in the "doc" folder.
 
 
-<a id="org303581d"></a>
+<a id="org8d0d6fd"></a>
 
 ## Configuration
 
-org-webpage use variable \`owp-projects' to store all projects's configures, user can add a project with the help of \`add-to-list' function, but the easiest way is using \`owp-add-project' function.
+OWP use variable \`owp-projects' to store all projects's configures, user can add a project with the help of \`add-to-list' function, but the easiest way is using \`owp-add-project' function.
 
 The follow code is [my website](http://tumashu.github.com)'s [config](https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el), you can adjust and paste it to your `.emacs` file:
 
-    (add-to-list 'load-path "path/to/org-webpage") ; Only needed if you install org-webpage manually
+    (add-to-list 'load-path "path/to/owp") ; Only needed if you install owp manually
 
-    (require 'org-webpage)
+    (require 'owp)
 
     (owp-add-project
      '("tumashu.github.com"
@@ -76,7 +78,7 @@ The follow code is [my website](http://tumashu.github.com)'s [config](https://gi
        :personal-duoshuo-shortname "tumashu-website"
        :web-server-port 7654))
 
-[pyim](https://github.com/tumashu/pyim) 's org-webpage [config](https://github.com/tumashu/pyim/blob/master/pyim-devtools.el) is a more complex example.
+[pyim](https://github.com/tumashu/pyim) 's owp [config](https://github.com/tumashu/pyim/blob/master/pyim-devtools.el) is a more complex example.
 
 You can find more config options and theirs default values by commands:
 
@@ -84,14 +86,14 @@ You can find more config options and theirs default values by commands:
     C-h v owp-config-fallback
 
 
-<a id="org23d524f"></a>
+<a id="org2c76f04"></a>
 
 ## Publication
 
-    M-x owp-publish
+    M-x owp-do-publication
 
 
-<a id="org6224b40"></a>
+<a id="org039c031"></a>
 
 ## Dependencies
 
@@ -107,12 +109,12 @@ You can find more config options and theirs default values by commands:
 10. [simple-httpd](https://github.com/skeeto/emacs-web-server): Extensible Emacs HTTP 1.1 server
 
 
-<a id="orgcbbaa05"></a>
+<a id="orgb78e717"></a>
 
 ## Known issues
 
 1.  Currently the deletion change handler has not been implemented so if you deleted some org sources, you may have to manually delete corresponding generated html files.
-2.  URI path change detection is not available. That is, if you make a post with the URI "/blog/2013/03/25/the-old-post-name" and then change this value in your org source, org-webpage would be unable to detect that this has happened. it will only publish a new html file for you so you need to delete the old html file related to the old URI manually.
+2.  URI path change detection is not available. That is, if you make a post with the URI "/blog/2013/03/25/the-old-post-name" and then change this value in your org source, owp would be unable to detect that this has happened. it will only publish a new html file for you so you need to delete the old html file related to the old URI manually.
 
 
-Converted from org-webpage.el by [el2org](https://github.com/tumashu/el2org) .
+Converted from owp.el by [el2org](https://github.com/tumashu/el2org) .
