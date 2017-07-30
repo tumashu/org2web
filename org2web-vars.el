@@ -31,20 +31,20 @@
 (require 'ht)
 
 
-(defgroup org-webpage nil
-  "Options for generating static pages using org-webpage."
+(defgroup org2web nil
+  "Options for generating static pages using org2web."
   :tag "Org static page generator"
   :group 'org)
 
 (defcustom org2web-default-project nil
   "If set, `org2web-publish' will directly publish this project
 and `org2web-new-post' will directly add new post to this project."
-  :group 'org-webpage
+  :group 'org2web
   :type 'string)
 
 (defcustom org2web-temporary-directory "~/.emacs.d/org2web/tmp/"
-  "Temporary directory used by org-webpage."
-  :group 'org-webpage
+  "Temporary directory used by org2web."
+  :group 'org2web
   :type 'string)
 
 (defcustom org2web-terminal-emulater
@@ -54,8 +54,8 @@ and `org2web-new-post' will directly add new post to this project."
       (executable-find "rxvt-unicode")
       (executable-find "rxvt")
       (executable-find "xterm"))
-  "Terminal emulater used by org-webpage update script."
-  :group 'org-webpage
+  "Terminal emulater used by org2web update script."
+  :group 'org2web
   :type 'string)
 
 (defcustom org2web-uploaders
@@ -96,13 +96,13 @@ and `org2web-new-post' will directly add new post to this project."
 1. Install Go from 'https://golang.org/dl/'
 2. Install rclone with command 'go get github.com/ncw/rclone'
    or download and install rclone from 'http://rclone.org/downloads/' directly."))
-  "The uploader configure of org-webpage."
-  :group 'org-webpage)
+  "The uploader configure of org2web."
+  :group 'org2web)
 
 (defcustom org2web-projects nil
-  "Association list to control org-webpage publishing behavior.
+  "Association list to control org2web publishing behavior.
 
-Each element of the alist is a org-webpage project.  The CAR of
+Each element of the alist is a org2web project.  The CAR of
 each element is a string, uniquely identifying the project.  The
 CDR of each element is a well-formed property list with an even
 number of elements, alternating keys and values, specifying
@@ -135,9 +135,9 @@ published.
 
   `:remote'
 
-A remote, published html file by org-webpage will be push/upload to.
+A remote, published html file by org2web will be push/upload to.
 1. Type: list
-2. Example1: (git \"https://github.com/tumashu/org-webpage.git\" \"gh-pages\")
+2. Example1: (git \"https://github.com/tumashu/org2web.git\" \"gh-pages\")
 
 
   `:site-domain'
@@ -180,13 +180,13 @@ be a list of functions.
   `:theme-root-directory'
 
 The root directory list that stores themes for page rendering. By default, it
-points to the directory `themes' in org-webpage installation directory.
+points to the directory `themes' in org2web installation directory.
 1. Type: list
 2. Example1: (\"/path/to/dir1\" \"/path/to/dir2\" \"/path/to/dir3\" ...)
 3. Example2: nil
 
-When set this option to `nil', org-webpage will find two paths as fallback:
-1. <Directory which contain org-webpage.el>/themes
+When set this option to `nil', org2web will find two paths as fallback:
+1. <Directory which contain org2web.el>/themes
 2. <Your project repository directory>/themes
 
 
@@ -204,7 +204,7 @@ When set this option to `nil', default theme will be used.
 
 The personal github link.
 1. Type: list
-2. Example1: (\"GitHub\" \"https://github.com/tumashu/org-webpage\")
+2. Example1: (\"GitHub\" \"https://github.com/tumashu/org2web\")
 
 
   `:personal-avatar'
@@ -212,7 +212,7 @@ The personal github link.
 The link to an avatar image.
 1. Type: string
 2. Example1: \"/media/img/horse.jpg\"
-2. Example2: \"http://tumashu.github.com/org-webpage/media/img/horse.jpg\"
+2. Example2: \"http://tumashu.github.com/org2web/media/img/horse.jpg\"
 
 
   `:personal-disqus-shortname'
@@ -315,7 +315,7 @@ org file's path, if parameter is nil, it should return all categories.
 
    `:org-export-function'
 
-Set the default function by which org-webpage export org file to html.
+Set the default function by which org2web export org file to html.
 1. Type: function
 2. Example1: org2web-default-org-export
 
@@ -328,15 +328,15 @@ Information about the creator of the HTML document.
 
   `:web-server-docroot'
 
-org-webpage can start a web server to test publish, this
+org2web can start a web server to test publish, this
 set the server document root.
 1. Type: string
-2. Example1: \"~/.emacs.d/org-website-server/org-webpage/\"
+2. Example1: \"~/.emacs.d/org-website-server/org2web/\"
 
 
   `:web-server-port'
 
-org-webpage can start a web server to test publish, this
+org2web can start a web server to test publish, this
 set the server port.
 1. Type: number
 2. Example1: 9876
@@ -347,7 +347,7 @@ set the server port.
 Emacs-lisp files from which org files will be generated with the
 help of el2org:
 1. Type: regexp-list
-2. Example: (\"org-webpage.el\" \"org2web-*.el\")
+2. Example: (\"org2web.el\" \"org2web-*.el\")
 
 
   `:el2org-doc-tags'
@@ -364,7 +364,7 @@ from `:el2org-doc-source'.
 Emacs-lisp or org file from which README.md will be generated with the
 help of el2org:
 1. Type: file name list
-2. Example: (\"org-webpage.el\")
+2. Example: (\"org2web.el\")
 
 NOTE: At the moment, *only* use the *first* element of list, NEED improve.
 
@@ -383,7 +383,7 @@ from `:el2org-readme-source'.
 Emacs-lisp or org file from which index.org will be generated with the
 help of el2org:
 1. Type: file name list
-2. Example: (\"org-webpage.el\")
+2. Example: (\"org2web.el\")
 
 NOTE: At the moment, *only* use the *first* element of list, NEED improve.
 
@@ -399,23 +399,23 @@ from `:el2org-index-source'.
 
 You can see fallback value of above option in `org2web-config-fallback'
 
-Note: Advanced user can use (:eval form) to config *All* org-webpage config options,
+Note: Advanced user can use (:eval form) to config *All* org2web config options,
 for example, set `:repository-directory' to:
 
  (:eval (concat \"~/.emacs.d/project/\" \"tumashu.github.com/\"))
 
 This feature is very useful in certain case."
-  :group 'org-webpage
+  :group 'org2web
   :type 'alist)
 
 (defcustom org2web-get-config-option-function
   'org2web-get-config-option-from-alist
   "The function used to get config option."
-  :group 'org-webpage
+  :group 'org2web
   :type 'function)
 
 (defconst org2web-temp-buffer-name "*Org Page Output*"
-  "Name of the temporary buffer used by org-webpage.")
+  "Name of the temporary buffer used by org2web.")
 
 (defconst org2web-load-directory
   (cond
@@ -425,7 +425,7 @@ This feature is very useful in certain case."
    ((string= (file-name-nondirectory buffer-file-name) "org2web-vars.el")
     (file-name-directory buffer-file-name))
    (t nil))
-  "The directory where org-webpage is loaded from.")
+  "The directory where org2web is loaded from.")
 
 (defvar org2web-category-config-alist
   '(("blog"
@@ -453,7 +453,7 @@ This feature is very useful in certain case."
 
 (defvar org2web-current-project nil)
 (defvar org2web-last-project nil)
-(defvar org2web-buffer-name " *org-webpage buffer*")
+(defvar org2web-buffer-name " *org2web buffer*")
 
 (defvar org2web-publish-to-repository nil)
 (defvar org2web-always-use-relative-url nil
@@ -472,8 +472,8 @@ test publish.")
     <pubDate>{{date}}</pubDate>
     <lastBuildDate>{{date}}</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
-    <generator>org-webpage static site generator \
-(https://github.com/tumashu/org-webpage)</generator>
+    <generator>org2web static site generator \
+(https://github.com/tumashu/org2web)</generator>
 {{#items}}
 <item>
 <title>{{item-title}}</title>
@@ -495,7 +495,7 @@ test publish.")
     :remote nil
     :site-domain nil
     :old-site-domain nil
-    :site-main-title "org-webpage"
+    :site-main-title "org2web"
     :site-sub-title "static site generator"
     :theme-root-directory nil
     :theme (default)
@@ -515,7 +515,7 @@ test publish.")
     :get-title-function org2web-get-title
     :retrieve-category-function org2web-get-file-category
     :org-export-function org2web-default-org-export
-    :web-server-docroot "~/.emacs.d/org-webpage-server/default"
+    :web-server-docroot "~/.emacs.d/org2web-server/default"
     :web-server-port 9876
     :el2org-doc-sources nil
     :el2org-readme-sources nil
@@ -529,7 +529,7 @@ test publish.")
 (if (fboundp 'org-version)
     (replace-regexp-in-string "\\..*" ".x" (org-version))
   "Unknown Version"))
-"If User don't set an option, org-webpage will use fallback value of this option."))
+"If User don't set an option, org2web will use fallback value of this option."))
 
 
 (provide 'org2web-vars)
