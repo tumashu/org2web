@@ -452,7 +452,7 @@ This feature is very useful in certain case."
   "Configurations for different categories, can and should be customized.")
 
 (defvar owp-current-project nil)
-(defvar owp-last-project-name nil)
+(defvar owp-last-project nil)
 (defvar owp-buffer-name " *org-webpage buffer*")
 
 (defvar owp-publish-to-repository nil)

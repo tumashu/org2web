@@ -183,9 +183,9 @@
             (completing-read prompt
                              (delete-dups
                               (mapcar 'car owp-projects))
-                             nil t nil nil owp-last-project-name)))
+                             nil t nil nil owp-last-project)))
   (setq owp-current-project project-name
-        owp-last-project-name project-name)
+        owp-last-project project-name)
   project-name)
 
 ;;;###autoload
