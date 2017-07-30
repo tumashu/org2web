@@ -9,7 +9,6 @@
 ;;         Jorge Javier Araya Navarro <elcorreo AT deshackra.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: org-mode, convenience, beautify
-;; Package-requires: (("owp" 0.1))
 ;; Homepage: https://github.com/tumashu/org-webpage
 
 ;; This program is free software; you can redistribute it and/or modify
