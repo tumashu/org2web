@@ -43,9 +43,6 @@
 (define-obsolete-function-alias 'owp/do-publication 'org2web-publish)
 (define-obsolete-function-alias 'owp/new-post 'org2web-new-post)
 
-(define-obsolete-function-alias 'owp/el2org-preparation-function 'org2web-el2org-preparation-function)
-(define-obsolete-function-alias 'owp/el2org-org-export-function 'org2web-el2org-org-export-function)
-
 ;; * Footer
 (provide 'org-webpage)
 
