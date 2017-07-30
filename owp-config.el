@@ -41,11 +41,11 @@
 
 (defun owp-get-config-option-from-alist (option)
   "The default org-webpage config read function,
-which can read `option' from `owp-project-config-alist'
+which can read `option' from `owp-projects'
 if `option' is not found, get fallback value from
 `owp-config-fallback'."
   (let ((project-plist (cdr (assoc owp-current-project-name
-                                   owp-project-config-alist))))
+                                   owp-projects))))
     (if (plist-member project-plist option)
         (plist-get project-plist option)
       (plist-get owp-config-fallback option))))

@@ -99,7 +99,7 @@ and `owp-new-post' will directly add new post to this project."
   "The uploader configure of org-webpage."
   :group 'org-webpage)
 
-(defcustom owp-project-config-alist nil
+(defcustom owp-projects nil
   "Association list to control org-webpage publishing behavior.
 
 Each element of the alist is a org-webpage project.  The CAR of
