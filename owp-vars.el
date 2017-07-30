@@ -58,7 +58,7 @@ and `owp-new-post' will directly add new post to this project."
   :group 'org-webpage
   :type 'string)
 
-(defcustom owp-uploader-config-alist
+(defcustom owp-uploaders
   '((git :requires ("bash" "git")
          :template "git.mustache"
          :template-settings
