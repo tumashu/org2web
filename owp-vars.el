@@ -37,7 +37,7 @@
   :group 'org)
 
 (defcustom owp-default-project-name nil
-  "If set, `owp-do-publication' will directly publish this project
+  "If set, `owp-publish' will directly publish this project
 and `owp-new-post' will directly add new post to this project."
   :group 'org-webpage
   :type 'string)

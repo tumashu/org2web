@@ -186,7 +186,7 @@
         owp-last-project-name project-name)
   project-name)
 
-(defun owp-do-publication (&optional project-name publishing-directory job-number update-top-n)
+(defun owp-publish (&optional project-name publishing-directory job-number update-top-n)
   (interactive)
   (setq project-name (owp-select-project "Which project do you want to publish? " project-name))
   (setq owp-item-cache nil)

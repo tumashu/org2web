@@ -88,7 +88,7 @@ You can find more config options and theirs default values by commands:
 
 ## Publication
 
-    M-x owp-do-publication
+    M-x owp-publish
 
 
 <a id="org6224b40"></a>
