@@ -1,4 +1,4 @@
-;;; owp-web-server.el --- Test web server required by org-webpage
+;;; owp-webserver.el --- Test web server required by org-webpage
 
 ;; Copyright (C)  2015 Feng Shu
 
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; owp-web-server.el is a web server used to test org-webpage.
+;; owp-webserver.el is a web server used to test org-webpage.
 
 ;;; Code:
 (require 'cl-lib)
@@ -31,16 +31,16 @@
 (require 'owp-vars)
 (require 'owp-config)
 
-(defvar owp/last-web-server-docroot nil)
-(defvar owp/last-web-server-port nil)
+(defvar owp/webserver-last-docroot nil)
+(defvar owp/webserver-last-port nil)
 (defvar owp/current-project-name)
 
-(defun owp/web-server-start (docroot port)
-  (owp/web-server-stop)
-  (httpd-log `(start ,(format "org-webpage: start web-server at %s"
+(defun owp/webserver-start (docroot port)
+  (owp/webserver-stop)
+  (httpd-log `(start ,(format "org-webpage: start webserver at %s"
                               (current-time-string))))
   (make-network-process
-   :name     (or owp/current-project-name "owp-httpd")
+   :name     (or owp/current-project-name "owp-webserver")
    :service  port
    :server   t
    :host     httpd-host
@@ -52,27 +52,27 @@
    :coding   'utf-8-unix  ; *should* be ISO-8859-1 but that doesn't work
    :log      'httpd--log))
 
-(defun owp/web-server-stop ()
+(defun owp/webserver-stop ()
   (interactive)
-  (let ((name (or owp/current-project-name "owp-httpd")))
+  (let ((name (or owp/current-project-name "owp-webserver")))
     (when (process-status name)
       (delete-process name)
-      (httpd-log `(stop ,(format "org-webpage: stop web-server at %s"
+      (httpd-log `(stop ,(format "org-webpage: stop webserver at %s"
                                  (current-time-string)))))))
 
-(defun owp/web-server-browse (&optional docroot port)
+(defun owp/webserver-browse (&optional docroot port)
   (interactive)
-  (owp/web-server-stop)
-  (let ((docroot (or docroot owp/last-web-server-docroot) )
-        (port (or port owp/last-web-server-port)))
+  (owp/webserver-stop)
+  (let ((docroot (or docroot owp/webserver-last-docroot) )
+        (port (or port owp/webserver-last-port)))
     (when (and docroot port)
       (progn
-        (owp/web-server-start docroot port)
-        (setq owp/last-web-server-docroot docroot)
-        (setq owp/last-web-server-port port)
+        (owp/webserver-start docroot port)
+        (setq owp/webserver-last-docroot docroot)
+        (setq owp/webserver-last-port port)
         (browse-url-default-browser
          (format "http://localhost:%s" port))))))
 
-(provide 'owp-web-server)
+(provide 'owp-webserver)
 
-;;; owp-web-server.el ends here
+;;; owp-webserver.el ends here
