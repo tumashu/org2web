@@ -1,4 +1,4 @@
-;;; org2web-export.el --- Publication related functions required by org-webpage
+;;; org2web-export.el --- Publication related functions required by org2web
 
 ;; Copyright (C)  2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -6,7 +6,7 @@
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-webpage
+;; Homepage: https://github.com/tumashu/org2web
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -242,7 +242,7 @@ can contain following parameters:
 
 (defun org2web-get-file-category (org-file)
   "This is the default function used to get a file's category,
-see org-webpage config option 'retrieve-category-function. How to judge a
+see org2web config option 'retrieve-category-function. How to judge a
 file's category is based on its name and its root folder name."
   (let ((repo-dir (org2web-get-repository-directory))
         (default-category (org2web-get-config-option :default-category))

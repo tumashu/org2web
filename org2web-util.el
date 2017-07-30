@@ -1,4 +1,4 @@
-;;; org2web-util.el --- Common utility functions required by org-webpage
+;;; org2web-util.el --- Common utility functions required by org2web
 
 ;; Copyright (C)  2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -6,7 +6,7 @@
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-webpage
+;; Homepage: https://github.com/tumashu/org2web
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -262,7 +262,7 @@ to case differences."
 (defun org2web-trim-string (str)
   "Remove whitespace at the beginning and end of STR.
 The function is copied from https://github.com/magnars/s.el, because I do not
-want to make org-webpage depend on other libraries, so I copied the function here,
+want to make org2web depend on other libraries, so I copied the function here,
 so do `org2web-trim-string-left' and `org2web-trim-string-right'."
   (org2web-trim-string-left (org2web-trim-string-right str)))
 

@@ -1,22 +1,22 @@
-- [ORG2WEB README](#org2e2423d)
-  - [Installation](#orga7ee890)
-  - [Configuration](#org83d269b)
-  - [Publication](#org0179f87)
-  - [Dependencies](#org6a3532c)
-  - [Known issues](#orga5d9a1e)
+- [ORG2WEB README](#orgd9f14e1)
+  - [Installation](#org2ff514b)
+  - [Configuration](#orga8eadda)
+  - [Publication](#orgc9def65)
+  - [Dependencies](#org45b25ad)
+  - [Known issues](#org82cad71)
 
 
-<a id="org2e2423d"></a>
+<a id="orgd9f14e1"></a>
 
 # ORG2WEB README
 
-ORG2WEB is the new name of org-webpage, the reason of renaming org-webpage to ORG2WEB is: <https://github.com/purcell/package-lint/issues/75>
+org2web is the new name of org2web, the reason of renaming org2web to org2web is: <https://github.com/purcell/package-lint/issues/75>
 
-ORG2WEB is a static site generator based on [org-mode](http://orgmode.org/), which code derived from Kelvin H's [org-page](https://github.com/kelvinh/org-page).
+org2web is a static site generator based on [org-mode](http://orgmode.org/), which code derived from Kelvin H's [org-page](https://github.com/kelvinh/org-page).
 
 The main differents of two projects are as follow:
 
-1.  ORG2WEB's core **don't hard code git**, its process is like below:
+1.  org2web's core **don't hard code git**, its process is like below:
 
 
         [ Org files in repository]  [ Website project configure ]
@@ -38,25 +38,25 @@ The main differents of two projects are as follow:
 
                                [ REMOTE ]
 
-2.  ORG2WEB's default config is \`org-publish-project-alist' style alist, which can manage multi-site configs in an emacs session easily.
+2.  org2web's default config is \`org-publish-project-alist' style alist, which can manage multi-site configs in an emacs session easily.
 3.  org-website find theme-files from a **themes-list** in sequence and same theme-file first found will be used. User can set **fallback theme** with the help of this feature.
 4.  org-website include a tiny emacs web server, which can be used to test publish.
 5.  org-website can use other uploaders to upload website, for example: rclone.
 6.  &#x2026;
 
 
-<a id="orga7ee890"></a>
+<a id="org2ff514b"></a>
 
 ## Installation
 
-ORG2WEB is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/) so the recommended way is to install it through emacs package management system. For more info about installation, please see **tips.org** in the "doc" folder.
+org2web is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/) so the recommended way is to install it through emacs package management system. For more info about installation, please see **tips.org** in the "doc" folder.
 
 
-<a id="org83d269b"></a>
+<a id="orga8eadda"></a>
 
 ## Configuration
 
-ORG2WEB use variable \`org2web-projects' to store all projects's configures, user can add a project with the help of \`add-to-list' function, but the easiest way is using \`org2web-add-project' function.
+org2web use variable \`org2web-projects' to store all projects's configures, user can add a project with the help of \`add-to-list' function, but the easiest way is using \`org2web-add-project' function.
 
 The follow code is [my website](http://tumashu.github.com)'s [config](https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el), you can adjust and paste it to your `.emacs` file:
 
@@ -86,14 +86,14 @@ You can find more config options and theirs default values by commands:
     C-h v org2web-config-fallback
 
 
-<a id="org0179f87"></a>
+<a id="orgc9def65"></a>
 
 ## Publication
 
     M-x org2web-do-publication
 
 
-<a id="org6a3532c"></a>
+<a id="org45b25ad"></a>
 
 ## Dependencies
 
@@ -109,7 +109,7 @@ You can find more config options and theirs default values by commands:
 10. [simple-httpd](https://github.com/skeeto/emacs-web-server): Extensible Emacs HTTP 1.1 server
 
 
-<a id="orga5d9a1e"></a>
+<a id="org82cad71"></a>
 
 ## Known issues
 

@@ -1,4 +1,4 @@
-;;; org2web-resource.el --- Functions dealing with org-webpage theme resources
+;;; org2web-resource.el --- Functions dealing with org2web theme resources
 
 ;; Copyright (C)  2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -6,7 +6,7 @@
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-webpage
+;; Homepage: https://github.com/tumashu/org2web
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 ;;; Commentary:
 
-;; This file include functions which deal with org-webpage theme resources
+;; This file include functions which deal with org2web theme resources
 
 ;;; Code:
 

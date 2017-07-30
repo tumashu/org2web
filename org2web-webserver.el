@@ -1,10 +1,10 @@
-;;; org2web-webserver.el --- Test web server required by org-webpage
+;;; org2web-webserver.el --- Test web server required by org2web
 
 ;; Copyright (C)  2015 Feng Shu
 
 ;; Author: Feng Shu <tumashu AT 163 DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-webpage
+;; Homepage: https://github.com/tumashu/org2web
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; org2web-webserver.el is a web server used to test org-webpage.
+;; org2web-webserver.el is a web server used to test org2web.
 
 ;;; Code:
 (require 'cl-lib)
@@ -37,7 +37,7 @@
 
 (defun org2web-webserver-start (docroot port)
   (org2web-webserver-stop)
-  (httpd-log `(start ,(format "org-webpage: start webserver at %s"
+  (httpd-log `(start ,(format "org2web: start webserver at %s"
                               (current-time-string))))
   (make-network-process
    :name     (or org2web-current-project "org2web-webserver")
@@ -57,7 +57,7 @@
   (let ((name (or org2web-current-project "org2web-webserver")))
     (when (process-status name)
       (delete-process name)
-      (httpd-log `(stop ,(format "org-webpage: stop webserver at %s"
+      (httpd-log `(stop ,(format "org2web: stop webserver at %s"
                                  (current-time-string)))))))
 
 (defun org2web-webserver-browse (&optional docroot port)

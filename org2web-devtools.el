@@ -1,10 +1,10 @@
-;;; org2web-devtools.el --- Functions used to develop org-webpage
+;;; org2web-devtools.el --- Functions used to develop org2web
 
 ;; Copyright (C)  2015 Feng Shu
 
 ;; Author: Feng Shu <tumashu AT 163 DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-webpage
+;; Homepage: https://github.com/tumashu/org2web
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; org2web-config.el contains functions used to develop org-webpage.
+;; org2web-config.el contains functions used to develop org2web.
 
 ;;; Code:
 (require 'org)
@@ -31,26 +31,26 @@
 (require 'org2web-el2org)
 
 (defvar org2web-devtools-repository-directory
-  "~/project/emacs-packages/org-webpage/")
+  "~/project/emacs-packages/org2web/")
 
 (org2web-add-project
- '("org-webpage"
+ '("org2web"
    :repository-directory (:eval org2web-devtools-repository-directory)
-   :remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
-   :site-domain "http://tumashu.github.com/org-webpage"
-   :site-main-title "Org-webpage"
+   :remote (git "https://github.com/tumashu/org2web.git" "gh-pages")
+   :site-domain "http://tumashu.github.com/org2web"
+   :site-main-title "org2web"
    :site-sub-title "(Static site senerator based on org mode)"
    :default-category "documents"
    :theme (worg killjs)
    :force-absolute-url t
-   :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
+   :source-browse-url ("GitHub" "https://github.com/tumashu/org2web")
    :personal-avatar "/media/img/horse.jpg"
    :personal-duoshuo-shortname "tumashu-website"
    :preparation-function org2web-el2org-preparation-function
    :org-export-function org2web-el2org-org-export-function
-   :el2org-doc-sources ("org-webpage.el")
-   :el2org-readme-sources ("org-webpage.el")
-   :el2org-index-sources ("org-webpage.el")
+   :el2org-doc-sources ("org2web.el")
+   :el2org-readme-sources ("org2web.el")
+   :el2org-index-sources ("org2web.el")
    :web-server-port 6789))
 
 (provide 'org2web-devtools)

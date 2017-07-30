@@ -12,7 +12,7 @@ partial_update='{{partial-update}}'
 
 
 echo '###########################################################'
-echo '##            Org-webpage uploader using git-simple      ##'
+echo '##            org2web uploader using git-simple      ##'
 echo '###########################################################'
 
 echo ''
@@ -41,7 +41,7 @@ fi
 cp -r "$export_dir"/*  "$publish_dir"
 
 $git_cmd add --all .
-$git_cmd commit -m 'Update published html files, committed by org-webpage.'
+$git_cmd commit -m 'Update published html files, committed by org2web.'
 
 $git_cmd push origin $git_branch
 

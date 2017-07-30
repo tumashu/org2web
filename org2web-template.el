@@ -1,4 +1,4 @@
-;;; org2web-template.el --- templating system based on mustache, required by org-webpage
+;;; org2web-template.el --- templating system based on mustache, required by org2web
 
 ;; Copyright (C)  2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -6,7 +6,7 @@
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-webpage
+;; Homepage: https://github.com/tumashu/org2web
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

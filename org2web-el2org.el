@@ -1,10 +1,10 @@
-;;; org2web-el2org.el --- el2org support for org-webpage
+;;; org2web-el2org.el --- el2org support for org2web
 
 ;; Copyright (C)  2015 Feng Shu
 
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-webpage
+;; Homepage: https://github.com/tumashu/org2web
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@
          (tags (org2web-get-config-option :el2org-readme-tags)))
     (el2org-generate-file el-file tags 'org index-file)))
 
-;; ** org-webpage 导出函数（支持 el2org）
+;; ** org2web 导出函数（支持 el2org）
 
 (defun org2web-el2org-org-export-function ()
   "A function with can export org file to html."

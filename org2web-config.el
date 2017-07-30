@@ -1,10 +1,10 @@
-;;; org2web-config.el --- Functions dealing with org-webpage configure
+;;; org2web-config.el --- Functions dealing with org2web configure
 
 ;; Copyright (C)  2015 Feng Shu
 
 ;; Author: Feng Shu <tumashu AT 163 DOT com>
 ;; Keywords: convenience
-;; Homepage: https://github.com/tumashu/org-webpage
+;; Homepage: https://github.com/tumashu/org2web
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -21,14 +21,14 @@
 
 ;;; Commentary:
 
-;; org2web-config.el contains functions used to deal with org-webpage configure.
+;; org2web-config.el contains functions used to deal with org2web configure.
 
 ;;; Code:
 
 (require 'org2web-vars)
 
 (defun org2web-get-config-option (option)
-  "The function used to read org-webpage config"
+  "The function used to read org2web config"
   (when (functionp org2web-get-config-option-function)
     (let ((output (funcall org2web-get-config-option-function option)))
       ;; if "output" is a form which like (:eval myform),
@@ -40,7 +40,7 @@
         output))))
 
 (defun org2web-get-config-option-from-alist (option)
-  "The default org-webpage config read function,
+  "The default org2web config read function,
 which can read `option' from `org2web-projects'
 if `option' is not found, get fallback value from
 `org2web-config-fallback'."
@@ -79,9 +79,9 @@ if `option' is not found, get fallback value from
           (concat "http://" site-domain)))))))
 
 (defun org2web-get-theme-dirs (&optional root-dir theme type)
-  "The function ,return org-webpage theme type paths list.
+  "The function ,return org2web theme type paths list.
 
-org-webpage organizes its themes by directory:
+org2web organizes its themes by directory:
 
 | Directory           |  Argument   |  Value                 |
 +---------------------+-------------+------------------------+

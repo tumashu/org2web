@@ -1,4 +1,4 @@
-;;; org2web.el --- static site generator based on org mode (org-webpage)
+;;; org2web.el --- static site generator based on org mode
 
 ;; * Header
 ;; Copyright (C)  2016 Feng Shu, Jorge Javier Araya Navarro
@@ -27,15 +27,15 @@
 ;;; Commentary:
 
 ;; * ORG2WEB README                                                 :README:
-;; ORG2WEB is the new name of org-webpage, the reason of renaming org-webpage to ORG2WEB
+;; org2web is the new name of org2web, the reason of renaming org-webpage to org2web
 ;; is: [[https://github.com/purcell/package-lint/issues/75]]
 
-;; ORG2WEB is a static site generator based on [[http://orgmode.org/][org-mode]],
+;; org2web is a static site generator based on [[http://orgmode.org/][org-mode]],
 ;; which code derived from Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
 
 ;; The main differents of two projects are as follow:
 
-;; 1. ORG2WEB's core *don't hard code git*, its process is like below:
+;; 1. org2web's core *don't hard code git*, its process is like below:
 ;;    #+BEGIN_EXAMPLE
 
 ;;   [ Org files in repository]  [ Website project configure ]
@@ -59,7 +59,7 @@
 
 ;;    #+END_EXAMPLE
 
-;; 2. ORG2WEB's default config is `org-publish-project-alist' style alist,
+;; 2. org2web's default config is `org-publish-project-alist' style alist,
 ;;    which can manage multi-site configs in an emacs session easily.
 ;; 3. org-website find theme-files from a *themes-list* in sequence and same theme-file
 ;;    first found will be used. User can set *fallback theme* with the help of this feature.
@@ -69,13 +69,13 @@
 
 ;; ** Installation
 
-;; ORG2WEB is now available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]
+;; org2web is now available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]
 ;; so the recommended way is to install it through emacs package
 ;; management system. For more info about installation, please see
 ;; *tips.org* in the "doc" folder.
 
 ;; ** Configuration
-;; ORG2WEB use variable `org2web-projects' to store all projects's configures, user
+;; org2web use variable `org2web-projects' to store all projects's configures, user
 ;; can add a project with the help of `add-to-list' function, but the easiest way is
 ;; using `org2web-add-project' function.
 

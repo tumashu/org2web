@@ -1,30 +1,30 @@
-#+TITLE:       Tips of org-webpage
+#+TITLE:       Tips of org2web
 #+AUTHOR:      Feng Shu
 #+EMAIL:       tumashu@163.com
 #+DATE:        2015-04-01
 
 
-* How to install org-webpage in manual way
+* How to install org2web in manual way
 
-To install org-webpage manually you should first install all
+To install org2web manually you should first install all
 dependencies listed in *README.org*. Once this has been completed,
 clone the repo:
 
 #+BEGIN_EXAMPLE
-git clone https://github.com/tumashu/org-webpage.git
+git clone https://github.com/tumashu/org2web.git
 #+END_EXAMPLE
 
 After that, please remember to add this location to your emacs'
 =load-path= variable so that emacs can find the package.
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/path/to/org-webpage")
-(require 'org-webpage)
+(add-to-list 'load-path "/path/to/org2web")
+(require 'org2web)
 #+END_SRC
 
 NOTE: This is NOT recommended way for emacs beginner.
 
-* How to install org-webpage Through package management system
+* How to install org2web Through package management system
 
 1. Setting melpa repository, see: http://melpa.org/#/getting-started
 2. Run the following command
@@ -33,7 +33,7 @@ NOTE: This is NOT recommended way for emacs beginner.
    #+END_EXAMPLE
 3. Add the following to your =~/.emacs= file:
    #+BEGIN_EXAMPLE
-   (require 'org-webpage)
+   (require 'org2web)
    #+END_EXAMPLE
 
 * How to quickly add a new post
