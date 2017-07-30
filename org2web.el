@@ -114,7 +114,7 @@
 ;; ** Publication
 
 ;; #+BEGIN_EXAMPLE
-;; M-x org2web-do-publication
+;; M-x org2web-publish
 ;; #+END_EXAMPLE
 
 ;; ** Dependencies

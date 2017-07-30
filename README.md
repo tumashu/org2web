@@ -90,7 +90,7 @@ You can find more config options and theirs default values by commands:
 
 ## Publication
 
-    M-x org2web-do-publication
+    M-x org2web-publish
 
 
 <a id="orgbcf2f7f"></a>
