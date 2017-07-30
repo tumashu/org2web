@@ -31,16 +31,16 @@
 (require 'owp-vars)
 (require 'owp-config)
 
-(defvar owp/webserver-last-docroot nil)
-(defvar owp/webserver-last-port nil)
-(defvar owp/current-project-name)
+(defvar owp-webserver-last-docroot nil)
+(defvar owp-webserver-last-port nil)
+(defvar owp-current-project-name)
 
-(defun owp/webserver-start (docroot port)
-  (owp/webserver-stop)
+(defun owp-webserver-start (docroot port)
+  (owp-webserver-stop)
   (httpd-log `(start ,(format "org-webpage: start webserver at %s"
                               (current-time-string))))
   (make-network-process
-   :name     (or owp/current-project-name "owp-webserver")
+   :name     (or owp-current-project-name "owp-webserver")
    :service  port
    :server   t
    :host     httpd-host
@@ -52,24 +52,24 @@
    :coding   'utf-8-unix  ; *should* be ISO-8859-1 but that doesn't work
    :log      'httpd--log))
 
-(defun owp/webserver-stop ()
+(defun owp-webserver-stop ()
   (interactive)
-  (let ((name (or owp/current-project-name "owp-webserver")))
+  (let ((name (or owp-current-project-name "owp-webserver")))
     (when (process-status name)
       (delete-process name)
       (httpd-log `(stop ,(format "org-webpage: stop webserver at %s"
                                  (current-time-string)))))))
 
-(defun owp/webserver-browse (&optional docroot port)
+(defun owp-webserver-browse (&optional docroot port)
   (interactive)
-  (owp/webserver-stop)
-  (let ((docroot (or docroot owp/webserver-last-docroot) )
-        (port (or port owp/webserver-last-port)))
+  (owp-webserver-stop)
+  (let ((docroot (or docroot owp-webserver-last-docroot) )
+        (port (or port owp-webserver-last-port)))
     (when (and docroot port)
       (progn
-        (owp/webserver-start docroot port)
-        (setq owp/webserver-last-docroot docroot)
-        (setq owp/webserver-last-port port)
+        (owp-webserver-start docroot port)
+        (setq owp-webserver-last-docroot docroot)
+        (setq owp-webserver-last-port port)
         (browse-url-default-browser
          (format "http://localhost:%s" port))))))
 

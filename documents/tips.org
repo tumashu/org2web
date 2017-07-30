@@ -38,7 +38,7 @@ NOTE: This is NOT recommended way for emacs beginner.
 
 * How to quickly add a new post
 #+BEGIN_EXAMPLE
-M-x owp/new-post
+M-x owp-new-post
 #+END_EXAMPLE
 
 This command will ask you the follow question:
@@ -49,7 +49,7 @@ This command will ask you the follow question:
 * How to quickly insert org-website post template
 
 #+BEGIN_EXAMPLE
-M-x owp/insert-options-template
+M-x owp-insert-options-template
 #+END_EXAMPLE
 
 * How to configure the default slogan
@@ -97,10 +97,10 @@ Add the follow line to you config alist.
 * How to disable commenting for posts under certain categories?
 
 #+BEGIN_SRC emacs-lisp
-(setq owp/category-config-alist
+(setq owp-category-config-alist
       (cons '("photography" ;; category name goes here
               :show-comment nil)
-            owp/category-config-alist))
+            owp-category-config-alist))
 #+END_SRC
 
 Other config items:

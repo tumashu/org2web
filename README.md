@@ -54,7 +54,7 @@ org-webpage is now available from the famous emacs package repo [melpa](http://m
 
 ## Configuration
 
-org-webpage use variable \`owp/project-config-alist' to store all projects's configures, user can add a project with the help of \`add-to-list' function, but the easiest way is using \`owp/add-project-config' function.
+org-webpage use variable \`owp-project-config-alist' to store all projects's configures, user can add a project with the help of \`add-to-list' function, but the easiest way is using \`owp-add-project-config' function.
 
 The follow code is [my website](http://tumashu.github.com)'s [config](https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el), you can adjust and paste it to your `.emacs` file:
 
@@ -62,7 +62,7 @@ The follow code is [my website](http://tumashu.github.com)'s [config](https://gi
 
     (require 'org-webpage)
 
-    (owp/add-project-config
+    (owp-add-project-config
      '("tumashu.github.com"
        :repository-directory "~/project/emacs-packages/tumashu.github.com"
        :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
@@ -80,15 +80,15 @@ The follow code is [my website](http://tumashu.github.com)'s [config](https://gi
 
 You can find more config options and theirs default values by commands:
 
-    C-h v owp/project-config-alist
-    C-h v owp/config-fallback
+    C-h v owp-project-config-alist
+    C-h v owp-config-fallback
 
 
 <a id="org23d524f"></a>
 
 ## Publication
 
-    M-x owp/do-publication
+    M-x owp-do-publication
 
 
 <a id="org6224b40"></a>

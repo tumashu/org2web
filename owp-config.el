@@ -27,10 +27,10 @@
 
 (require 'owp-vars)
 
-(defun owp/get-config-option (option)
+(defun owp-get-config-option (option)
   "The function used to read org-webpage config"
-  (when (functionp owp/get-config-option-function)
-    (let ((output (funcall owp/get-config-option-function option)))
+  (when (functionp owp-get-config-option-function)
+    (let ((output (funcall owp-get-config-option-function option)))
       ;; if "output" is a form which like (:eval myform),
       ;; eval myform and return the result, otherwise
       ;; return "output".
@@ -39,36 +39,36 @@
           (eval `(progn ,@(cdr output)))
         output))))
 
-(defun owp/get-config-option-from-alist (option)
+(defun owp-get-config-option-from-alist (option)
   "The default org-webpage config read function,
-which can read `option' from `owp/project-config-alist'
+which can read `option' from `owp-project-config-alist'
 if `option' is not found, get fallback value from
-`owp/config-fallback'."
-  (let ((project-plist (cdr (assoc owp/current-project-name
-                                   owp/project-config-alist))))
+`owp-config-fallback'."
+  (let ((project-plist (cdr (assoc owp-current-project-name
+                                   owp-project-config-alist))))
     (if (plist-member project-plist option)
         (plist-get project-plist option)
-      (plist-get owp/config-fallback option))))
+      (plist-get owp-config-fallback option))))
 
-(defun owp/get-repository-directory ()
+(defun owp-get-repository-directory ()
   "The function, which can return repository directory string."
-  (let ((dir (owp/get-config-option :repository-directory)))
+  (let ((dir (owp-get-config-option :repository-directory)))
     (when dir
       (file-name-as-directory
        (expand-file-name dir)))))
 
-(defun owp/get-publishing-directory ()
+(defun owp-get-publishing-directory ()
   "The function, which can return publishing directory string."
-  (let ((dir (owp/get-config-option :publishing-directory)))
+  (let ((dir (owp-get-config-option :publishing-directory)))
     (when dir
       (file-name-as-directory
        (expand-file-name dir)))))
 
-(defun owp/get-site-domain (&optional old-site-domain)
+(defun owp-get-site-domain (&optional old-site-domain)
   "The function, which can return site-domain string."
   (let ((site-domain (if old-site-domain
-                         (owp/get-config-option :old-site-domain)
-                       (owp/get-config-option :site-domain))))
+                         (owp-get-config-option :old-site-domain)
+                       (owp-get-config-option :site-domain))))
     (when site-domain
       (if (or (string-prefix-p "http://"  site-domain)
               (string-prefix-p "https://" site-domain))
@@ -78,7 +78,7 @@ if `option' is not found, get fallback value from
          (file-name-as-directory
           (concat "http://" site-domain)))))))
 
-(defun owp/get-theme-dirs (&optional root-dir theme type)
+(defun owp-get-theme-dirs (&optional root-dir theme type)
   "The function ,return org-webpage theme type paths list.
 
 org-webpage organizes its themes by directory:
@@ -95,19 +95,19 @@ org-webpage organizes its themes by directory:
   `(\"path/to/dir1\" \"path/to/dir2\" \"path/to/dir3\")'
   `(theme1 theme2 theme3)'
 
-At this time, `owp/get-theme-dirs' will find *all possible*
+At this time, `owp-get-theme-dirs' will find *all possible*
 <type> directorys by permutation way and return a list with
 multi path."
   (let* ((themes (delete-dups
                   (if theme
                       (list theme)
-                    `(,@(owp/get-config-option :theme) default))))
+                    `(,@(owp-get-config-option :theme) default))))
          (theme-root-dirs (delete-dups
                            (if root-dir
                                (list root-dir)
-                             `(,@(owp/get-config-option :theme-root-directory)
-                               ,(concat (owp/get-repository-directory) "themes/")
-                               ,(concat owp/load-directory "themes/")))))
+                             `(,@(owp-get-config-option :theme-root-directory)
+                               ,(concat (owp-get-repository-directory) "themes/")
+                               ,(concat owp-load-directory "themes/")))))
          theme-dir theme-dirs)
     (dolist (theme themes)
       (dolist (root-dir theme-root-dirs)
@@ -121,17 +121,17 @@ multi path."
           (push theme-dir theme-dirs))))
     (reverse theme-dirs)))
 
-(defun owp/get-html-creator-string ()
+(defun owp-get-html-creator-string ()
   "The function, which can return creator string."
-  (or (owp/get-config-option :html-creator-string) ""))
+  (or (owp-get-config-option :html-creator-string) ""))
 
-(defun owp/get-category-setting (category)
+(defun owp-get-category-setting (category)
   "The function , which can return category config of `category'"
-  (or (assoc category owp/category-config-alist)
+  (or (assoc category owp-category-config-alist)
       `(,category
         :show-meta t
         :show-comment t
-        :uri-generator owp/generate-uri
+        :uri-generator owp-generate-uri
         :uri-template ,(format "/%s/%%t/" category)
         :sort-by :date
         :category-index t)))

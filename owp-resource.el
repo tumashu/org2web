@@ -34,10 +34,10 @@
 (require 'owp-vars)
 (require 'owp-config)
 
-(defun owp/prepare-theme-resources (pub-root-dir)
+(defun owp-prepare-theme-resources (pub-root-dir)
   "Copy theme resources files to PUB-ROOT-DIR."
   (let ((pub-theme-dir (expand-file-name "media/" pub-root-dir))
-        (theme-dirs (reverse (owp/get-theme-dirs nil nil 'resources))))
+        (theme-dirs (reverse (owp-get-theme-dirs nil nil 'resources))))
     (when (file-directory-p pub-theme-dir)
       (delete-directory pub-theme-dir t))
     (dolist (theme-dir theme-dirs)

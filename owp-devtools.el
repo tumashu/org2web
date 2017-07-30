@@ -30,12 +30,12 @@
 (require 'owp-config)
 (require 'owp-el2org)
 
-(defvar owp/devtools-repository-directory
+(defvar owp-devtools-repository-directory
   "~/project/emacs-packages/org-webpage/")
 
-(owp/add-project-config
+(owp-add-project-config
  '("org-webpage"
-   :repository-directory (:eval owp/devtools-repository-directory)
+   :repository-directory (:eval owp-devtools-repository-directory)
    :remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
    :site-domain "http://tumashu.github.com/org-webpage"
    :site-main-title "Org-webpage"
@@ -46,8 +46,8 @@
    :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
    :personal-avatar "/media/img/horse.jpg"
    :personal-duoshuo-shortname "tumashu-website"
-   :preparation-function owp/el2org-preparation-function
-   :org-export-function owp/el2org-org-export-function
+   :preparation-function owp-el2org-preparation-function
+   :org-export-function owp-el2org-org-export-function
    :el2org-doc-sources ("org-webpage.el")
    :el2org-readme-sources ("org-webpage.el")
    :el2org-index-sources ("org-webpage.el")

@@ -36,18 +36,18 @@
   :tag "Org static page generator"
   :group 'org)
 
-(defcustom owp/default-project-name nil
-  "If set, `owp/do-publication' will directly publish this project
-and `owp/new-post' will directly add new post to this project."
+(defcustom owp-default-project-name nil
+  "If set, `owp-do-publication' will directly publish this project
+and `owp-new-post' will directly add new post to this project."
   :group 'org-webpage
   :type 'string)
 
-(defcustom owp/temporary-directory "~/.emacs.d/owp-temp.d/"
+(defcustom owp-temporary-directory "~/.emacs.d/owp-temp.d/"
   "Temporary directory used by org-webpage."
   :group 'org-webpage
   :type 'string)
 
-(defcustom owp/terminal-emulater
+(defcustom owp-terminal-emulater
   (or (executable-find "x-terminal-emulator")
       (executable-find "gnome-terminal")
       (executable-find "konsole")
@@ -58,7 +58,7 @@ and `owp/new-post' will directly add new post to this project."
   :group 'org-webpage
   :type 'string)
 
-(defcustom owp/uploader-config-alist
+(defcustom owp-uploader-config-alist
   '((git :requires ("bash" "git")
          :template "git.mustache"
          :template-settings
@@ -99,7 +99,7 @@ and `owp/new-post' will directly add new post to this project."
   "The uploader configure of org-webpage."
   :group 'org-webpage)
 
-(defcustom owp/project-config-alist nil
+(defcustom owp-project-config-alist nil
   "Association list to control org-webpage publishing behavior.
 
 Each element of the alist is a org-webpage project.  The CAR of
@@ -302,7 +302,7 @@ Names in this list will not showed in webpage navbar.
 A function used to retrieve an org file's Title, it has no parameter and
 run org file buffer.
 1. Type: function
-2. Example1: owp/get-title
+2. Example1: owp-get-title
 
 
   `:retrieve-category-function'
@@ -310,14 +310,14 @@ run org file buffer.
 A function used to retrieve an org file's category, its parameter is the
 org file's path, if parameter is nil, it should return all categories.
 1. Type: function
-2. Example1: owp/get-file-category
+2. Example1: owp-get-file-category
 
 
    `:org-export-function'
 
 Set the default function by which org-webpage export org file to html.
 1. Type: function
-2. Example1: owp/default-org-export
+2. Example1: owp-default-org-export
 
 
   `:html-creator-string'
@@ -397,7 +397,7 @@ from `:el2org-index-source'.
 2. Example: (\"tag1\" \"tag2\" \"tag3\")
 
 
-You can see fallback value of above option in `owp/config-fallback'
+You can see fallback value of above option in `owp-config-fallback'
 
 Note: Advanced user can use (:eval form) to config *All* org-webpage config options,
 for example, set `:repository-directory' to:
@@ -408,62 +408,62 @@ This feature is very useful in certain case."
   :group 'org-webpage
   :type 'alist)
 
-(defcustom owp/get-config-option-function
-  'owp/get-config-option-from-alist
+(defcustom owp-get-config-option-function
+  'owp-get-config-option-from-alist
   "The function used to get config option."
   :group 'org-webpage
   :type 'function)
 
-(defconst owp/temp-buffer-name "*Org Page Output*"
+(defconst owp-temp-buffer-name "*Org Page Output*"
   "Name of the temporary buffer used by org-webpage.")
 
-(defconst owp/load-directory
+(defconst owp-load-directory
   (cond
    (load-file-name (file-name-directory load-file-name))
-   ((symbol-file 'owp/temp-buffer-name)
-    (file-name-directory (symbol-file 'owp/temp-buffer-name)))
+   ((symbol-file 'owp-temp-buffer-name)
+    (file-name-directory (symbol-file 'owp-temp-buffer-name)))
    ((string= (file-name-nondirectory buffer-file-name) "owp-vars.el")
     (file-name-directory buffer-file-name))
    (t nil))
   "The directory where org-webpage is loaded from.")
 
-(defvar owp/category-config-alist
+(defvar owp-category-config-alist
   '(("blog"
      :show-meta t
      :show-comment t
-     :uri-generator owp/generate-uri
+     :uri-generator owp-generate-uri
      :uri-template "/blog/%y/%m/%d/%t/"
      :sort-by :date     ;; how to sort the posts
      :category-index t) ;; generate category index or not
     ("index"
      :show-meta nil
      :show-comment nil
-     :uri-generator owp/generate-uri
+     :uri-generator owp-generate-uri
      :uri-template "/"
      :sort-by :date
      :category-index nil)
     ("about"
      :show-meta nil
      :show-comment nil
-     :uri-generator owp/generate-uri
+     :uri-generator owp-generate-uri
      :uri-template "/about/"
      :sort-by :date
      :category-index nil))
   "Configurations for different categories, can and should be customized.")
 
-(defvar owp/current-project-name nil)
-(defvar owp/last-project-name nil)
-(defvar owp/buffer-name " *org-webpage buffer*")
+(defvar owp-current-project-name nil)
+(defvar owp-last-project-name nil)
+(defvar owp-buffer-name " *org-webpage buffer*")
 
-(defvar owp/publish-to-repository nil)
-(defvar owp/always-use-relative-url nil
+(defvar owp-publish-to-repository nil)
+(defvar owp-always-use-relative-url nil
   "Always use relative url in exported html files, this is useful for
 test publish.")
 
-(defvar owp/item-cache nil
+(defvar owp-item-cache nil
   "The cache for general purpose.")
 
-(defconst owp/rss-template "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+(defconst owp-rss-template "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <rss version=\"2.0\">
   <channel>
     <title>{{title}}</title>
@@ -487,7 +487,7 @@ test publish.")
 </rss>"
   "Template for RSS rendering.")
 
-(defvar owp/config-fallback
+(defvar owp-config-fallback
   `(:repository-directory
     nil
     :ignore ("-pkg\\.org$" "-autoloads\\.org" "#\\..*")
@@ -512,9 +512,9 @@ test publish.")
     :confound-email t
     :force-absolute-url t
     :preparation-function nil
-    :get-title-function owp/get-title
-    :retrieve-category-function owp/get-file-category
-    :org-export-function owp/default-org-export
+    :get-title-function owp-get-title
+    :retrieve-category-function owp-get-file-category
+    :org-export-function owp-default-org-export
     :web-server-docroot "~/.emacs.d/org-webpage-server/default"
     :web-server-port 9876
     :el2org-doc-sources nil

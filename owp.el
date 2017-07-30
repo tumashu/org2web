@@ -75,9 +75,9 @@
 ;; *tips.org* in the "doc" folder.
 
 ;; ** Configuration
-;; OWP use variable `owp/project-config-alist' to store all projects's configures, user
+;; OWP use variable `owp-project-config-alist' to store all projects's configures, user
 ;; can add a project with the help of `add-to-list' function, but the easiest way is
-;; using `owp/add-project-config' function.
+;; using `owp-add-project-config' function.
 
 ;; The follow code is [[http://tumashu.github.com][my website]]'s [[https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el][config]],
 ;; you can adjust and paste it to your =.emacs= file:
@@ -87,7 +87,7 @@
 
 ;; (require 'owp)
 
-;; (owp/add-project-config
+;; (owp-add-project-config
 ;;  '("tumashu.github.com"
 ;;    :repository-directory "~/project/emacs-packages/tumashu.github.com"
 ;;    :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
@@ -107,14 +107,14 @@
 ;; You can find more config options and theirs default values by commands:
 
 ;; #+BEGIN_EXAMPLE
-;; C-h v owp/project-config-alist
-;; C-h v owp/config-fallback
+;; C-h v owp-project-config-alist
+;; C-h v owp-config-fallback
 ;; #+END_EXAMPLE
 
 ;; ** Publication
 
 ;; #+BEGIN_EXAMPLE
-;; M-x owp/do-publication
+;; M-x owp-do-publication
 ;; #+END_EXAMPLE
 
 ;; ** Dependencies
@@ -161,39 +161,39 @@
 
 (defconst owp-version "0.1")
 
-(defun owp/add-project-config (project-config)
-  "Add `project-config' to `owp/project-config-alist'"
+(defun owp-add-project-config (project-config)
+  "Add `project-config' to `owp-project-config-alist'"
   (if (listp project-config)
       (let ((project-name (car project-config)))
         (when (stringp project-name)
-          (setq owp/project-config-alist
-                (remove (assoc project-name owp/project-config-alist)
-                        owp/project-config-alist)))
-        (add-to-list 'owp/project-config-alist project-config))
+          (setq owp-project-config-alist
+                (remove (assoc project-name owp-project-config-alist)
+                        owp-project-config-alist)))
+        (add-to-list 'owp-project-config-alist project-config))
     (message "Invalid project config!")))
 
-(defun owp/select-project-name (prompt &optional project-name)
+(defun owp-select-project-name (prompt &optional project-name)
   "Let user select a project then return its name."
-  (setq owp/current-project-name nil)
+  (setq owp-current-project-name nil)
   (setq project-name
         (or project-name
-            owp/default-project-name
+            owp-default-project-name
             (completing-read prompt
                              (delete-dups
-                              (mapcar 'car owp/project-config-alist))
-                             nil t nil nil owp/last-project-name)))
-  (setq owp/current-project-name project-name
-        owp/last-project-name project-name)
+                              (mapcar 'car owp-project-config-alist))
+                             nil t nil nil owp-last-project-name)))
+  (setq owp-current-project-name project-name
+        owp-last-project-name project-name)
   project-name)
 
-(defun owp/do-publication (&optional project-name publishing-directory job-number update-top-n)
+(defun owp-do-publication (&optional project-name publishing-directory job-number update-top-n)
   (interactive)
-  (setq project-name (owp/select-project-name "Which project do you want to publish? " project-name))
-  (setq owp/item-cache nil)
+  (setq project-name (owp-select-project-name "Which project do you want to publish? " project-name))
+  (setq owp-item-cache nil)
 
-  (owp/verify-configuration)
-  (let* ((remote (owp/get-config-option :remote))
-         (uploader-config (cdr (assoc (nth 0 remote) owp/uploader-config-alist)))
+  (owp-verify-configuration)
+  (let* ((remote (owp-get-config-option :remote))
+         (uploader-config (cdr (assoc (nth 0 remote) owp-uploader-config-alist)))
          (support-partial-update (plist-get uploader-config :support-partial-update))
          (jobs (if support-partial-update
                    '((1 . "Full publish")
@@ -218,32 +218,32 @@
          (upload-latest-publish (if support-partial-update
                                     (= job-number 5)
                                   (= job-number 3)))
-         (repo-dir (owp/get-repository-directory))
-         (publish-root-dir (owp/get-uploader-directory project-name))
-         (export-dir (owp/get-uploader-directory project-name "export"))
-         (history-dir (owp/get-uploader-directory project-name "history"))
+         (repo-dir (owp-get-repository-directory))
+         (publish-root-dir (owp-get-uploader-directory project-name))
+         (export-dir (owp-get-uploader-directory project-name "export"))
+         (history-dir (owp-get-uploader-directory project-name "history"))
          (publishing-directory
           (when publishing-directory
             (expand-file-name publishing-directory)))
          (publish-dir
           (or publishing-directory
-              (owp/get-uploader-directory project-name "publish")
-              (owp/get-publishing-directory)))
-         (test-publish-dir (owp/get-uploader-directory project-name "test-publish"))
+              (owp-get-uploader-directory project-name "publish")
+              (owp-get-publishing-directory)))
+         (test-publish-dir (owp-get-uploader-directory project-name "test-publish"))
          (uploader-file (concat publish-root-dir "owp-uploader.sh"))
-         (site-domain (owp/get-site-domain))
-         (preparation-function (owp/get-config-option :preparation-function))
+         (site-domain (owp-get-site-domain))
+         (preparation-function (owp-get-config-option :preparation-function))
          (repo-files
           (unless upload-latest-publish
             (when preparation-function
               (run-hooks 'preparation-function))
-            (owp/sort-files (owp/remove-matched-items
-                             (owp/directory-files-recursively repo-dir "\\.org$")
-                             (owp/get-config-option :ignore)))))
+            (owp-sort-files (owp-remove-matched-items
+                             (owp-directory-files-recursively repo-dir "\\.org$")
+                             (owp-get-config-option :ignore)))))
          (length-repo-files (length repo-files))
          (update-top-n
           (cond ((and partial-update (numberp update-top-n)) update-top-n)
-                (partial-update (owp/read-top-n
+                (partial-update (owp-read-top-n
                                  "owp will update TOP (N) org-files, Please type N: "
                                  repo-files repo-dir))))
          (changed-files (if (numberp update-top-n)
@@ -251,40 +251,40 @@
                           repo-files)))
 
     (if upload-latest-publish
-        (owp/delete-directory
+        (owp-delete-directory
          history-dir publish-dir test-publish-dir)
-      (owp/delete-directory publish-root-dir)
-      (owp/make-directory export-dir))
+      (owp-delete-directory publish-root-dir)
+      (owp-make-directory export-dir))
 
-    (owp/make-directory
+    (owp-make-directory
      history-dir publish-dir test-publish-dir)
 
     (if test-publish
-        (let ((owp/always-use-relative-url t) ; Local test website, can't use absolute path.
-              (port (or (owp/get-config-option :web-server-port)
-                        (owp/get-random-number 4))))
-          (owp/prepare-theme-resources test-publish-dir)
-          (owp/publish-changes repo-files changed-files test-publish-dir)
-          (owp/web-server-browse test-publish-dir port))
+        (let ((owp-always-use-relative-url t) ; Local test website, can't use absolute path.
+              (port (or (owp-get-config-option :web-server-port)
+                        (owp-get-random-number 4))))
+          (owp-prepare-theme-resources test-publish-dir)
+          (owp-publish-changes repo-files changed-files test-publish-dir)
+          (owp-web-server-browse test-publish-dir port))
       (unless upload-latest-publish
-        (owp/prepare-theme-resources export-dir)
-        (owp/publish-changes repo-files changed-files export-dir))
-      (owp/generate-and-run-uploader
+        (owp-prepare-theme-resources export-dir)
+        (owp-publish-changes repo-files changed-files export-dir))
+      (owp-generate-and-run-uploader
        uploader-file remote export-dir history-dir publish-dir partial-update))))
 
-(defun owp/generate-and-run-uploader (uploader-file remote export-dir history-dir publish-dir partial-update)
+(defun owp-generate-and-run-uploader (uploader-file remote export-dir history-dir publish-dir partial-update)
   "Generate shell script UPLOADER-FILE then RUN it, the uploader is used to upload html files
 generated by owp to REMOTE."
   (if (not (and uploader-file remote export-dir history-dir publish-dir))
       (message "Can't generate owp uploader file.")
     (let* ((uploader-name (nth 0 remote))
-           (uploader-names (mapcar #'car owp/uploader-config-alist))
-           (uploader-config (cdr (assoc uploader-name owp/uploader-config-alist)))
+           (uploader-names (mapcar #'car owp-uploader-config-alist))
+           (uploader-config (cdr (assoc uploader-name owp-uploader-config-alist)))
            (uploader-requires (plist-get uploader-config :requires))
            (uploader-help-info (plist-get uploader-config :help-info))
            (uploader-template
-            (owp/file-to-string
-             (owp/get-uploader-template
+            (owp-file-to-string
+             (owp-get-uploader-template
               (or (plist-get uploader-config :template)
                   (concat (symbol-name uploader-name) ".mustache")))))
            (uploader-template-settings
@@ -297,7 +297,7 @@ generated by owp to REMOTE."
                      uploader-requires)
             (message uploader-help-info)
           ;; Generate uploader file
-          (owp/string-to-file
+          (owp-string-to-file
            (mustache-render
             uploader-template
             (funcall uploader-template-settings ; it's a function.
@@ -310,16 +310,16 @@ generated by owp to REMOTE."
                ((string-equal system-type "windows-nt")
                 (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" uploader-file t t)))
                ((and (string-equal system-type "gnu/linux")
-                     owp/terminal-emulater)
+                     owp-terminal-emulater)
                 (start-process-shell-command
-                 "owp/uploader-script"
+                 "owp-uploader-script"
                  nil
                  (format "%s -e 'bash %s'"
-                         owp/terminal-emulater
+                         owp-terminal-emulater
                          uploader-file))))
             (message "Can't run owp uploader, user should install 'bash' correctly.")))))))
 
-(defun owp/verify-configuration ()
+(defun owp-verify-configuration ()
   "Ensure all required configuration fields are properly configured, include:
 1.  `:repository-directory': <required>
 2.  `:site-domain': <required>
@@ -330,48 +330,48 @@ generated by owp to REMOTE."
 7.  `:personal-github-link': [optional] (but customization recommended)
 8.  `:personal-google-analytics-id': [optional] (but customization recommended)
 9.  `:theme': [optional]"
-  (unless (member owp/current-project-name
-                  (mapcar 'car owp/project-config-alist))
-    (error "Can't find project: \"%s\"" owp/current-project-name))
-  (let ((repo-dir (owp/get-repository-directory))
-        (site-domain (owp/get-site-domain)))
+  (unless (member owp-current-project-name
+                  (mapcar 'car owp-project-config-alist))
+    (error "Can't find project: \"%s\"" owp-current-project-name))
+  (let ((repo-dir (owp-get-repository-directory))
+        (site-domain (owp-get-site-domain)))
     (unless (and repo-dir (file-directory-p repo-dir))
       (error "Repository directory is not properly configured."))
     (unless site-domain
       (error "Site domain is not properly configured."))))
 
-(defun owp/generate-readme (save-dir)
-  "Generate README for `owp/new-repository'. SAVE-DIR is the directory where to
+(defun owp-generate-readme (save-dir)
+  "Generate README for `owp-new-repository'. SAVE-DIR is the directory where to
 save generated README."
-  (owp/string-to-file
+  (owp-string-to-file
    (concat
     (format "Personal site of %s, managed by emacs, org mode, git and owp."
             (or user-full-name "[Author]"))
     "\n\n"
-    "This git repository is generated by owp \"owp/new-repository\" \
+    "This git repository is generated by owp \"owp-new-repository\" \
 function, it is only used for demonstrating how the git branches and directory \
 structure are organized by owp.")
    (expand-file-name "README" save-dir)))
 
-(defun owp/generate-index (save-dir)
-  "Generate index.org for `owp/new-repository'. SAVE-DIR is the directory where
+(defun owp-generate-index (save-dir)
+  "Generate index.org for `owp-new-repository'. SAVE-DIR is the directory where
 to save generated index.org."
-  (owp/string-to-file
+  (owp-string-to-file
    (concat "#+TITLE: Index" "\n\n"
            (format "This is the home page of %s."
                    (or user-full-name "[Author]")))
    (expand-file-name "index.org" save-dir)))
 
-(defun owp/generate-about (save-dir)
-  "Generate about.org for `owp/new-repository'. SAVE-DIR is the directory where
+(defun owp-generate-about (save-dir)
+  "Generate about.org for `owp-new-repository'. SAVE-DIR is the directory where
 to save generated about.org."
-  (owp/string-to-file
+  (owp-string-to-file
    (concat "#+TITLE: About" "\n\n"
            (format "* About %s" (or user-full-name "[Author]")) "\n\n"
            "  This file is automatically generated by owp.")
    (expand-file-name "about.org" save-dir)))
 
-(defun owp/insert-options-template (&optional title uri
+(defun owp-insert-options-template (&optional title uri
                                               keywords tags description)
   "Insert a template into current buffer with information for exporting.
 
@@ -392,11 +392,11 @@ responsibility to guarantee these parameters are valid."
           (u (read-string "URI(%y, %m and %d can be used to represent year, \
 month and day): " (unless (string= i "")
                     (format-spec "/%c/%y/%m/%d/%t"
-                                 `((?c . ,(owp/get-config-option :default-category))
+                                 `((?c . ,(owp-get-config-option :default-category))
                                    (?y . "%y")
                                    (?m . "%m")
                                    (?d . "%d")
-                                   (?t . ,(owp/encode-string-to-url i)))))))
+                                   (?t . ,(owp-encode-string-to-url i)))))))
           (k (read-string "Keywords(separated by comma and space [, ]): "))
           (a (read-string "Tags(separated by comma and space [, ]): "))
           (d (read-string "Description: ")))
@@ -445,7 +445,7 @@ month and day): " (unless (string= i "")
            org-export-with-emphasize
            org-export-with-timestamps)))
 
-(defun owp/new-post (&optional project-name category filename insert-fallback-template)
+(defun owp-new-post (&optional project-name category filename insert-fallback-template)
   "Setup a new post.
 
 PROJECT-NAME: which project do you want to export
@@ -455,19 +455,19 @@ FILENAME:     the file name of this post
 Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive
-   (let* ((p (owp/select-project-name "Which project do you want post? "))
+   (let* ((p (owp-select-project-name "Which project do you want post? "))
           (c (read-string (format "Category of \"%s\" project: " p)
-                          (owp/get-config-option :default-category)))
+                          (owp-get-config-option :default-category)))
           (f (read-string (format "Filename of \"%s\" project: " p) "new-post.org" p))
           (d (yes-or-no-p "Insert fallback template? ")))
      (list p c f d)))
   (if (string= category "")
-      (setq category (owp/get-config-option :default-category)))
+      (setq category (owp-get-config-option :default-category)))
   (if (string= filename "")
       (setq filename "new-post.org"))
-  (unless (owp/string-suffix-p ".org" filename)
+  (unless (owp-string-suffix-p ".org" filename)
     (setq filename (concat filename ".org")))
-  (let* ((repo-dir (owp/get-repository-directory))
+  (let* ((repo-dir (owp-get-repository-directory))
          (dir (concat (file-name-as-directory repo-dir)
                       (file-name-as-directory category)))
          (path (concat dir filename)))
@@ -478,8 +478,8 @@ responsibility to guarantee the two parameters are valid."
     (switch-to-buffer (find-file path))
     (if (and (not insert-fallback-template)
              (called-interactively-p 'any))
-        (call-interactively 'owp/insert-options-template)
-      (owp/insert-options-template "<Insert Your Title Here>"
+        (call-interactively 'owp-insert-options-template)
+      (owp-insert-options-template "<Insert Your Title Here>"
                                    (format "/%s/%%y/%%m/%%d/%%t/ Or /%s/%%t/"
                                            category category)
                                    "keyword1, keyword2, keyword3"
