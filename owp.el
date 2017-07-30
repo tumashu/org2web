@@ -172,7 +172,7 @@
         (add-to-list 'owp-projects project-config))
     (message "Invalid project config!")))
 
-(defun owp-select-project-name (prompt &optional project-name)
+(defun owp-select-project (prompt &optional project-name)
   "Let user select a project then return its name."
   (setq owp-current-project-name nil)
   (setq project-name
@@ -188,7 +188,7 @@
 
 (defun owp-do-publication (&optional project-name publishing-directory job-number update-top-n)
   (interactive)
-  (setq project-name (owp-select-project-name "Which project do you want to publish? " project-name))
+  (setq project-name (owp-select-project "Which project do you want to publish? " project-name))
   (setq owp-item-cache nil)
 
   (owp-verify-configuration)
@@ -455,7 +455,7 @@ FILENAME:     the file name of this post
 Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive
-   (let* ((p (owp-select-project-name "Which project do you want post? "))
+   (let* ((p (owp-select-project "Which project do you want post? "))
           (c (read-string (format "Category of \"%s\" project: " p)
                           (owp-get-config-option :default-category)))
           (f (read-string (format "Filename of \"%s\" project: " p) "new-post.org" p))

@@ -37,7 +37,7 @@
 
 (defun owp-el2org-generate-readme (&optional project-name)
   (interactive)
-  (owp-select-project-name
+  (owp-select-project
    "Which project do you want to generate README.md? " project-name)
   (let* ((repo-dir (owp-get-repository-repo-directory))
          (el-file (concat
@@ -49,7 +49,7 @@
 
 (defun owp-el2org-generate-index (&optional project-name)
   (interactive)
-  (owp-select-project-name
+  (owp-select-project
    "Which project do you want to generate index.org? " project-name)
   (let* ((repo-dir (owp-get-repository-repo-directory))
          (el-file (concat
