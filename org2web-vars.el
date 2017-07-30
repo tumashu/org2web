@@ -515,7 +515,7 @@ test publish.")
     :get-title-function org2web-get-title
     :retrieve-category-function org2web-get-file-category
     :org-export-function org2web-default-org-export
-    :web-server-docroot "~/.emacs.d/org2web-server/default"
+    :web-server-docroot "~/.emacs.d/org2web/www"
     :web-server-port 9876
     :el2org-doc-sources nil
     :el2org-readme-sources nil
