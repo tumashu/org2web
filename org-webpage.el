@@ -1,4 +1,4 @@
-;;; org-webpage.el --- Please install "owp" instead.
+;;; org-webpage.el --- Please install "org2web" instead.
 
 ;; * Header
 ;; Copyright (C)  2016 Feng Shu, Jorge Javier Araya Navarro
@@ -25,26 +25,26 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;; Don't use this package, please install and use "owp" package instead.
+;; Don't use this package, please install and use "org2web" package instead.
 ;;; Code:
 
 ;; * 代码说明                                                             :code:
-(require 'owp)
+(require 'org2web)
 
-(define-obsolete-variable-alias 'owp/default-project-name 'owp-default-project)
-(define-obsolete-variable-alias 'owp/temporary-directory 'owp-temporary-directory)
-(define-obsolete-variable-alias 'owp/terminal-emulater 'owp-terminal-emulater)
-(define-obsolete-variable-alias 'owp/uploader-config-alist 'owp-uploaders)
-(define-obsolete-variable-alias 'owp/project-config-alist 'owp-projects)
-(define-obsolete-variable-alias 'owp/get-config-option-function 'owp-get-config-option-function)
+(define-obsolete-variable-alias 'owp/default-project-name 'org2web-default-project)
+(define-obsolete-variable-alias 'owp/temporary-directory 'org2web-temporary-directory)
+(define-obsolete-variable-alias 'owp/terminal-emulater 'org2web-terminal-emulater)
+(define-obsolete-variable-alias 'owp/uploader-config-alist 'org2web-uploaders)
+(define-obsolete-variable-alias 'owp/project-config-alist 'org2web-projects)
+(define-obsolete-variable-alias 'owp/get-config-option-function 'org2web-get-config-option-function)
 
-(define-obsolete-function-alias 'owp/add-project-config 'owp-add-project)
-(define-obsolete-function-alias 'owp/select-project-name 'owp-select-project)
-(define-obsolete-function-alias 'owp/do-publication 'owp-publish)
-(define-obsolete-function-alias 'owp/new-post 'owp-new-post)
+(define-obsolete-function-alias 'owp/add-project-config 'org2web-add-project)
+(define-obsolete-function-alias 'owp/select-project-name 'org2web-select-project)
+(define-obsolete-function-alias 'owp/do-publication 'org2web-publish)
+(define-obsolete-function-alias 'owp/new-post 'org2web-new-post)
 
-(define-obsolete-function-alias 'owp/el2org-preparation-function 'owp-el2org-preparation-function)
-(define-obsolete-function-alias 'owp/el2org-org-export-function 'owp-el2org-org-export-function)
+(define-obsolete-function-alias 'owp/el2org-preparation-function 'org2web-el2org-preparation-function)
+(define-obsolete-function-alias 'owp/el2org-org-export-function 'org2web-el2org-org-export-function)
 
 ;; * Footer
 (provide 'org-webpage)

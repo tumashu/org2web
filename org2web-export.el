@@ -1,4 +1,4 @@
-;;; owp-export.el --- Publication related functions required by org-webpage
+;;; org2web-export.el --- Publication related functions required by org-webpage
 
 ;; Copyright (C)  2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -31,14 +31,14 @@
 (require 'ox)
 (require 'ht)
 (require 'dash)
-(require 'owp-util)
-(require 'owp-vars)
-(require 'owp-config)
-(require 'owp-template)
+(require 'org2web-util)
+(require 'org2web-vars)
+(require 'org2web-config)
+(require 'org2web-template)
 (require 'cl-lib)
 
 
-(defun owp-publish-changes (all-files changed-files pub-root-dir)
+(defun org2web-publish-changes (all-files changed-files pub-root-dir)
   "This function is for:
 1. publish changed org files to html
 3. update index pages
@@ -47,7 +47,7 @@
  to be updated.
 
 This function don't handle deleted org-files."
-  (let* ((repo-dir (owp-get-repository-directory))
+  (let* ((repo-dir (org2web-get-repository-directory))
          visiting uri-alist file-attr-list)
     (when changed-files
       (dolist (org-file all-files)
@@ -55,7 +55,7 @@ This function don't handle deleted org-files."
           (let (attr-cell)
             (insert-file-contents org-file)
             (org-mode)
-            (setq attr-cell (owp-get-org-file-options
+            (setq attr-cell (org2web-get-org-file-options
                              org-file pub-root-dir))
             (push attr-cell file-attr-list)
             (push (cons (file-relative-name org-file repo-dir)
@@ -82,62 +82,62 @@ This function don't handle deleted org-files."
                            (format "file:%s/index.html"
                                    (cdr file-link)) nil t)))
                     uri-alist)
-              (setq attr-cell (owp-get-org-file-options
+              (setq attr-cell (org2web-get-org-file-options
                                org-file
                                pub-root-dir))
-              (setq exported-content (owp-get-org-file-export-content
+              (setq exported-content (org2web-get-org-file-export-content
                                       org-file pub-root-dir attr-cell))
-              (owp-publish-modified-file exported-content
+              (org2web-publish-modified-file exported-content
                                          (plist-get attr-cell :pub-dir))))))
       (unless (member
                (expand-file-name "index.org" repo-dir)
                all-files)
-        (owp-generate-default-index file-attr-list pub-root-dir))
-      (when (and (owp-get-config-option :about)
+        (org2web-generate-default-index file-attr-list pub-root-dir))
+      (when (and (org2web-get-config-option :about)
                  (not (member
                        (expand-file-name "about.org" repo-dir)
                        all-files)))
-        (owp-generate-default-about pub-root-dir))
-      (owp-update-category-index file-attr-list pub-root-dir)
-      (when (owp-get-config-option :rss)
-        (owp-update-rss file-attr-list pub-root-dir))
+        (org2web-generate-default-about pub-root-dir))
+      (org2web-update-category-index file-attr-list pub-root-dir)
+      (when (org2web-get-config-option :rss)
+        (org2web-update-rss file-attr-list pub-root-dir))
       (mapc
        #'(lambda (name)
-           (owp-update-summary file-attr-list pub-root-dir name))
-       (mapcar #'car (owp-get-config-option :summary))))))
+           (org2web-update-summary file-attr-list pub-root-dir name))
+       (mapcar #'car (org2web-get-config-option :summary))))))
 
-(defun owp-get-org-file-options (org-file pub-root-dir)
+(defun org2web-get-org-file-options (org-file pub-root-dir)
   "Retrieve all needed options for org file opened in current buffer.
 PUB-ROOT-DIR is the root directory of published files."
-  (let* ((repo-dir (owp-get-repository-directory))
-         (attr-plist `(:title ,(funcall (owp-get-config-option :get-title-function) org-file)
-                              :date ,(owp-fix-timestamp-string
-                                      (or (owp-read-org-option "DATE")
+  (let* ((repo-dir (org2web-get-repository-directory))
+         (attr-plist `(:title ,(funcall (org2web-get-config-option :get-title-function) org-file)
+                              :date ,(org2web-fix-timestamp-string
+                                      (or (org2web-read-org-option "DATE")
                                           (format-time-string "%Y-%m-%d")))
                               :mod-date ,(if (not org-file)
                                              (format-time-string "%Y-%m-%d")
                                            (format-time-string
                                             "%Y-%m-%d"
                                             (nth 5 (file-attributes org-file))))
-                              :description ,(or (owp-read-org-option "DESCRIPTION")
+                              :description ,(or (org2web-read-org-option "DESCRIPTION")
                                                 "No Description")
-                              :thumb ,(owp-read-org-option "THUMBNAIL")))
+                              :thumb ,(org2web-read-org-option "THUMBNAIL")))
          tags authors category cat-config)
-    (setq tags (owp-read-org-option "TAGS"))
+    (setq tags (org2web-read-org-option "TAGS"))
     (when tags
       (plist-put
-       attr-plist :tags (delete "" (mapcar 'owp-trim-string
+       attr-plist :tags (delete "" (mapcar 'org2web-trim-string
                                            (split-string tags "[:,]+" t)))))
-    (setq authors (owp-read-org-option "AUTHOR"))
+    (setq authors (org2web-read-org-option "AUTHOR"))
     (when authors
       (plist-put
-       attr-plist :authors (delete "" (mapcar 'owp-trim-string
+       attr-plist :authors (delete "" (mapcar 'org2web-trim-string
                                               (split-string authors "[:,]+" t)))))
-    (setq category (owp-get-category org-file))
+    (setq category (org2web-get-category org-file))
     (plist-put attr-plist :category category)
-    (setq cat-config (cdr (or (assoc category owp-category-config-alist)
-                              (owp-get-category-setting
-                               (owp-get-config-option :default-category)))))
+    (setq cat-config (cdr (or (assoc category org2web-category-config-alist)
+                              (org2web-get-category-setting
+                               (org2web-get-config-option :default-category)))))
     (plist-put attr-plist :uri (funcall (plist-get cat-config :uri-generator)
                                         (plist-get cat-config :uri-template)
                                         (plist-get attr-plist :date)
@@ -153,14 +153,14 @@ PUB-ROOT-DIR is the root directory of published files."
     attr-plist))
 
 
-(defun owp-get-org-file-export-content (org-file pub-root-dir attr-plist)
+(defun org2web-get-org-file-export-content (org-file pub-root-dir attr-plist)
   "Export org file to html and return html content."
-  (let* ((repo-dir (owp-get-repository-directory))
+  (let* ((repo-dir (org2web-get-repository-directory))
          assets-dir post-content
          asset-path asset-abs-path pub-abs-path converted-path
          component-table tags authors category cat-config)
     ;; (princ attr-plist)
-    (setq post-content (owp-render-content nil nil org-file))
+    (setq post-content (org2web-render-content nil nil org-file))
     (setq assets-dir (file-name-as-directory
                       (concat (file-name-as-directory pub-root-dir)
                               "assets/"
@@ -201,13 +201,13 @@ PUB-ROOT-DIR is the root directory of published files."
             (setq post-content
                   (replace-regexp-in-string
                    (regexp-quote asset-path) converted-path post-content))))))
-    (setq component-table (ht ("header" (owp-render-header nil org-file))
-                              ("nav" (owp-render-navigation-bar nil org-file))
+    (setq component-table (ht ("header" (org2web-render-header nil org-file))
+                              ("nav" (org2web-render-navigation-bar nil org-file))
                               ("content" post-content)
-                              ("footer" (owp-render-footer nil org-file))))
+                              ("footer" (org2web-render-footer nil org-file))))
     component-table))
 
-(defun owp-read-org-option (option)
+(defun org2web-read-org-option (option)
   "Read option value of org file opened in current buffer.
 e.g:
 #+TITLE: this is title
@@ -218,7 +218,7 @@ will return \"this is title\" if OPTION is \"TITLE\""
       (when (re-search-forward match-regexp nil t)
         (match-string-no-properties 2 nil)))))
 
-(defun owp-generate-uri (default-uri-template creation-date title)
+(defun org2web-generate-uri (default-uri-template creation-date title)
   "Generate URI of org file opened in current buffer. It will be firstly created
 by #+URI option, if it is nil, DEFAULT-URI-TEMPLATE will be used to generate the
 uri. If CREATION-DATE is nil, current date will be used. The uri template option
@@ -227,28 +227,28 @@ can contain following parameters:
 %m: month of creation date
 %d: day of creation date
 %t: title of current buffer"
-  (let ((uri-template (or (owp-read-org-option "URI")
+  (let ((uri-template (or (org2web-read-org-option "URI")
                           default-uri-template))
         (date-list (split-string (if creation-date
-                                     (owp-fix-timestamp-string creation-date)
+                                     (org2web-fix-timestamp-string creation-date)
                                    (format-time-string "%Y-%m-%d"))
                                  "-"))
-        (encoded-title (owp-encode-string-to-url title)))
+        (encoded-title (org2web-encode-string-to-url title)))
     (format-spec uri-template `((?y . ,(car date-list))
                                 (?m . ,(cadr date-list))
                                 (?d . ,(cl-caddr date-list))
                                 (?t . ,encoded-title)))))
 
 
-(defun owp-get-file-category (org-file)
+(defun org2web-get-file-category (org-file)
   "This is the default function used to get a file's category,
 see org-webpage config option 'retrieve-category-function. How to judge a
 file's category is based on its name and its root folder name."
-  (let ((repo-dir (owp-get-repository-directory))
-        (default-category (owp-get-config-option :default-category))
-        (category-ignore-list (owp-get-config-option :category-ignore-list)))
+  (let ((repo-dir (org2web-get-repository-directory))
+        (default-category (org2web-get-config-option :default-category))
+        (category-ignore-list (org2web-get-config-option :category-ignore-list)))
     (cond ((not org-file)
-           (let ((cat-list `("index" "about" ,(owp-get-config-option :default-category)))) ;; 3 default categories
+           (let ((cat-list `("index" "about" ,(org2web-get-config-option :default-category)))) ;; 3 default categories
              (dolist (f (directory-files repo-dir))
                (when (and (not (equal f "."))
                           (not (equal f ".."))
@@ -269,16 +269,16 @@ file's category is based on its name and its root folder name."
                                  (expand-file-name org-file) repo-dir)
                                 "[/\\\\]+"))))))
 
-(defun owp-relative-url-to-absolute (html-content)
+(defun org2web-relative-url-to-absolute (html-content)
   "Force convert relative url of `html-content' to absolute url."
-  (let ((site-domain (owp-get-site-domain))
+  (let ((site-domain (org2web-get-site-domain))
         url)
-    (if owp-always-use-relative-url
+    (if org2web-always-use-relative-url
         html-content
       (with-temp-buffer
         (insert html-content)
         (goto-char (point-min))
-        (when (owp-get-config-option :force-absolute-url)
+        (when (org2web-get-config-option :force-absolute-url)
           (while (re-search-forward
                 ;;; TODO: not only links need to convert, but also inline
                 ;;; images, may add others later
@@ -295,31 +295,31 @@ file's category is based on its name and its root folder name."
               (replace-match url))))
         (buffer-string)))))
 
-(defun owp-publish-modified-file (component-table pub-dir)
+(defun org2web-publish-modified-file (component-table pub-dir)
   "Publish org file opened in current buffer. COMPONENT-TABLE is the hash table
 used to render the template, PUB-DIR is the directory for published html file.
 If COMPONENT-TABLE is nil, the publication will be skipped."
   (when component-table
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
-    (owp-string-to-file
-     (owp-relative-url-to-absolute
+    (org2web-string-to-file
+     (org2web-relative-url-to-absolute
       (mustache-render
-       (owp-get-cache-create
+       (org2web-get-cache-create
         :container-template
         (message "Read container.mustache from file")
-        (owp-file-to-string (owp-get-template-file "container.mustache")))
+        (org2web-file-to-string (org2web-get-template-file "container.mustache")))
        component-table))
      (concat (file-name-as-directory pub-dir) "index.html") ;; 'html-mode ;; do NOT indent the code
      )))
 
-(defun owp-rearrange-category-sorted (file-attr-list)
+(defun org2web-rearrange-category-sorted (file-attr-list)
   "Rearrange and sort attribute property lists from FILE-ATTR-LIST. Rearrange
 according to category, and sort according to :sort-by property defined in
-`owp-category-config-alist', if category is not in `owp-category-config-alist',
+`org2web-category-config-alist', if category is not in `org2web-category-config-alist',
 by default, category which set by config option `:default-category' will be used.
 For sorting, later lies headmost."
-  (let ((default-category (owp-get-config-option :default-category))
+  (let ((default-category (org2web-get-config-option :default-category))
         cat-alist cat-list)
     (mapc
      #'(lambda (plist)
@@ -336,59 +336,59 @@ For sorting, later lies headmost."
           cell
           (sort (cdr cell)
                 #'(lambda (plist1 plist2)
-                    (<= (owp-compare-standard-date
-                         (owp-fix-timestamp-string
+                    (<= (org2web-compare-standard-date
+                         (org2web-fix-timestamp-string
                           (plist-get
                            plist1
                            (plist-get
                             (cdr (or (assoc (plist-get plist1 :category)
-                                            owp-category-config-alist)
-                                     (owp-get-category-setting default-category)))
+                                            org2web-category-config-alist)
+                                     (org2web-get-category-setting default-category)))
                             :sort-by)))
-                         (owp-fix-timestamp-string
+                         (org2web-fix-timestamp-string
                           (plist-get
                            plist2
                            (plist-get
                             (cdr (or (assoc (plist-get plist2 :category)
-                                            owp-category-config-alist)
-                                     (owp-get-category-setting default-category)))
+                                            org2web-category-config-alist)
+                                     (org2web-get-category-setting default-category)))
                             :sort-by))))
                         0)))))
      cat-alist)))
 
-(defun owp-update-category-index (file-attr-list pub-base-dir)
+(defun org2web-update-category-index (file-attr-list pub-base-dir)
   "Update index page of different categories. FILE-ATTR-LIST is the list of all
 file attribute property lists. PUB-BASE-DIR is the root publication directory."
-  (let* ((sort-alist (owp-rearrange-category-sorted file-attr-list))
-         (default-category (owp-get-config-option :default-category))
+  (let* ((sort-alist (org2web-rearrange-category-sorted file-attr-list))
+         (default-category (org2web-get-config-option :default-category))
          cat-dir)
     (mapc
      #'(lambda (cat-list)
          (unless (not (plist-get (cdr (or (assoc (car cat-list)
-                                                 owp-category-config-alist)
-                                          (owp-get-category-setting default-category)))
+                                                 org2web-category-config-alist)
+                                          (org2web-get-category-setting default-category)))
                                  :category-index))
            (setq cat-dir (file-name-as-directory
                           (concat (file-name-as-directory pub-base-dir)
-                                  (owp-encode-string-to-url (car cat-list)))))
+                                  (org2web-encode-string-to-url (car cat-list)))))
            (unless (file-directory-p cat-dir)
              (mkdir cat-dir t))
-           (owp-string-to-file
-            (owp-relative-url-to-absolute
+           (org2web-string-to-file
+            (org2web-relative-url-to-absolute
              (mustache-render
-              (owp-get-cache-create
+              (org2web-get-cache-create
                :container-template
                (message "Read container.mustache from file")
-               (owp-file-to-string (owp-get-template-file "container.mustache")))
+               (org2web-file-to-string (org2web-get-template-file "container.mustache")))
               (ht ("header"
-                   (owp-render-header
+                   (org2web-render-header
                     (ht ("page-title" (concat (capitalize (car cat-list))
                                               " Index - "
-                                              (owp-get-config-option :site-main-title)))
+                                              (org2web-get-config-option :site-main-title)))
                         ("author" (or user-full-name "Unknown Author")))))
-                  ("nav" (owp-render-navigation-bar))
+                  ("nav" (org2web-render-navigation-bar))
                   ("content"
-                   (owp-render-content
+                   (org2web-render-content
                     "category-index.mustache"
                     (ht ("cat-name" (capitalize (car cat-list)))
                         ("posts"
@@ -396,7 +396,7 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                           #'(lambda (attr-plist)
                               (let ((tags-multi (mapcar
                                                  #'(lambda (tag-name)
-                                                     (ht ("link" (owp-generate-summary-uri "tags" tag-name))
+                                                     (ht ("link" (org2web-generate-summary-uri "tags" tag-name))
                                                          ("name" tag-name)))
                                                  (plist-get attr-plist :tags))))
                                 (ht ("date"
@@ -405,8 +405,8 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                                       (plist-get
                                        (cdr (or (assoc
                                                  (plist-get attr-plist :category)
-                                                 owp-category-config-alist)
-                                                (owp-get-category-setting default-category)))
+                                                 org2web-category-config-alist)
+                                                (org2web-get-category-setting default-category)))
                                        :sort-by)))
                                     ("post-uri" (plist-get attr-plist :uri))
                                     ("post-title" (plist-get attr-plist :title))
@@ -418,38 +418,38 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                                                     tags-multi " : "))))))
                           (cdr cat-list))))))
                   ("footer"
-                   (owp-render-footer
+                   (org2web-render-footer
                     (ht ("show-meta" nil)
                         ("show-comment" nil)
                         ("author" (or user-full-name "Unknown Author"))
-                        ("google-analytics" (owp-get-config-option :personal-google-analytics-id))
-                        ("google-analytics-id" (owp-get-config-option :personal-google-analytics-id))
-                        ("creator-info" (owp-get-html-creator-string))
-                        ("email" (owp-confound-email-address (or user-mail-address
+                        ("google-analytics" (org2web-get-config-option :personal-google-analytics-id))
+                        ("google-analytics-id" (org2web-get-config-option :personal-google-analytics-id))
+                        ("creator-info" (org2web-get-html-creator-string))
+                        ("email" (org2web-confound-email-address (or user-mail-address
                                                                  "Unknown Email")))))))))
             (concat cat-dir "index.html") 'html-mode)))
      sort-alist)))
 
-(defun owp-generate-default-index (file-attr-list pub-base-dir)
+(defun org2web-generate-default-index (file-attr-list pub-base-dir)
   "Generate default index page, only if index.org does not exist. FILE-ATTR-LIST
 is the list of all file attribute property lists. PUB-BASE-DIR is the root
 publication directory."
-  (let ((sort-alist (owp-rearrange-category-sorted file-attr-list))
+  (let ((sort-alist (org2web-rearrange-category-sorted file-attr-list))
         (id 0))
-    (owp-string-to-file
-     (owp-relative-url-to-absolute
+    (org2web-string-to-file
+     (org2web-relative-url-to-absolute
       (mustache-render
-       (owp-get-cache-create
+       (org2web-get-cache-create
         :container-template
         (message "Read container.mustache from file")
-        (owp-file-to-string (owp-get-template-file "container.mustache")))
+        (org2web-file-to-string (org2web-get-template-file "container.mustache")))
        (ht ("header"
-            (owp-render-header
-             (ht ("page-title" (concat "Index - " (owp-get-config-option :site-main-title)))
+            (org2web-render-header
+             (ht ("page-title" (concat "Index - " (org2web-get-config-option :site-main-title)))
                  ("author" (or user-full-name "Unknown Author")))))
-           ("nav" (owp-render-navigation-bar))
+           ("nav" (org2web-render-navigation-bar))
            ("content"
-            (owp-render-content
+            (org2web-render-content
              "index.mustache"
              (ht ("categories"
                   (mapcar
@@ -474,61 +474,61 @@ publication directory."
                         (string= (car cell) "about"))
                     sort-alist))))))
            ("footer"
-            (owp-render-footer
+            (org2web-render-footer
              (ht ("show-meta" nil)
                  ("show-comment" nil)
                  ("author" (or user-full-name "Unknown Author"))
-                 ("google-analytics" (owp-get-config-option :personal-google-analytics-id))
-                 ("google-analytics-id" (owp-get-config-option :personal-google-analytics-id))
-                 ("creator-info" (owp-get-html-creator-string))
-                 ("email" (owp-confound-email-address (or user-mail-address
+                 ("google-analytics" (org2web-get-config-option :personal-google-analytics-id))
+                 ("google-analytics-id" (org2web-get-config-option :personal-google-analytics-id))
+                 ("creator-info" (org2web-get-html-creator-string))
+                 ("email" (org2web-confound-email-address (or user-mail-address
                                                           "Unknown Email")))))))))
      (concat (file-name-as-directory pub-base-dir) "index.html") 'html-mode)))
 
-(defun owp-generate-default-about (pub-base-dir)
+(defun org2web-generate-default-about (pub-base-dir)
   "Generate default about page, only if about.org does not exist. PUB-BASE-DIR
 is the root publication directory."
   (let* ((about-sub-dir
           (replace-regexp-in-string
            "^/" ""
-           (car (cdr (owp-get-config-option :about)))))
+           (car (cdr (org2web-get-config-option :about)))))
          (pub-dir (file-name-as-directory
                    (expand-file-name about-sub-dir pub-base-dir))))
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
-    (owp-string-to-file
-     (owp-relative-url-to-absolute
+    (org2web-string-to-file
+     (org2web-relative-url-to-absolute
       (mustache-render
-       (owp-get-cache-create
+       (org2web-get-cache-create
         :container-template
         (message "Read container.mustache from file")
-        (owp-file-to-string (owp-get-template-file "container.mustache")))
+        (org2web-file-to-string (org2web-get-template-file "container.mustache")))
        (ht ("header"
-            (owp-render-header
-             (ht ("page-title" (concat "About - " (owp-get-config-option :site-main-title)))
+            (org2web-render-header
+             (ht ("page-title" (concat "About - " (org2web-get-config-option :site-main-title)))
                  ("author" (or user-full-name "Unknown Author")))))
-           ("nav" (owp-render-navigation-bar))
+           ("nav" (org2web-render-navigation-bar))
            ("content"
-            (owp-render-content
+            (org2web-render-content
              "about.mustache"
              (ht ("author" (or user-full-name "Unknown Author")))))
            ("footer"
-            (owp-render-footer
+            (org2web-render-footer
              (ht ("show-meta" nil)
                  ("show-comment" nil)
                  ("author" (or user-full-name "Unknown Author"))
-                 ("google-analytics" (owp-get-config-option :personal-google-analytics-id))
-                 ("google-analytics-id" (owp-get-config-option :personal-google-analytics-id))
-                 ("creator-info" (owp-get-html-creator-string))
-                 ("email" (owp-confound-email-address (or user-mail-address
+                 ("google-analytics" (org2web-get-config-option :personal-google-analytics-id))
+                 ("google-analytics-id" (org2web-get-config-option :personal-google-analytics-id))
+                 ("creator-info" (org2web-get-html-creator-string))
+                 ("email" (org2web-confound-email-address (or user-mail-address
                                                           "Unknown Email")))))))))
      (concat pub-dir "index.html") 'html-mode)))
 
-(defun owp-generate-summary-uri (summary-name summary-item-name)
+(defun org2web-generate-summary-uri (summary-name summary-item-name)
   "Generate summary uri based on `summary-name' and `summary-item-name'."
-  (concat "/" summary-name "/" (owp-encode-string-to-url summary-item-name) "/"))
+  (concat "/" summary-name "/" (org2web-encode-string-to-url summary-item-name) "/"))
 
-(defun owp-update-summary (file-attr-list pub-base-dir summary-name)
+(defun org2web-update-summary (file-attr-list pub-base-dir summary-name)
   "Update summary pages which name is `summary-name', FILE-ATTR-LIST
 is the list of all file attribute property lists. PUB-BASE-DIR is the
 root publication directory.
@@ -546,70 +546,70 @@ TODO: improve this function."
               (unless summary-list
                 (add-to-list 'summary-alist (setq summary-list `(,name))))
               (nconc summary-list (list attr-plist)))
-          (let* ((summary-attr (car (cdr (assoc summary-name (owp-get-config-option :summary)))))
+          (let* ((summary-attr (car (cdr (assoc summary-name (org2web-get-config-option :summary)))))
                  (elem (plist-get attr-plist summary-attr)))
             (if (listp elem) elem (list elem)))))
      file-attr-list)
     (unless (file-directory-p summary-base-dir)
       (mkdir summary-base-dir t))
-    (owp-string-to-file
-     (owp-relative-url-to-absolute
+    (org2web-string-to-file
+     (org2web-relative-url-to-absolute
       (mustache-render
-       (owp-get-cache-create
+       (org2web-get-cache-create
         :container-template
         (message "Read container.mustache from file")
-        (owp-file-to-string (owp-get-template-file "container.mustache")))
+        (org2web-file-to-string (org2web-get-template-file "container.mustache")))
        (ht ("header"
-            (owp-render-header
+            (org2web-render-header
              (ht ("page-title" (concat (capitalize summary-name)
                                        " Index - "
-                                       (owp-get-config-option :site-main-title)))
+                                       (org2web-get-config-option :site-main-title)))
                  ("author" (or user-full-name "Unknown Author")))))
-           ("nav" (owp-render-navigation-bar))
+           ("nav" (org2web-render-navigation-bar))
            ("content"
-            (owp-render-content
+            (org2web-render-content
              "summary-index.mustache"
              (ht ("summary-name" (capitalize summary-name))
                  ("summary"
                   (mapcar
                    #'(lambda (summary-list)
                        (ht ("summary-item-name" (car summary-list))
-                           ("summary-item-uri" (owp-generate-summary-uri summary-name (car summary-list)))
+                           ("summary-item-uri" (org2web-generate-summary-uri summary-name (car summary-list)))
                            ("count" (number-to-string (length (cdr summary-list))))))
                    summary-alist)))))
            ("footer"
-            (owp-render-footer
+            (org2web-render-footer
              (ht ("show-meta" nil)
                  ("show-comment" nil)
                  ("author" (or user-full-name "Unknown Author"))
-                 ("google-analytics" (owp-get-config-option :personal-google-analytics-id))
-                 ("google-analytics-id" (owp-get-config-option :personal-google-analytics-id))
-                 ("creator-info" (owp-get-html-creator-string))
-                 ("email" (owp-confound-email-address (or user-mail-address
+                 ("google-analytics" (org2web-get-config-option :personal-google-analytics-id))
+                 ("google-analytics-id" (org2web-get-config-option :personal-google-analytics-id))
+                 ("creator-info" (org2web-get-html-creator-string))
+                 ("email" (org2web-confound-email-address (or user-mail-address
                                                           "Unknown Email")))))))))
      (concat summary-base-dir "index.html") 'html-mode)
     (mapc
      #'(lambda (summary-list)
          (setq summary-dir (file-name-as-directory
                             (concat summary-base-dir
-                                    (owp-encode-string-to-url (car summary-list)))))
+                                    (org2web-encode-string-to-url (car summary-list)))))
          (unless (file-directory-p summary-dir)
            (mkdir summary-dir t))
-         (owp-string-to-file
-          (owp-relative-url-to-absolute
+         (org2web-string-to-file
+          (org2web-relative-url-to-absolute
            (mustache-render
-            (owp-get-cache-create
+            (org2web-get-cache-create
              :container-template
              (message "Read container.mustache from file")
-             (owp-file-to-string (owp-get-template-file "container.mustache")))
+             (org2web-file-to-string (org2web-get-template-file "container.mustache")))
             (ht ("header"
-                 (owp-render-header
+                 (org2web-render-header
                   (ht ("page-title" (concat (capitalize summary-name) ": " (car summary-list)
-                                            " - " (owp-get-config-option :site-main-title)))
+                                            " - " (org2web-get-config-option :site-main-title)))
                       ("author" (or user-full-name "Unknown Author")))))
-                ("nav" (owp-render-navigation-bar))
+                ("nav" (org2web-render-navigation-bar))
                 ("content"
-                 (owp-render-content
+                 (org2web-render-content
                   "summary.mustache"
                   (ht ("summary-name" (capitalize summary-name))
                       ("summary-item-name" (car summary-list))
@@ -621,34 +621,34 @@ TODO: improve this function."
                                 ("post-date" (plist-get attr-plist :date))))
                         (cdr summary-list))))))
                 ("footer"
-                 (owp-render-footer
+                 (org2web-render-footer
                   (ht ("show-meta" nil)
                       ("show-comment" nil)
                       ("author" (or user-full-name "Unknown Author"))
-                      ("google-analytics" (owp-get-config-option :personal-google-analytics-id))
-                      ("google-analytics-id" (owp-get-config-option :personal-google-analytics-id))
-                      ("creator-info" (owp-get-html-creator-string))
-                      ("email" (owp-confound-email-address (or user-mail-address
+                      ("google-analytics" (org2web-get-config-option :personal-google-analytics-id))
+                      ("google-analytics-id" (org2web-get-config-option :personal-google-analytics-id))
+                      ("creator-info" (org2web-get-html-creator-string))
+                      ("email" (org2web-confound-email-address (or user-mail-address
                                                                "Unknown Email")))))))))
           (concat summary-dir "index.html") 'html-mode))
      summary-alist)))
 
-(defun owp-update-rss (file-attr-list pub-base-dir)
+(defun org2web-update-rss (file-attr-list pub-base-dir)
   "Update RSS. FILE-ATTR-LIST is the list of all file attribute property lists.
 PUB-BASE-DIR is the root publication directory."
   (let* ((rss-file-name
           (replace-regexp-in-string
            "^/" ""
-           (car (cdr (owp-get-config-option :rss)))))
+           (car (cdr (org2web-get-config-option :rss)))))
          (rss-file
           (concat (file-name-as-directory pub-base-dir) rss-file-name))
          (rss-base-dir
           (file-name-directory rss-file))
          (last-10-posts
-          (-take 10 (--sort (>= 0 (owp-compare-standard-date
-                                   (owp-fix-timestamp-string
+          (-take 10 (--sort (>= 0 (org2web-compare-standard-date
+                                   (org2web-fix-timestamp-string
                                     (plist-get it :mod-date))
-                                   (owp-fix-timestamp-string
+                                   (org2web-fix-timestamp-string
                                     (plist-get other :mod-date))))
                             (--filter (not (or
                                             (string= (plist-get it :category)
@@ -658,22 +658,22 @@ PUB-BASE-DIR is the root publication directory."
                                       file-attr-list)))))
     (unless (file-directory-p rss-base-dir)
       (mkdir rss-base-dir t))
-    (owp-string-to-file
-     (owp-relative-url-to-absolute
+    (org2web-string-to-file
+     (org2web-relative-url-to-absolute
       (mustache-render
-       owp-rss-template
-       (ht ("title" (owp-get-config-option :site-main-title))
-           ("link" (owp-get-site-domain))
-           ("description" (owp-get-config-option :site-sub-title))
+       org2web-rss-template
+       (ht ("title" (org2web-get-config-option :site-main-title))
+           ("link" (org2web-get-site-domain))
+           ("description" (org2web-get-config-option :site-sub-title))
            ("date" (format-time-string "%a, %d %b %Y %T %Z"))
            ("items" (--map (ht ("item-title" (plist-get it :title))
-                               ("item-link" (owp-get-full-url (plist-get it :uri)))
+                               ("item-link" (org2web-get-full-url (plist-get it :uri)))
                                ("item-description" (plist-get it :description))
                                ("item-update-date" (plist-get it :mod-date)))
                            last-10-posts)))))
      rss-file)))
 
 
-(provide 'owp-export)
+(provide 'org2web-export)
 
-;;; owp-export.el ends here
+;;; org2web-export.el ends here

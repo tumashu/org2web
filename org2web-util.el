@@ -1,4 +1,4 @@
-;;; owp-util.el --- Common utility functions required by org-webpage
+;;; org2web-util.el --- Common utility functions required by org-webpage
 
 ;; Copyright (C)  2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -28,11 +28,11 @@
 ;;; Code:
 
 (require 'ht)
-(require 'owp-vars)
-(require 'owp-config)
+(require 'org2web-vars)
+(require 'org2web-config)
 (require 'cl-lib)
 
-(defun owp-directory-files-recursively (&optional directory regexp)
+(defun org2web-directory-files-recursively (&optional directory regexp)
   "recursively list all the files in a directory"
   (let* ((directory (or directory default-directory))
          (regexp (or regexp ".*"))
@@ -45,27 +45,27 @@
              when (string-match regexp (file-name-nondirectory file))
              collect file into ret
              when (file-directory-p file)
-             nconc (owp-directory-files-recursively file regexp) into ret
+             nconc (org2web-directory-files-recursively file regexp) into ret
              finally return ret)))
 
-(defun owp-delete-directory (&rest dir-list)
+(defun org2web-delete-directory (&rest dir-list)
   (dolist (dir dir-list)
     (when (file-directory-p dir)
       (delete-directory dir t))))
 
-(defun owp-make-directory (&rest dir-list)
+(defun org2web-make-directory (&rest dir-list)
   (dolist (dir dir-list)
     (make-directory dir t)))
 
-(defun owp-get-uploader-directory (project-name &optional subdir)
+(defun org2web-get-uploader-directory (project-name &optional subdir)
   (expand-file-name
    (file-name-as-directory
     (concat (file-name-as-directory
-             (concat (file-name-as-directory owp-temporary-directory)
+             (concat (file-name-as-directory org2web-temporary-directory)
                      project-name))
             (or subdir "")))))
 
-(defun owp-read-top-n (prompt files base &optional max)
+(defun org2web-read-top-n (prompt files base &optional max)
   (let* ((max-mini-window-height 0.9)
          (length (length files))
          (max-line (min length (or max 20))))
@@ -84,20 +84,20 @@
              "\n\n"
              prompt))))
 
-(defun owp-sort-files (files)
+(defun org2web-sort-files (files)
   (sort files #'(lambda (a b)
                   (time-less-p
                    (cl-sixth (file-attributes b))
                    (cl-sixth (file-attributes a))))))
 
-(defun owp-get-random-number (n)
+(defun org2web-get-random-number (n)
   (let ((result 0))
     (dotimes (i n)
       (setq result
             (+ result (* (random 9) (expt 10 i)))))
     result))
 
-(defun owp-compare-standard-date (date1 date2)
+(defun org2web-compare-standard-date (date1 date2)
   "Compare two standard ISO 8601 format dates, format is as below:
 2012-08-17
 1. if date1 is earlier than date2, returns 1
@@ -119,7 +119,7 @@
                             ((> day1 day2) -1)
                             (t 0))))))))
 
-(defun owp-remove-matched-items (list regexp-list)
+(defun org2web-remove-matched-items (list regexp-list)
   "Remove all items of `list', which match any regexp of `regexp-list'."
   (dolist (regexp regexp-list)
     (setq list
@@ -128,7 +128,7 @@
                (string-match-p regexp x)) list)))
   list)
 
-(defun owp-select-matched-items (list regexp-list)
+(defun org2web-select-matched-items (list regexp-list)
   "Select all items of `list', which match any regexp of `regexp-list'."
   (let (output)
     (dolist (regexp regexp-list)
@@ -140,7 +140,7 @@
                                        x)) list)))))
     (cl-delete-duplicates output)))
 
-(defun owp-fix-timestamp-string (date-string)
+(defun org2web-fix-timestamp-string (date-string)
   "This is a piece of code copied from Xah Lee (I modified a little):
 Returns yyyy-mm-dd format of date-string
 For examples:
@@ -230,16 +230,16 @@ T[0-9][0-9]:[0-9][0-9]" date-str)
           (setq dd (if date (format "%02d" date) ""))
           (concat yyyy "-" mm "-" dd))))))
 
-(defun owp-confound-email-address (email)
+(defun org2web-confound-email-address (email)
   "Confound email to prevent spams using simple rule:
 replace . with <dot>, @ with <at>, e.g.
 name@domain.com => name <at> domain <dot> com"
-  (if (not (owp-get-config-option :confound-email)) email
+  (if (not (org2web-get-config-option :confound-email)) email
     (replace-regexp-in-string
      " +" " " (replace-regexp-in-string
                "@" " <at> " (replace-regexp-in-string "\\." " <dot> " email)))))
 
-(defun owp-string-suffix-p (str1 str2 &optional ignore-case)
+(defun org2web-string-suffix-p (str1 str2 &optional ignore-case)
   "Return non-nil if STR1 is a suffix of STR2.
 If IGNORE-CASE is non-nil, the comparison is done without paying attention
 to case differences."
@@ -247,42 +247,42 @@ to case differences."
     (if (< pos 0) nil (eq t (compare-strings str1 nil nil
                                              str2 pos nil ignore-case)))))
 
-(defun owp-trim-string-left (str)
+(defun org2web-trim-string-left (str)
   "Remove whitespace at the beginning of STR."
   (if (string-match "\\`[ \t\n\r]+" str)
       (replace-match "" t t str)
     str))
 
-(defun owp-trim-string-right (str)
+(defun org2web-trim-string-right (str)
   "Remove whitespace at the end of STR."
   (if (string-match "[ \t\n\r]+\\'" str)
       (replace-match "" t t str)
     str))
 
-(defun owp-trim-string (str)
+(defun org2web-trim-string (str)
   "Remove whitespace at the beginning and end of STR.
 The function is copied from https://github.com/magnars/s.el, because I do not
 want to make org-webpage depend on other libraries, so I copied the function here,
-so do `owp-trim-string-left' and `owp-trim-string-right'."
-  (owp-trim-string-left (owp-trim-string-right str)))
+so do `org2web-trim-string-left' and `org2web-trim-string-right'."
+  (org2web-trim-string-left (org2web-trim-string-right str)))
 
-(defun owp-encode-string-to-url (string)
+(defun org2web-encode-string-to-url (string)
   "Encode STRING to legal URL. Why we do not use `url-encode-url' to encode the
 string, is that `url-encode-url' will convert all not allowed characters into
 encoded ones, like %3E, but we do NOT want this kind of url."
   (downcase (replace-regexp-in-string "[ :/\\]+" "-" string)))
 
-(defun owp-get-full-url (uri)
+(defun org2web-get-full-url (uri)
   "Get the full url of URI, by joining site-domain with URI."
-  (concat (replace-regexp-in-string "/?$" "" (owp-get-site-domain)) uri))
+  (concat (replace-regexp-in-string "/?$" "" (org2web-get-site-domain)) uri))
 
-(defun owp-file-to-string (file)
+(defun org2web-file-to-string (file)
   "Read the content of FILE and return it as a string."
   (with-temp-buffer
     (insert-file-contents file)
     (buffer-string)))
 
-(defun owp-string-to-file (string file &optional mode)
+(defun org2web-string-to-file (string file &optional mode)
   "Write STRING into FILE, only when FILE is writable. If MODE is a valid major
 mode, format the string with MODE's format settings."
   (with-temp-buffer
@@ -296,7 +296,7 @@ mode, format the string with MODE's format settings."
     (when (file-writable-p file)
       (write-region (point-min) (point-max) file))))
 
-(defun owp-convert-plist-to-hashtable (plist)
+(defun org2web-convert-plist-to-hashtable (plist)
   "Convert normal property list PLIST into hash table, keys of PLIST should be
 in format :key, and it will be converted into \"key\" in hash table. This is an
 alternative to `ht-from-plist'."
@@ -307,6 +307,6 @@ alternative to `ht-from-plist'."
         (ht-set h key value)))))
 
 
-(provide 'owp-util)
+(provide 'org2web-util)
 
-;;; owp-util.el ends here
+;;; org2web-util.el ends here

@@ -1,4 +1,4 @@
-;;; owp-devtools.el --- Functions used to develop org-webpage
+;;; org2web-devtools.el --- Functions used to develop org-webpage
 
 ;; Copyright (C)  2015 Feng Shu
 
@@ -21,21 +21,21 @@
 
 ;;; Commentary:
 
-;; owp-config.el contains functions used to develop org-webpage.
+;; org2web-config.el contains functions used to develop org-webpage.
 
 ;;; Code:
 (require 'org)
 (require 'ox-org)
-(require 'owp-vars)
-(require 'owp-config)
-(require 'owp-el2org)
+(require 'org2web-vars)
+(require 'org2web-config)
+(require 'org2web-el2org)
 
-(defvar owp-devtools-repository-directory
+(defvar org2web-devtools-repository-directory
   "~/project/emacs-packages/org-webpage/")
 
-(owp-add-project
+(org2web-add-project
  '("org-webpage"
-   :repository-directory (:eval owp-devtools-repository-directory)
+   :repository-directory (:eval org2web-devtools-repository-directory)
    :remote (git "https://github.com/tumashu/org-webpage.git" "gh-pages")
    :site-domain "http://tumashu.github.com/org-webpage"
    :site-main-title "Org-webpage"
@@ -46,13 +46,13 @@
    :source-browse-url ("GitHub" "https://github.com/tumashu/org-webpage")
    :personal-avatar "/media/img/horse.jpg"
    :personal-duoshuo-shortname "tumashu-website"
-   :preparation-function owp-el2org-preparation-function
-   :org-export-function owp-el2org-org-export-function
+   :preparation-function org2web-el2org-preparation-function
+   :org-export-function org2web-el2org-org-export-function
    :el2org-doc-sources ("org-webpage.el")
    :el2org-readme-sources ("org-webpage.el")
    :el2org-index-sources ("org-webpage.el")
    :web-server-port 6789))
 
-(provide 'owp-devtools)
+(provide 'org2web-devtools)
 
-;;; owp-devtools.el ends here
+;;; org2web-devtools.el ends here

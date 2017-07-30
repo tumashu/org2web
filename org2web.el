@@ -9,7 +9,7 @@
 ;;         Jorge Javier Araya Navarro <elcorreo AT deshackra.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: org-mode, convenience, beautify
-;; Homepage: https://github.com/tumashu/owp
+;; Homepage: https://github.com/tumashu/org2web
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,16 +26,16 @@
 
 ;;; Commentary:
 
-;; * OWP README                                                 :README:
-;; OWP is the new name of org-webpage, the reason of renaming org-webpage to OWP
+;; * ORG2WEB README                                                 :README:
+;; ORG2WEB is the new name of org-webpage, the reason of renaming org-webpage to ORG2WEB
 ;; is: [[https://github.com/purcell/package-lint/issues/75]]
 
-;; OWP is a static site generator based on [[http://orgmode.org/][org-mode]],
+;; ORG2WEB is a static site generator based on [[http://orgmode.org/][org-mode]],
 ;; which code derived from Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
 
 ;; The main differents of two projects are as follow:
 
-;; 1. OWP's core *don't hard code git*, its process is like below:
+;; 1. ORG2WEB's core *don't hard code git*, its process is like below:
 ;;    #+BEGIN_EXAMPLE
 
 ;;   [ Org files in repository]  [ Website project configure ]
@@ -59,7 +59,7 @@
 
 ;;    #+END_EXAMPLE
 
-;; 2. OWP's default config is `org-publish-project-alist' style alist,
+;; 2. ORG2WEB's default config is `org-publish-project-alist' style alist,
 ;;    which can manage multi-site configs in an emacs session easily.
 ;; 3. org-website find theme-files from a *themes-list* in sequence and same theme-file
 ;;    first found will be used. User can set *fallback theme* with the help of this feature.
@@ -69,25 +69,25 @@
 
 ;; ** Installation
 
-;; OWP is now available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]
+;; ORG2WEB is now available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]
 ;; so the recommended way is to install it through emacs package
 ;; management system. For more info about installation, please see
 ;; *tips.org* in the "doc" folder.
 
 ;; ** Configuration
-;; OWP use variable `owp-projects' to store all projects's configures, user
+;; ORG2WEB use variable `org2web-projects' to store all projects's configures, user
 ;; can add a project with the help of `add-to-list' function, but the easiest way is
-;; using `owp-add-project' function.
+;; using `org2web-add-project' function.
 
 ;; The follow code is [[http://tumashu.github.com][my website]]'s [[https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el][config]],
 ;; you can adjust and paste it to your =.emacs= file:
 
 ;; #+BEGIN_EXAMPLE
-;; (add-to-list 'load-path "path/to/owp") ; Only needed if you install owp manually
+;; (add-to-list 'load-path "path/to/org2web") ; Only needed if you install org2web manually
 
-;; (require 'owp)
+;; (require 'org2web)
 
-;; (owp-add-project
+;; (org2web-add-project
 ;;  '("tumashu.github.com"
 ;;    :repository-directory "~/project/emacs-packages/tumashu.github.com"
 ;;    :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
@@ -102,19 +102,19 @@
 ;;    :web-server-port 7654))
 ;; #+END_EXAMPLE
 
-;; [[https://github.com/tumashu/pyim][pyim]] 's owp [[https://github.com/tumashu/pyim/blob/master/pyim-devtools.el][config]] is a more complex example.
+;; [[https://github.com/tumashu/pyim][pyim]] 's org2web [[https://github.com/tumashu/pyim/blob/master/pyim-devtools.el][config]] is a more complex example.
 
 ;; You can find more config options and theirs default values by commands:
 
 ;; #+BEGIN_EXAMPLE
-;; C-h v owp-projects
-;; C-h v owp-config-fallback
+;; C-h v org2web-projects
+;; C-h v org2web-config-fallback
 ;; #+END_EXAMPLE
 
 ;; ** Publication
 
 ;; #+BEGIN_EXAMPLE
-;; M-x owp-do-publication
+;; M-x org2web-do-publication
 ;; #+END_EXAMPLE
 
 ;; ** Dependencies
@@ -137,7 +137,7 @@
 ;;    corresponding generated html files.
 ;; 2. URI path change detection is not available. That is, if you make a
 ;;    post with the URI "/blog/2013/03/25/the-old-post-name" and then
-;;    change this value in your org source, owp would be unable to
+;;    change this value in your org source, org2web would be unable to
 ;;    detect that this has happened. it will only publish a new html
 ;;    file for you so you need to delete the old html file related to
 ;;    the old URI manually.
@@ -150,53 +150,53 @@
 
 (require 'ox)
 (require 'ht)
-(require 'owp-util)
-(require 'owp-vars)
-(require 'owp-config)
-(require 'owp-resource)
-(require 'owp-export)
-(require 'owp-webserver)
+(require 'org2web-util)
+(require 'org2web-vars)
+(require 'org2web-config)
+(require 'org2web-resource)
+(require 'org2web-export)
+(require 'org2web-webserver)
 (require 'cl-lib)
 
 
-(defconst owp-version "0.1")
+(defconst org2web-version "0.1")
 
 ;;;###autoload
-(defun owp-add-project (project-config)
-  "Add `project-config' to `owp-projects'"
+(defun org2web-add-project (project-config)
+  "Add `project-config' to `org2web-projects'"
   (if (listp project-config)
       (let ((project-name (car project-config)))
         (when (stringp project-name)
-          (setq owp-projects
-                (remove (assoc project-name owp-projects)
-                        owp-projects)))
-        (add-to-list 'owp-projects project-config))
+          (setq org2web-projects
+                (remove (assoc project-name org2web-projects)
+                        org2web-projects)))
+        (add-to-list 'org2web-projects project-config))
     (message "Invalid project config!")))
 
 ;;;###autoload
-(defun owp-select-project (prompt &optional project-name)
+(defun org2web-select-project (prompt &optional project-name)
   "Let user select a project then return its name."
-  (setq owp-current-project nil)
+  (setq org2web-current-project nil)
   (setq project-name
         (or project-name
-            owp-default-project
+            org2web-default-project
             (completing-read prompt
                              (delete-dups
-                              (mapcar 'car owp-projects))
-                             nil t nil nil owp-last-project)))
-  (setq owp-current-project project-name
-        owp-last-project project-name)
+                              (mapcar 'car org2web-projects))
+                             nil t nil nil org2web-last-project)))
+  (setq org2web-current-project project-name
+        org2web-last-project project-name)
   project-name)
 
 ;;;###autoload
-(defun owp-publish (&optional project-name publishing-directory job-number update-top-n)
+(defun org2web-publish (&optional project-name publishing-directory job-number update-top-n)
   (interactive)
-  (setq project-name (owp-select-project "Which project do you want to publish? " project-name))
-  (setq owp-item-cache nil)
+  (setq project-name (org2web-select-project "Which project do you want to publish? " project-name))
+  (setq org2web-item-cache nil)
 
-  (owp-verify-configuration)
-  (let* ((remote (owp-get-config-option :remote))
-         (uploader-config (cdr (assoc (nth 0 remote) owp-uploaders)))
+  (org2web-verify-configuration)
+  (let* ((remote (org2web-get-config-option :remote))
+         (uploader-config (cdr (assoc (nth 0 remote) org2web-uploaders)))
          (support-partial-update (plist-get uploader-config :support-partial-update))
          (jobs (if support-partial-update
                    '((1 . "Full publish")
@@ -221,73 +221,73 @@
          (upload-latest-publish (if support-partial-update
                                     (= job-number 5)
                                   (= job-number 3)))
-         (repo-dir (owp-get-repository-directory))
-         (publish-root-dir (owp-get-uploader-directory project-name))
-         (export-dir (owp-get-uploader-directory project-name "export"))
-         (history-dir (owp-get-uploader-directory project-name "history"))
+         (repo-dir (org2web-get-repository-directory))
+         (publish-root-dir (org2web-get-uploader-directory project-name))
+         (export-dir (org2web-get-uploader-directory project-name "export"))
+         (history-dir (org2web-get-uploader-directory project-name "history"))
          (publishing-directory
           (when publishing-directory
             (expand-file-name publishing-directory)))
          (publish-dir
           (or publishing-directory
-              (owp-get-uploader-directory project-name "publish")
-              (owp-get-publishing-directory)))
-         (test-publish-dir (owp-get-uploader-directory project-name "test-publish"))
-         (uploader-file (concat publish-root-dir "owp-uploader.sh"))
-         (site-domain (owp-get-site-domain))
-         (preparation-function (owp-get-config-option :preparation-function))
+              (org2web-get-uploader-directory project-name "publish")
+              (org2web-get-publishing-directory)))
+         (test-publish-dir (org2web-get-uploader-directory project-name "test-publish"))
+         (uploader-file (concat publish-root-dir "org2web-uploader.sh"))
+         (site-domain (org2web-get-site-domain))
+         (preparation-function (org2web-get-config-option :preparation-function))
          (repo-files
           (unless upload-latest-publish
             (when preparation-function
               (run-hooks 'preparation-function))
-            (owp-sort-files (owp-remove-matched-items
-                             (owp-directory-files-recursively repo-dir "\\.org$")
-                             (owp-get-config-option :ignore)))))
+            (org2web-sort-files (org2web-remove-matched-items
+                                 (org2web-directory-files-recursively repo-dir "\\.org$")
+                                 (org2web-get-config-option :ignore)))))
          (length-repo-files (length repo-files))
          (update-top-n
           (cond ((and partial-update (numberp update-top-n)) update-top-n)
-                (partial-update (owp-read-top-n
-                                 "owp will update TOP (N) org-files, Please type N: "
+                (partial-update (org2web-read-top-n
+                                 "org2web will update TOP (N) org-files, Please type N: "
                                  repo-files repo-dir))))
          (changed-files (if (numberp update-top-n)
                             (cl-subseq repo-files 0 (min update-top-n length-repo-files))
                           repo-files)))
 
     (if upload-latest-publish
-        (owp-delete-directory
+        (org2web-delete-directory
          history-dir publish-dir test-publish-dir)
-      (owp-delete-directory publish-root-dir)
-      (owp-make-directory export-dir))
+      (org2web-delete-directory publish-root-dir)
+      (org2web-make-directory export-dir))
 
-    (owp-make-directory
+    (org2web-make-directory
      history-dir publish-dir test-publish-dir)
 
     (if test-publish
-        (let ((owp-always-use-relative-url t) ; Local test website, can't use absolute path.
-              (port (or (owp-get-config-option :web-server-port)
-                        (owp-get-random-number 4))))
-          (owp-prepare-theme-resources test-publish-dir)
-          (owp-publish-changes repo-files changed-files test-publish-dir)
-          (owp-web-server-browse test-publish-dir port))
+        (let ((org2web-always-use-relative-url t) ; Local test website, can't use absolute path.
+              (port (or (org2web-get-config-option :web-server-port)
+                        (org2web-get-random-number 4))))
+          (org2web-prepare-theme-resources test-publish-dir)
+          (org2web-publish-changes repo-files changed-files test-publish-dir)
+          (org2web-web-server-browse test-publish-dir port))
       (unless upload-latest-publish
-        (owp-prepare-theme-resources export-dir)
-        (owp-publish-changes repo-files changed-files export-dir))
-      (owp-generate-and-run-uploader
+        (org2web-prepare-theme-resources export-dir)
+        (org2web-publish-changes repo-files changed-files export-dir))
+      (org2web-generate-and-run-uploader
        uploader-file remote export-dir history-dir publish-dir partial-update))))
 
-(defun owp-generate-and-run-uploader (uploader-file remote export-dir history-dir publish-dir partial-update)
+(defun org2web-generate-and-run-uploader (uploader-file remote export-dir history-dir publish-dir partial-update)
   "Generate shell script UPLOADER-FILE then RUN it, the uploader is used to upload html files
-generated by owp to REMOTE."
+generated by org2web to REMOTE."
   (if (not (and uploader-file remote export-dir history-dir publish-dir))
-      (message "Can't generate owp uploader file.")
+      (message "Can't generate org2web uploader file.")
     (let* ((uploader-name (nth 0 remote))
-           (uploader-names (mapcar #'car owp-uploaders))
-           (uploader-config (cdr (assoc uploader-name owp-uploaders)))
+           (uploader-names (mapcar #'car org2web-uploaders))
+           (uploader-config (cdr (assoc uploader-name org2web-uploaders)))
            (uploader-requires (plist-get uploader-config :requires))
            (uploader-help-info (plist-get uploader-config :help-info))
            (uploader-template
-            (owp-file-to-string
-             (owp-get-uploader-template
+            (org2web-file-to-string
+             (org2web-get-uploader-template
               (or (plist-get uploader-config :template)
                   (concat (symbol-name uploader-name) ".mustache")))))
            (uploader-template-settings
@@ -300,7 +300,7 @@ generated by owp to REMOTE."
                      uploader-requires)
             (message uploader-help-info)
           ;; Generate uploader file
-          (owp-string-to-file
+          (org2web-string-to-file
            (mustache-render
             uploader-template
             (funcall uploader-template-settings ; it's a function.
@@ -313,16 +313,16 @@ generated by owp to REMOTE."
                ((string-equal system-type "windows-nt")
                 (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" uploader-file t t)))
                ((and (string-equal system-type "gnu/linux")
-                     owp-terminal-emulater)
+                     org2web-terminal-emulater)
                 (start-process-shell-command
-                 "owp-uploader-script"
+                 "org2web-uploader-script"
                  nil
                  (format "%s -e 'bash %s'"
-                         owp-terminal-emulater
+                         org2web-terminal-emulater
                          uploader-file))))
-            (message "Can't run owp uploader, user should install 'bash' correctly.")))))))
+            (message "Can't run org2web uploader, user should install 'bash' correctly.")))))))
 
-(defun owp-verify-configuration ()
+(defun org2web-verify-configuration ()
   "Ensure all required configuration fields are properly configured, include:
 1.  `:repository-directory': <required>
 2.  `:site-domain': <required>
@@ -333,48 +333,48 @@ generated by owp to REMOTE."
 7.  `:personal-github-link': [optional] (but customization recommended)
 8.  `:personal-google-analytics-id': [optional] (but customization recommended)
 9.  `:theme': [optional]"
-  (unless (member owp-current-project
-                  (mapcar 'car owp-projects))
-    (error "Can't find project: \"%s\"" owp-current-project))
-  (let ((repo-dir (owp-get-repository-directory))
-        (site-domain (owp-get-site-domain)))
+  (unless (member org2web-current-project
+                  (mapcar 'car org2web-projects))
+    (error "Can't find project: \"%s\"" org2web-current-project))
+  (let ((repo-dir (org2web-get-repository-directory))
+        (site-domain (org2web-get-site-domain)))
     (unless (and repo-dir (file-directory-p repo-dir))
       (error "Repository directory is not properly configured."))
     (unless site-domain
       (error "Site domain is not properly configured."))))
 
-(defun owp-generate-readme (save-dir)
-  "Generate README for `owp-new-repository'. SAVE-DIR is the directory where to
+(defun org2web-generate-readme (save-dir)
+  "Generate README for `org2web-new-repository'. SAVE-DIR is the directory where to
 save generated README."
-  (owp-string-to-file
+  (org2web-string-to-file
    (concat
-    (format "Personal site of %s, managed by emacs, org mode, git and owp."
+    (format "Personal site of %s, managed by emacs, org mode, git and org2web."
             (or user-full-name "[Author]"))
     "\n\n"
-    "This git repository is generated by owp \"owp-new-repository\" \
+    "This git repository is generated by org2web \"org2web-new-repository\" \
 function, it is only used for demonstrating how the git branches and directory \
-structure are organized by owp.")
+structure are organized by org2web.")
    (expand-file-name "README" save-dir)))
 
-(defun owp-generate-index (save-dir)
-  "Generate index.org for `owp-new-repository'. SAVE-DIR is the directory where
+(defun org2web-generate-index (save-dir)
+  "Generate index.org for `org2web-new-repository'. SAVE-DIR is the directory where
 to save generated index.org."
-  (owp-string-to-file
+  (org2web-string-to-file
    (concat "#+TITLE: Index" "\n\n"
            (format "This is the home page of %s."
                    (or user-full-name "[Author]")))
    (expand-file-name "index.org" save-dir)))
 
-(defun owp-generate-about (save-dir)
-  "Generate about.org for `owp-new-repository'. SAVE-DIR is the directory where
+(defun org2web-generate-about (save-dir)
+  "Generate about.org for `org2web-new-repository'. SAVE-DIR is the directory where
 to save generated about.org."
-  (owp-string-to-file
+  (org2web-string-to-file
    (concat "#+TITLE: About" "\n\n"
            (format "* About %s" (or user-full-name "[Author]")) "\n\n"
-           "  This file is automatically generated by owp.")
+           "  This file is automatically generated by org2web.")
    (expand-file-name "about.org" save-dir)))
 
-(defun owp-insert-options-template (&optional title uri
+(defun org2web-insert-options-template (&optional title uri
                                               keywords tags description)
   "Insert a template into current buffer with information for exporting.
 
@@ -395,11 +395,11 @@ responsibility to guarantee these parameters are valid."
           (u (read-string "URI(%y, %m and %d can be used to represent year, \
 month and day): " (unless (string= i "")
                     (format-spec "/%c/%y/%m/%d/%t"
-                                 `((?c . ,(owp-get-config-option :default-category))
+                                 `((?c . ,(org2web-get-config-option :default-category))
                                    (?y . "%y")
                                    (?m . "%m")
                                    (?d . "%d")
-                                   (?t . ,(owp-encode-string-to-url i)))))))
+                                   (?t . ,(org2web-encode-string-to-url i)))))))
           (k (read-string "Keywords(separated by comma and space [, ]): "))
           (a (read-string "Tags(separated by comma and space [, ]): "))
           (d (read-string "Description: ")))
@@ -449,7 +449,7 @@ month and day): " (unless (string= i "")
            org-export-with-timestamps)))
 
 ;;;###autoload
-(defun owp-new-post (&optional project-name category filename insert-fallback-template)
+(defun org2web-new-post (&optional project-name category filename insert-fallback-template)
   "Setup a new post.
 
 PROJECT-NAME: which project do you want to export
@@ -459,19 +459,19 @@ FILENAME:     the file name of this post
 Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive
-   (let* ((p (owp-select-project "Which project do you want post? "))
+   (let* ((p (org2web-select-project "Which project do you want post? "))
           (c (read-string (format "Category of \"%s\" project: " p)
-                          (owp-get-config-option :default-category)))
+                          (org2web-get-config-option :default-category)))
           (f (read-string (format "Filename of \"%s\" project: " p) "new-post.org" p))
           (d (yes-or-no-p "Insert fallback template? ")))
      (list p c f d)))
   (if (string= category "")
-      (setq category (owp-get-config-option :default-category)))
+      (setq category (org2web-get-config-option :default-category)))
   (if (string= filename "")
       (setq filename "new-post.org"))
-  (unless (owp-string-suffix-p ".org" filename)
+  (unless (org2web-string-suffix-p ".org" filename)
     (setq filename (concat filename ".org")))
-  (let* ((repo-dir (owp-get-repository-directory))
+  (let* ((repo-dir (org2web-get-repository-directory))
          (dir (concat (file-name-as-directory repo-dir)
                       (file-name-as-directory category)))
          (path (concat dir filename)))
@@ -482,19 +482,19 @@ responsibility to guarantee the two parameters are valid."
     (switch-to-buffer (find-file path))
     (if (and (not insert-fallback-template)
              (called-interactively-p 'any))
-        (call-interactively 'owp-insert-options-template)
-      (owp-insert-options-template "<Insert Your Title Here>"
-                                   (format "/%s/%%y/%%m/%%d/%%t/ Or /%s/%%t/"
-                                           category category)
-                                   "keyword1, keyword2, keyword3"
-                                   "tag1, tag2, tag3"
-                                   "<Add description here>"))
+        (call-interactively 'org2web-insert-options-template)
+      (org2web-insert-options-template "<Insert Your Title Here>"
+                                       (format "/%s/%%y/%%m/%%d/%%t/ Or /%s/%%t/"
+                                               category category)
+                                       "keyword1, keyword2, keyword3"
+                                       "tag1, tag2, tag3"
+                                       "<Add description here>"))
     (save-buffer)))
 
 
 
 
 ;; * Footer
-(provide 'owp)
+(provide 'org2web)
 
-;;; owp.el ends here
+;;; org2web.el ends here

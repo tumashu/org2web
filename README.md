@@ -1,22 +1,22 @@
-- [OWP README](#org85442a7)
-  - [Installation](#orgd9e21d2)
-  - [Configuration](#org8d0d6fd)
-  - [Publication](#org2c76f04)
-  - [Dependencies](#org039c031)
-  - [Known issues](#orgb78e717)
+- [ORG2WEB README](#org2e2423d)
+  - [Installation](#orga7ee890)
+  - [Configuration](#org83d269b)
+  - [Publication](#org0179f87)
+  - [Dependencies](#org6a3532c)
+  - [Known issues](#orga5d9a1e)
 
 
-<a id="org85442a7"></a>
+<a id="org2e2423d"></a>
 
-# OWP README
+# ORG2WEB README
 
-OWP is the new name of org-webpage, the reason of renaming org-webpage to OWP is: <https://github.com/purcell/package-lint/issues/75>
+ORG2WEB is the new name of org-webpage, the reason of renaming org-webpage to ORG2WEB is: <https://github.com/purcell/package-lint/issues/75>
 
-OWP is a static site generator based on [org-mode](http://orgmode.org/), which code derived from Kelvin H's [org-page](https://github.com/kelvinh/org-page).
+ORG2WEB is a static site generator based on [org-mode](http://orgmode.org/), which code derived from Kelvin H's [org-page](https://github.com/kelvinh/org-page).
 
 The main differents of two projects are as follow:
 
-1.  OWP's core **don't hard code git**, its process is like below:
+1.  ORG2WEB's core **don't hard code git**, its process is like below:
 
 
         [ Org files in repository]  [ Website project configure ]
@@ -38,33 +38,33 @@ The main differents of two projects are as follow:
 
                                [ REMOTE ]
 
-2.  OWP's default config is \`org-publish-project-alist' style alist, which can manage multi-site configs in an emacs session easily.
+2.  ORG2WEB's default config is \`org-publish-project-alist' style alist, which can manage multi-site configs in an emacs session easily.
 3.  org-website find theme-files from a **themes-list** in sequence and same theme-file first found will be used. User can set **fallback theme** with the help of this feature.
 4.  org-website include a tiny emacs web server, which can be used to test publish.
 5.  org-website can use other uploaders to upload website, for example: rclone.
 6.  &#x2026;
 
 
-<a id="orgd9e21d2"></a>
+<a id="orga7ee890"></a>
 
 ## Installation
 
-OWP is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/) so the recommended way is to install it through emacs package management system. For more info about installation, please see **tips.org** in the "doc" folder.
+ORG2WEB is now available from the famous emacs package repo [melpa](http://melpa.milkbox.net/) so the recommended way is to install it through emacs package management system. For more info about installation, please see **tips.org** in the "doc" folder.
 
 
-<a id="org8d0d6fd"></a>
+<a id="org83d269b"></a>
 
 ## Configuration
 
-OWP use variable \`owp-projects' to store all projects's configures, user can add a project with the help of \`add-to-list' function, but the easiest way is using \`owp-add-project' function.
+ORG2WEB use variable \`org2web-projects' to store all projects's configures, user can add a project with the help of \`add-to-list' function, but the easiest way is using \`org2web-add-project' function.
 
 The follow code is [my website](http://tumashu.github.com)'s [config](https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el), you can adjust and paste it to your `.emacs` file:
 
-    (add-to-list 'load-path "path/to/owp") ; Only needed if you install owp manually
+    (add-to-list 'load-path "path/to/org2web") ; Only needed if you install org2web manually
 
-    (require 'owp)
+    (require 'org2web)
 
-    (owp-add-project
+    (org2web-add-project
      '("tumashu.github.com"
        :repository-directory "~/project/emacs-packages/tumashu.github.com"
        :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
@@ -78,22 +78,22 @@ The follow code is [my website](http://tumashu.github.com)'s [config](https://gi
        :personal-duoshuo-shortname "tumashu-website"
        :web-server-port 7654))
 
-[pyim](https://github.com/tumashu/pyim) 's owp [config](https://github.com/tumashu/pyim/blob/master/pyim-devtools.el) is a more complex example.
+[pyim](https://github.com/tumashu/pyim) 's org2web [config](https://github.com/tumashu/pyim/blob/master/pyim-devtools.el) is a more complex example.
 
 You can find more config options and theirs default values by commands:
 
-    C-h v owp-projects
-    C-h v owp-config-fallback
+    C-h v org2web-projects
+    C-h v org2web-config-fallback
 
 
-<a id="org2c76f04"></a>
+<a id="org0179f87"></a>
 
 ## Publication
 
-    M-x owp-do-publication
+    M-x org2web-do-publication
 
 
-<a id="org039c031"></a>
+<a id="org6a3532c"></a>
 
 ## Dependencies
 
@@ -109,12 +109,12 @@ You can find more config options and theirs default values by commands:
 10. [simple-httpd](https://github.com/skeeto/emacs-web-server): Extensible Emacs HTTP 1.1 server
 
 
-<a id="orgb78e717"></a>
+<a id="orga5d9a1e"></a>
 
 ## Known issues
 
 1.  Currently the deletion change handler has not been implemented so if you deleted some org sources, you may have to manually delete corresponding generated html files.
-2.  URI path change detection is not available. That is, if you make a post with the URI "/blog/2013/03/25/the-old-post-name" and then change this value in your org source, owp would be unable to detect that this has happened. it will only publish a new html file for you so you need to delete the old html file related to the old URI manually.
+2.  URI path change detection is not available. That is, if you make a post with the URI "/blog/2013/03/25/the-old-post-name" and then change this value in your org source, org2web would be unable to detect that this has happened. it will only publish a new html file for you so you need to delete the old html file related to the old URI manually.
 
 
-Converted from owp.el by [el2org](https://github.com/tumashu/el2org) .
+Converted from org2web.el by [el2org](https://github.com/tumashu/el2org) .

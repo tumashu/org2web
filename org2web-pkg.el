@@ -1,5 +1,5 @@
 (define-package
-  "owp" "0.1"
+  "org2web" "0.1"
   "A static site generator based on org mode."
   '((cl-lib "1.0")
     (ht "1.5")

@@ -1,4 +1,4 @@
-;;; owp-webserver.el --- Test web server required by org-webpage
+;;; org2web-webserver.el --- Test web server required by org-webpage
 
 ;; Copyright (C)  2015 Feng Shu
 
@@ -21,26 +21,26 @@
 
 ;;; Commentary:
 
-;; owp-webserver.el is a web server used to test org-webpage.
+;; org2web-webserver.el is a web server used to test org-webpage.
 
 ;;; Code:
 (require 'cl-lib)
 (require 'url-util)
 (require 'browse-url)
 (require 'simple-httpd)
-(require 'owp-vars)
-(require 'owp-config)
+(require 'org2web-vars)
+(require 'org2web-config)
 
-(defvar owp-webserver-last-docroot nil)
-(defvar owp-webserver-last-port nil)
-(defvar owp-current-project)
+(defvar org2web-webserver-last-docroot nil)
+(defvar org2web-webserver-last-port nil)
+(defvar org2web-current-project)
 
-(defun owp-webserver-start (docroot port)
-  (owp-webserver-stop)
+(defun org2web-webserver-start (docroot port)
+  (org2web-webserver-stop)
   (httpd-log `(start ,(format "org-webpage: start webserver at %s"
                               (current-time-string))))
   (make-network-process
-   :name     (or owp-current-project "owp-webserver")
+   :name     (or org2web-current-project "org2web-webserver")
    :service  port
    :server   t
    :host     httpd-host
@@ -52,27 +52,27 @@
    :coding   'utf-8-unix  ; *should* be ISO-8859-1 but that doesn't work
    :log      'httpd--log))
 
-(defun owp-webserver-stop ()
+(defun org2web-webserver-stop ()
   (interactive)
-  (let ((name (or owp-current-project "owp-webserver")))
+  (let ((name (or org2web-current-project "org2web-webserver")))
     (when (process-status name)
       (delete-process name)
       (httpd-log `(stop ,(format "org-webpage: stop webserver at %s"
                                  (current-time-string)))))))
 
-(defun owp-webserver-browse (&optional docroot port)
+(defun org2web-webserver-browse (&optional docroot port)
   (interactive)
-  (owp-webserver-stop)
-  (let ((docroot (or docroot owp-webserver-last-docroot) )
-        (port (or port owp-webserver-last-port)))
+  (org2web-webserver-stop)
+  (let ((docroot (or docroot org2web-webserver-last-docroot) )
+        (port (or port org2web-webserver-last-port)))
     (when (and docroot port)
       (progn
-        (owp-webserver-start docroot port)
-        (setq owp-webserver-last-docroot docroot)
-        (setq owp-webserver-last-port port)
+        (org2web-webserver-start docroot port)
+        (setq org2web-webserver-last-docroot docroot)
+        (setq org2web-webserver-last-port port)
         (browse-url-default-browser
          (format "http://localhost:%s" port))))))
 
-(provide 'owp-webserver)
+(provide 'org2web-webserver)
 
-;;; owp-webserver.el ends here
+;;; org2web-webserver.el ends here
