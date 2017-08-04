@@ -490,7 +490,7 @@ test publish.")
 (defvar org2web-config-fallback
   `(:repository-directory
     nil
-    :ignore ("-pkg\\.org$" "-autoloads\\.org" "#\\..*")
+    :ignore ("-pkg\\.org$" "-autoloads\\.org" "#\\..*" "\\.dir-local\\.*")
     :publishing-directory nil
     :remote nil
     :site-domain nil
