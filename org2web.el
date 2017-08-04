@@ -268,7 +268,7 @@
                         (org2web-get-random-number 4))))
           (org2web-prepare-theme-resources test-publish-dir)
           (org2web-publish-changes repo-files changed-files test-publish-dir)
-          (org2web-web-server-browse test-publish-dir port))
+          (org2web-webserver-browse test-publish-dir port))
       (unless upload-latest-publish
         (org2web-prepare-theme-resources export-dir)
         (org2web-publish-changes repo-files changed-files export-dir))
