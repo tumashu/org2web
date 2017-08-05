@@ -86,7 +86,7 @@
                (el2org-generate-file file tags 'org org-file))))
        files)))
 
-  ;; Generate README.mk if necessary
+  ;; Generate README.md if necessary
   (let* ((repo-dir (org2web-get-repository-directory))
          (filename (car (org2web-get-config-option :el2org-readme-sources)))
          (file (when filename
