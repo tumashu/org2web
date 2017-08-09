@@ -147,7 +147,7 @@
 
 ;; * 代码说明                                                             :code:
 
-
+(require 'cl-lib)
 (require 'ox)
 (require 'ht)
 (require 'org2web-util)
@@ -156,7 +156,7 @@
 (require 'org2web-resource)
 (require 'org2web-export)
 (require 'org2web-webserver)
-(require 'cl-lib)
+(require 'org2web-el2org)
 
 
 (defconst org2web-version "0.1")

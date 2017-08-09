@@ -7,4 +7,5 @@
     (htmlize "1.47")
     (org "8.0")
     (dash "2.0.0")
+    (el2org "0.10")
     (simple-httpd "0.1")))
