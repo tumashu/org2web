@@ -24,11 +24,7 @@
 ;; org2web-config.el contains functions used to develop org2web.
 
 ;;; Code:
-(require 'org)
-(require 'ox-org)
-(require 'org2web-vars)
-(require 'org2web-config)
-(require 'org2web-el2org)
+(require 'org2web)
 
 (defvar org2web-devtools-repository-directory
   "~/project/emacs-packages/org2web/")
