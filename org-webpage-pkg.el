@@ -1,6 +1,6 @@
 (define-package
   "org-webpage" "0.1"
-  "A static site generator based on org mode."
+  "Please install \"org2web\" instead."
   '((cl-lib "1.0")
     (ht "1.5")
     (mustache "0.22")
