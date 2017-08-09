@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
-    <title>Org-webpage</title>
-    <link>http://tumashu.github.com/org-webpage</link>
+    <title>org2web</title>
+    <link>http://tumashu.github.com/org2web</link>
     <description>(Static site senerator based on org mode)</description>
-    <pubDate>四, 27 7月 2017 21:36:20 CST</pubDate>
-    <lastBuildDate>四, 27 7月 2017 21:36:20 CST</lastBuildDate>
+    <pubDate>三, 09 8月 2017 19:46:48 CST</pubDate>
+    <lastBuildDate>三, 09 8月 2017 19:46:48 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
-    <generator>org-webpage static site generator (https://github.com/tumashu/org-webpage)</generator>
+    <generator>org2web static site generator (https://github.com/tumashu/org2web)</generator>
 <item>
-<title>org-webpage.el --- static site generator based on org mode</title>
-<link>http://tumashu.github.com/org-webpage/documents/org-webpage.el-----static-site-generator-based-on-org-mode/</link>
+<title>static site generator based on org mode</title>
+<link>http://tumashu.github.com/org2web/documents/static-site-generator-based-on-org-mode/</link>
 <description>No Description</description>
-<pubDate>2017-07-27</pubDate>
-<guid>http://tumashu.github.com/org-webpage/documents/org-webpage.el-----static-site-generator-based-on-org-mode/</guid>
+<pubDate>2017-08-09</pubDate>
+<guid>http://tumashu.github.com/org2web/documents/static-site-generator-based-on-org-mode/</guid>
 </item>
 <item>
-<title>Tips of org-webpage</title>
-<link>http://tumashu.github.com/org-webpage/documents/tips-of-org-webpage/</link>
+<title>el2org support for org2web</title>
+<link>http://tumashu.github.com/org2web/documents/el2org-support-for-org2web/</link>
 <description>No Description</description>
-<pubDate>2015-08-22</pubDate>
-<guid>http://tumashu.github.com/org-webpage/documents/tips-of-org-webpage/</guid>
+<pubDate>2017-08-09</pubDate>
+<guid>http://tumashu.github.com/org2web/documents/el2org-support-for-org2web/</guid>
+</item>
+<item>
+<title>Tips of org2web</title>
+<link>http://tumashu.github.com/org2web/documents/tips-of-org2web/</link>
+<description>No Description</description>
+<pubDate>2017-07-30</pubDate>
+<guid>http://tumashu.github.com/org2web/documents/tips-of-org2web/</guid>
 </item>
 <item>
 <title>Change Log</title>
-<link>http://tumashu.github.com/org-webpage/documents/change-log/</link>
+<link>http://tumashu.github.com/org2web/documents/change-log/</link>
 <description>No Description</description>
 <pubDate>2015-04-27</pubDate>
-<guid>http://tumashu.github.com/org-webpage/documents/change-log/</guid>
+<guid>http://tumashu.github.com/org2web/documents/change-log/</guid>
 </item>
 </channel>
 </rss>

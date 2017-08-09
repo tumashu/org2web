@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>el2org support for org2web - org2web</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Feng Shu" />
+    <link rel="stylesheet" href="http://tumashu.github.com/org2web/media/css/main.css" type="text/css">
+  </head>
+<body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="http://tumashu.github.com/org2web/">org2web</a> <span class="subtitle">(Static site senerator based on org mode)</span></h1>
+        <ul>
+          <li><a href="http://tumashu.github.com/org2web/changelog/">Changelog</a></li>
+          <li><a href="http://tumashu.github.com/org2web/documents/">Documents</a></li>
+          <li><a href="http://tumashu.github.com/org2web/tags/">Tags</a></li>
+          <li><a href="http://tumashu.github.com/org2web/about/">About</a></li>
+          <li><a href="https://github.com/tumashu/org2web">GitHub</a></li>
+          <li><a href="http://tumashu.github.com/org2web/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="http://www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="tumashu.github.com/org2web">
+        </form>
+        <img class="avatar" src="http://tumashu.github.com/org2web/media/img/horse.jpg" />
+      </header>
+    </div>
+
+<div class="content-and-footer">
+<div>
+<div class="post">
+<h1 class="post-title">el2org support for org2web</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgbe555c3">1. 说明文档</a></li>
+<li><a href="#org946ff2c">2. 代码</a>
+<ul>
+<li><a href="#orga9ad9f5">2.1. Require</a></li>
+<li><a href="#org1b05e88">2.2. org2web 导出函数（支持 el2org）</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgbe555c3" class="outline-2">
+<h2 id="orgbe555c3"><span class="section-number-2">1</span> 说明文档</h2>
+<div class="outline-text-2" id="text-1">
+<pre class="example">
+(require 'org2web-el2org) ;; You need install el2org and gfm
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org946ff2c" class="outline-2">
+<h2 id="org946ff2c"><span class="section-number-2">2</span> 代码</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-orga9ad9f5" class="outline-3">
+<h3 id="orga9ad9f5"><span class="section-number-3">2.1</span> Require</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">el2org</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ox-gfm</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-el2org-generate-readme</span> (<span style="color: #afd8af;">&amp;optional</span> project-name)
+  (<span style="color: #4c83ff;">interactive</span>)
+  (org2web-select-project
+   <span style="color: #61CE3C;">"Which project do you want to generate README.md? "</span> project-name)
+  (<span style="color: #4c83ff;">let*</span> ((repo-dir (org2web-get-repository-repo-directory))
+         (el-file (concat
+                   (file-name-as-repo-directory repo-dir)
+                   (car (org2web-get-config-option <span style="color: #4c83ff;">:el2org-readme-sources</span>))))
+         (readme-file (concat (file-name-as-repo-directory repo-dir) <span style="color: #61CE3C;">"README.md"</span>))
+         (tags (org2web-get-config-option <span style="color: #4c83ff;">:el2org-readme-tags</span>)))
+    (el2org-generate-file el-file tags 'gfm readme-file)))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-el2org-generate-index</span> (<span style="color: #afd8af;">&amp;optional</span> project-name)
+  (<span style="color: #4c83ff;">interactive</span>)
+  (org2web-select-project
+   <span style="color: #61CE3C;">"Which project do you want to generate index.org? "</span> project-name)
+  (<span style="color: #4c83ff;">let*</span> ((repo-dir (org2web-get-repository-repo-directory))
+         (el-file (concat
+                   (file-name-as-repo-directory repo-dir)
+                   (car (org2web-get-config-option <span style="color: #4c83ff;">:el2org-readme-sources</span>))))
+         (index-file (concat (file-name-as-repo-directory repo-dir) <span style="color: #61CE3C;">"index.org"</span>))
+         (tags (org2web-get-config-option <span style="color: #4c83ff;">:el2org-readme-tags</span>)))
+    (el2org-generate-file el-file tags 'org index-file)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1b05e88" class="outline-3">
+<h3 id="org1b05e88"><span class="section-number-3">2.2</span> org2web 导出函数（支持 el2org）</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-el2org-org-export-function</span> ()
+  <span style="color: #FBDE2D;">"A function with can export org file to html."</span>
+  (<span style="color: #4c83ff;">let</span> ((org-export-headline-levels 7)
+        (indent-tabs-mode nil)
+        (tab-width 4))
+    (org-export-as 'html nil nil t nil)))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-el2org-preparation-function</span> ()
+  <span style="color: #FBDE2D;">"Generate org files by el2org."</span>
+  <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">Orgify elisp files</span>
+  (<span style="color: #4c83ff;">let*</span> ((repo-dir (org2web-get-repository-directory))
+         (tags (org2web-get-config-option <span style="color: #4c83ff;">:el2org-doc-tags</span>))
+         (regexp-list (org2web-get-config-option <span style="color: #4c83ff;">:el2org-doc-sources</span>))
+         (files (<span style="color: #4c83ff;">when</span> regexp-list
+                  (org2web-select-matched-items
+                   (org2web-directory-files-recursively repo-dir <span style="color: #61CE3C;">"\\.el$"</span>)
+                   regexp-list))))
+    (<span style="color: #4c83ff;">when</span> files
+      (mapc
+       #'(lambda (file)
+           (<span style="color: #4c83ff;">when</span> (file-exists-p file)
+             (<span style="color: #4c83ff;">let</span> ((org-file (concat (file-name-sans-extension file) <span style="color: #61CE3C;">".org"</span>)))
+               (el2org-generate-file file tags 'org org-file))))
+       files)))
+
+  <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">Generate README.md if necessary</span>
+  (<span style="color: #4c83ff;">let*</span> ((repo-dir (org2web-get-repository-directory))
+         (filename (car (org2web-get-config-option <span style="color: #4c83ff;">:el2org-readme-sources</span>)))
+         (file (<span style="color: #4c83ff;">when</span> filename
+                 (concat (file-name-as-directory repo-dir) filename)))
+         (readme-file (concat (file-name-as-directory repo-dir) <span style="color: #61CE3C;">"README.md"</span>))
+         (tags (org2web-get-config-option <span style="color: #4c83ff;">:el2org-readme-tags</span>)))
+    (el2org-generate-file file tags 'gfm readme-file))
+
+  <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">Generate index.org if necessary</span>
+  (<span style="color: #4c83ff;">let*</span> ((repo-dir (org2web-get-repository-directory))
+         (filename (car (org2web-get-config-option <span style="color: #4c83ff;">:el2org-index-sources</span>)))
+         (file (<span style="color: #4c83ff;">when</span> filename
+                 (concat (file-name-as-directory repo-dir) filename)))
+         (index-file (concat (file-name-as-directory repo-dir) <span style="color: #61CE3C;">"index.org"</span>))
+         (tags (org2web-get-config-option <span style="color: #4c83ff;">:el2org-index-tags</span>)))
+    (el2org-generate-file file tags 'org index-file)))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">define-obsolete-function-alias</span> 'owp/el2org-preparation-function 'org2web-el2org-preparation-function)
+(<span style="color: #4c83ff;">define-obsolete-function-alias</span> 'owp/el2org-org-export-function 'org2web-el2org-org-export-function)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-08-09</span>
+        <span title="last modification date" class="post-info">2017-08-09</span>
+        <span title="tags" class="post-info">N/A</span>
+        <span title="author" class="post-info">Feng Shu</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div class="ds-thread" data-thread-key="ba123e292fc69d611e8b1c16f08313f7"
+                               data-title="el2org support for org2web" data-url="http://tumashu.github.com/org2web/documents/el2org-support-for-org2web/"></div>
+        <script type="text/javascript">
+        var duoshuoQuery = {short_name:"tumashu-website"};
+	    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	    })();
+	    </script>
+      </section>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; <span id="footerYear"></span> <a href="mailto:tumashu &lt;at&gt; 163 &lt;dot&gt; com">Feng Shu</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/tumashu/org2web" target="_blank">org2web</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+</div>
+</body>
+</html>

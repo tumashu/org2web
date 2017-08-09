@@ -1,57 +1,62 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>org-webpage.el --- static site generator based on org mode - Org-webpage</title>
+    <title>static site generator based on org mode - org2web</title>
     <meta charset="utf-8" />
     <meta name="author" content="Feng Shu" />
-    <link rel="stylesheet" href="http://tumashu.github.com/org-webpage/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="http://tumashu.github.com/org2web/media/css/main.css" type="text/css">
   </head>
 <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="masthead-title"><a href="http://tumashu.github.com/org-webpage/">Org-webpage</a> <span class="subtitle">(Static site senerator based on org mode)</span></h1>
+        <h1 class="masthead-title"><a href="http://tumashu.github.com/org2web/">org2web</a> <span class="subtitle">(Static site senerator based on org mode)</span></h1>
         <ul>
-          <li><a href="http://tumashu.github.com/org-webpage/changelog/">Changelog</a></li>
-          <li><a href="http://tumashu.github.com/org-webpage/documents/">Documents</a></li>
-          <li><a href="http://tumashu.github.com/org-webpage/tags/">Tags</a></li>
-          <li><a href="http://tumashu.github.com/org-webpage/about/">About</a></li>
-          <li><a href="https://github.com/tumashu/org-webpage">GitHub</a></li>
-          <li><a href="http://tumashu.github.com/org-webpage/rss.xml">RSS</a></li>
+          <li><a href="http://tumashu.github.com/org2web/changelog/">Changelog</a></li>
+          <li><a href="http://tumashu.github.com/org2web/documents/">Documents</a></li>
+          <li><a href="http://tumashu.github.com/org2web/tags/">Tags</a></li>
+          <li><a href="http://tumashu.github.com/org2web/about/">About</a></li>
+          <li><a href="https://github.com/tumashu/org2web">GitHub</a></li>
+          <li><a href="http://tumashu.github.com/org2web/rss.xml">RSS</a></li>
         </ul>
         <form method="get" id="searchform" action="http://www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
-          <input type="hidden" name="as_sitesearch" value="tumashu.github.com/org-webpage">
+          <input type="hidden" name="as_sitesearch" value="tumashu.github.com/org2web">
         </form>
-        <img class="avatar" src="http://tumashu.github.com/org-webpage/media/img/horse.jpg" />
+        <img class="avatar" src="http://tumashu.github.com/org2web/media/img/horse.jpg" />
       </header>
     </div>
 
 <div class="content-and-footer">
 <div>
 <div class="post">
-<h1 class="post-title">org-webpage.el --- static site generator based on org mode</h1>
+<h1 class="post-title">static site generator based on org mode</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfbfee4d">1. org-webpage README</a>
+<li><a href="#orgbd844f6">1. org2web README</a>
 <ul>
-<li><a href="#orgc44c4e0">1.1. Installation</a></li>
-<li><a href="#orga91a511">1.2. Configuration</a></li>
-<li><a href="#org3597940">1.3. Publication</a></li>
-<li><a href="#orgbae5938">1.4. Dependencies</a></li>
-<li><a href="#orgae7b980">1.5. Known issues</a></li>
+<li><a href="#org55e7eb5">1.1. Installation</a></li>
+<li><a href="#orgd0d8437">1.2. Configuration</a></li>
+<li><a href="#orge9a0802">1.3. Publication</a></li>
+<li><a href="#orge10c6a7">1.4. Dependencies</a></li>
+<li><a href="#org0bd4ea5">1.5. Known issues</a></li>
 </ul>
 </li>
-<li><a href="#org859a121">2. 代码说明</a></li>
+<li><a href="#org4617007">2. 代码说明</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgfbfee4d" class="outline-2">
-<h2 id="orgfbfee4d"><span class="section-number-2">1</span> org-webpage README</h2>
+<div id="outline-container-orgbd844f6" class="outline-2">
+<h2 id="orgbd844f6"><span class="section-number-2">1</span> org2web README</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-org-webpage is a static site generator based on <a href="http://orgmode.org/">org-mode</a>,
+org2web is the new name of org-webpage, the reason of renaming org-webpage to org2web
+is: <a href="https://github.com/purcell/package-lint/issues/75">https://github.com/purcell/package-lint/issues/75</a>
+</p>
+
+<p>
+org2web is a static site generator based on <a href="http://orgmode.org/">org-mode</a>,
 which code derived from Kelvin H's <a href="https://github.com/kelvinh/org-page">org-page</a>.
 </p>
 
@@ -61,7 +66,7 @@ The main differents of two projects are as follow:
 
 <ol class="org-ol">
 <li><p>
-org-webpage's core <b>don't hard code git</b>, its process is like below:
+org2web's core <b>don't hard code git</b>, its process is like below:
 </p>
 <pre class="example">
 
@@ -85,7 +90,7 @@ org-webpage's core <b>don't hard code git</b>, its process is like below:
                        [ REMOTE ]
 </pre></li>
 
-<li>org-webpage's default config is `org-publish-project-alist' style alist,
+<li>org2web's default config is `org-publish-project-alist' style alist,
 which can manage multi-site configs in an emacs session easily.</li>
 <li>org-website find theme-files from a <b>themes-list</b> in sequence and same theme-file
 first found will be used. User can set <b>fallback theme</b> with the help of this feature.</li>
@@ -95,11 +100,11 @@ first found will be used. User can set <b>fallback theme</b> with the help of th
 </ol>
 </div>
 
-<div id="outline-container-orgc44c4e0" class="outline-3">
-<h3 id="orgc44c4e0"><span class="section-number-3">1.1</span> Installation</h3>
+<div id="outline-container-org55e7eb5" class="outline-3">
+<h3 id="org55e7eb5"><span class="section-number-3">1.1</span> Installation</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-org-webpage is now available from the famous emacs package repo <a href="http://melpa.milkbox.net/">melpa</a>
+org2web is now available from the famous emacs package repo <a href="http://melpa.milkbox.net/">melpa</a>
 so the recommended way is to install it through emacs package
 management system. For more info about installation, please see
 <b>tips.org</b> in the "doc" folder.
@@ -107,13 +112,13 @@ management system. For more info about installation, please see
 </div>
 </div>
 
-<div id="outline-container-orga91a511" class="outline-3">
-<h3 id="orga91a511"><span class="section-number-3">1.2</span> Configuration</h3>
+<div id="outline-container-orgd0d8437" class="outline-3">
+<h3 id="orgd0d8437"><span class="section-number-3">1.2</span> Configuration</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-org-webpage use variable `owp/project-config-alist' to store all projects's configures, user
+org2web use variable `org2web-projects' to store all projects's configures, user
 can add a project with the help of `add-to-list' function, but the easiest way is
-using `owp/add-project-config' function.
+using `org2web-add-project' function.
 </p>
 
 <p>
@@ -122,11 +127,11 @@ you can adjust and paste it to your <code>.emacs</code> file:
 </p>
 
 <pre class="example">
-(add-to-list 'load-path "path/to/org-webpage") ; Only needed if you install org-webpage manually
+(add-to-list 'load-path "path/to/org2web") ; Only needed if you install org2web manually
 
-(require 'org-webpage)
+(require 'org2web)
 
-(owp/add-project-config
+(org2web-add-project
  '("tumashu.github.com"
    :repository-directory "~/project/emacs-packages/tumashu.github.com"
    :remote (git "https://github.com/tumashu/tumashu.github.com.git" "master")
@@ -142,7 +147,7 @@ you can adjust and paste it to your <code>.emacs</code> file:
 </pre>
 
 <p>
-<a href="https://github.com/tumashu/pyim">pyim</a> 's org-webpage <a href="https://github.com/tumashu/pyim/blob/master/pyim-devtools.el">config</a> is a more complex example.
+<a href="https://github.com/tumashu/pyim">pyim</a> 's org2web <a href="https://github.com/tumashu/pyim/blob/master/pyim-devtools.el">config</a> is a more complex example.
 </p>
 
 <p>
@@ -150,23 +155,23 @@ You can find more config options and theirs default values by commands:
 </p>
 
 <pre class="example">
-C-h v owp/project-config-alist
-C-h v owp/config-fallback
+C-h v org2web-projects
+C-h v org2web-config-fallback
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org3597940" class="outline-3">
-<h3 id="org3597940"><span class="section-number-3">1.3</span> Publication</h3>
+<div id="outline-container-orge9a0802" class="outline-3">
+<h3 id="orge9a0802"><span class="section-number-3">1.3</span> Publication</h3>
 <div class="outline-text-3" id="text-1-3">
 <pre class="example">
-M-x owp/do-publication
+M-x org2web-publish
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgbae5938" class="outline-3">
-<h3 id="orgbae5938"><span class="section-number-3">1.4</span> Dependencies</h3>
+<div id="outline-container-orge10c6a7" class="outline-3">
+<h3 id="orge10c6a7"><span class="section-number-3">1.4</span> Dependencies</h3>
 <div class="outline-text-3" id="text-1-4">
 <ol class="org-ol">
 <li><a href="http://www.gnu.org/software/emacs/">emacs</a>: this is an "of-course" dependency</li>
@@ -183,8 +188,8 @@ M-x owp/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgae7b980" class="outline-3">
-<h3 id="orgae7b980"><span class="section-number-3">1.5</span> Known issues</h3>
+<div id="outline-container-org0bd4ea5" class="outline-3">
+<h3 id="org0bd4ea5"><span class="section-number-3">1.5</span> Known issues</h3>
 <div class="outline-text-3" id="text-1-5">
 <ol class="org-ol">
 <li>Currently the deletion change handler has not been implemented so
@@ -192,7 +197,7 @@ if you deleted some org sources, you may have to manually delete
 corresponding generated html files.</li>
 <li>URI path change detection is not available. That is, if you make a
 post with the URI "/blog/2013/03/25/the-old-post-name" and then
-change this value in your org source, org-webpage would be unable to
+change this value in your org source, org2web would be unable to
 detect that this has happened. it will only publish a new html
 file for you so you need to delete the old html file related to
 the old URI manually.</li>
@@ -201,68 +206,69 @@ the old URI manually.</li>
 </div>
 </div>
 
-<div id="outline-container-org859a121" class="outline-2">
-<h2 id="org859a121"><span class="section-number-2">2</span> 代码说明</h2>
+<div id="outline-container-org4617007" class="outline-2">
+<h2 id="org4617007"><span class="section-number-2">2</span> 代码说明</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ox</span>)
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">cl-lib</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ox</span>)
 (<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">ht</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-util</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-vars</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-config</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-resource</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-export</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">owp-web-server</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">cl-lib</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">org2web-util</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">org2web-vars</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">org2web-config</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">org2web-resource</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">org2web-export</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">org2web-webserver</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">org2web-el2org</span>)
 </pre>
 </div>
 
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defconst</span> <span style="color: #ff69b4;">org-webpage-version</span> <span style="color: #61CE3C;">"0.1"</span>)
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defconst</span> <span style="color: #ff69b4;">org2web-version</span> <span style="color: #61CE3C;">"0.1"</span>)
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/add-project-config</span> (project-config)
-  <span style="color: #FBDE2D;">"Add `</span><span style="color: #96CBFE;">project-config</span><span style="color: #FBDE2D;">' to `</span><span style="color: #96CBFE;">owp/project-config-alist</span><span style="color: #FBDE2D;">'"</span>
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-add-project</span> (project-config)
+  <span style="color: #FBDE2D;">"Add `</span><span style="color: #96CBFE;">project-config</span><span style="color: #FBDE2D;">' to `</span><span style="color: #96CBFE;">org2web-projects</span><span style="color: #FBDE2D;">'"</span>
   (<span style="color: #4c83ff;">if</span> (listp project-config)
       (<span style="color: #4c83ff;">let</span> ((project-name (car project-config)))
         (<span style="color: #4c83ff;">when</span> (stringp project-name)
-          (<span style="color: #4c83ff;">setq</span> owp/project-config-alist
-                (remove (assoc project-name owp/project-config-alist)
-                        owp/project-config-alist)))
-        (add-to-list 'owp/project-config-alist project-config))
+          (<span style="color: #4c83ff;">setq</span> org2web-projects
+                (remove (assoc project-name org2web-projects)
+                        org2web-projects)))
+        (add-to-list 'org2web-projects project-config))
     (message <span style="color: #61CE3C;">"Invalid project config!"</span>)))
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/select-project-name</span> (prompt <span style="color: #afd8af;">&amp;optional</span> project-name)
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-select-project</span> (prompt <span style="color: #afd8af;">&amp;optional</span> project-name)
   <span style="color: #FBDE2D;">"Let user select a project then return its name."</span>
-  (<span style="color: #4c83ff;">setq</span> owp/current-project-name nil)
+  (<span style="color: #4c83ff;">setq</span> org2web-current-project nil)
   (<span style="color: #4c83ff;">setq</span> project-name
         (<span style="color: #4c83ff;">or</span> project-name
-            owp/default-project-name
+            org2web-default-project
             (completing-read prompt
                              (delete-dups
-                              (mapcar 'car owp/project-config-alist))
-                             nil t nil nil owp/last-project-name)))
-  (<span style="color: #4c83ff;">setq</span> owp/current-project-name project-name
-        owp/last-project-name project-name)
+                              (mapcar 'car org2web-projects))
+                             nil t nil nil org2web-last-project)))
+  (<span style="color: #4c83ff;">setq</span> org2web-current-project project-name
+        org2web-last-project project-name)
   project-name)
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/do-publication</span> (<span style="color: #afd8af;">&amp;optional</span> project-name publishing-directory job-number update-top-n)
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-publish</span> (<span style="color: #afd8af;">&amp;optional</span> project-name publishing-directory job-number update-top-n)
   (<span style="color: #4c83ff;">interactive</span>)
-  (<span style="color: #4c83ff;">setq</span> project-name (owp/select-project-name <span style="color: #61CE3C;">"Which project do you want to publish? "</span> project-name))
-  (<span style="color: #4c83ff;">setq</span> owp/item-cache nil)
+  (<span style="color: #4c83ff;">setq</span> project-name (org2web-select-project <span style="color: #61CE3C;">"Which project do you want to publish? "</span> project-name))
+  (<span style="color: #4c83ff;">setq</span> org2web-item-cache nil)
 
-  (owp/verify-configuration)
-  (<span style="color: #4c83ff;">let*</span> ((remote (owp/get-config-option <span style="color: #4c83ff;">:remote</span>))
-         (uploader-config (cdr (assoc (nth 0 remote) owp/uploader-config-alist)))
+  (org2web-verify-configuration)
+  (<span style="color: #4c83ff;">let*</span> ((remote (org2web-get-config-option <span style="color: #4c83ff;">:remote</span>))
+         (uploader-config (cdr (assoc (nth 0 remote) org2web-uploaders)))
          (support-partial-update (plist-get uploader-config <span style="color: #4c83ff;">:support-partial-update</span>))
          (jobs (<span style="color: #4c83ff;">if</span> support-partial-update
                    '((1 . <span style="color: #61CE3C;">"Full publish"</span>)
@@ -287,76 +293,76 @@ the old URI manually.</li>
          (upload-latest-publish (<span style="color: #4c83ff;">if</span> support-partial-update
                                     (= job-number 5)
                                   (= job-number 3)))
-         (repo-dir (owp/get-repository-directory))
-         (publish-root-dir (owp/get-uploader-directory project-name))
-         (export-dir (owp/get-uploader-directory project-name <span style="color: #61CE3C;">"export"</span>))
-         (history-dir (owp/get-uploader-directory project-name <span style="color: #61CE3C;">"history"</span>))
+         (repo-dir (org2web-get-repository-directory))
+         (publish-root-dir (org2web-get-uploader-directory project-name))
+         (export-dir (org2web-get-uploader-directory project-name <span style="color: #61CE3C;">"export"</span>))
+         (history-dir (org2web-get-uploader-directory project-name <span style="color: #61CE3C;">"history"</span>))
          (publishing-directory
           (<span style="color: #4c83ff;">when</span> publishing-directory
             (expand-file-name publishing-directory)))
          (publish-dir
           (<span style="color: #4c83ff;">or</span> publishing-directory
-              (owp/get-uploader-directory project-name <span style="color: #61CE3C;">"publish"</span>)
-              (owp/get-publishing-directory)))
-         (test-publish-dir (owp/get-uploader-directory project-name <span style="color: #61CE3C;">"test-publish"</span>))
-         (uploader-file (concat publish-root-dir <span style="color: #61CE3C;">"owp-uploader.sh"</span>))
-         (site-domain (owp/get-site-domain))
-         (preparation-function (owp/get-config-option <span style="color: #4c83ff;">:preparation-function</span>))
+              (org2web-get-uploader-directory project-name <span style="color: #61CE3C;">"publish"</span>)
+              (org2web-get-publishing-directory)))
+         (test-publish-dir (org2web-get-uploader-directory project-name <span style="color: #61CE3C;">"test-publish"</span>))
+         (uploader-file (concat publish-root-dir <span style="color: #61CE3C;">"org2web-uploader.sh"</span>))
+         (site-domain (org2web-get-site-domain))
+         (preparation-function (org2web-get-config-option <span style="color: #4c83ff;">:preparation-function</span>))
          (repo-files
           (<span style="color: #4c83ff;">unless</span> upload-latest-publish
             (<span style="color: #4c83ff;">when</span> preparation-function
               (run-hooks 'preparation-function))
-            (owp/sort-files (owp/remove-matched-items
-                             (owp/directory-files-recursively repo-dir <span style="color: #61CE3C;">"\\.org$"</span>)
-                             (owp/get-config-option <span style="color: #4c83ff;">:ignore</span>)))))
+            (org2web-sort-files (org2web-remove-matched-items
+                                 (org2web-directory-files-recursively repo-dir <span style="color: #61CE3C;">"\\.org$"</span>)
+                                 (org2web-get-config-option <span style="color: #4c83ff;">:ignore</span>)))))
          (length-repo-files (length repo-files))
          (update-top-n
           (<span style="color: #4c83ff;">cond</span> ((<span style="color: #4c83ff;">and</span> partial-update (numberp update-top-n)) update-top-n)
-                (partial-update (owp/read-top-n
-                                 <span style="color: #61CE3C;">"Org-webpage will update TOP (N) org-files, Please type N: "</span>
+                (partial-update (org2web-read-top-n
+                                 <span style="color: #61CE3C;">"org2web will update TOP (N) org-files, Please type N: "</span>
                                  repo-files repo-dir))))
          (changed-files (<span style="color: #4c83ff;">if</span> (numberp update-top-n)
                             (cl-subseq repo-files 0 (min update-top-n length-repo-files))
                           repo-files)))
 
     (<span style="color: #4c83ff;">if</span> upload-latest-publish
-        (owp/delete-directory
+        (org2web-delete-directory
          history-dir publish-dir test-publish-dir)
-      (owp/delete-directory publish-root-dir)
-      (owp/make-directory export-dir))
+      (org2web-delete-directory publish-root-dir)
+      (org2web-make-directory export-dir))
 
-    (owp/make-directory
+    (org2web-make-directory
      history-dir publish-dir test-publish-dir)
 
     (<span style="color: #4c83ff;">if</span> test-publish
-        (<span style="color: #4c83ff;">let</span> ((owp/always-use-relative-url t) <span style="color: #8B8989; font-style: italic;">; </span><span style="color: #8B8989; font-style: italic;">Local test website, can't use absolute path.</span>
-              (port (<span style="color: #4c83ff;">or</span> (owp/get-config-option <span style="color: #4c83ff;">:web-server-port</span>)
-                        (owp/get-random-number 4))))
-          (owp/prepare-theme-resources test-publish-dir)
-          (owp/publish-changes repo-files changed-files test-publish-dir)
-          (owp/web-server-browse test-publish-dir port))
+        (<span style="color: #4c83ff;">let</span> ((org2web-always-use-relative-url t) <span style="color: #8B8989; font-style: italic;">; </span><span style="color: #8B8989; font-style: italic;">Local test website, can't use absolute path.</span>
+              (port (<span style="color: #4c83ff;">or</span> (org2web-get-config-option <span style="color: #4c83ff;">:web-server-port</span>)
+                        (org2web-get-random-number 4))))
+          (org2web-prepare-theme-resources test-publish-dir)
+          (org2web-publish-changes repo-files changed-files test-publish-dir)
+          (org2web-webserver-browse test-publish-dir port))
       (<span style="color: #4c83ff;">unless</span> upload-latest-publish
-        (owp/prepare-theme-resources export-dir)
-        (owp/publish-changes repo-files changed-files export-dir))
-      (owp/generate-and-run-uploader
+        (org2web-prepare-theme-resources export-dir)
+        (org2web-publish-changes repo-files changed-files export-dir))
+      (org2web-generate-and-run-uploader
        uploader-file remote export-dir history-dir publish-dir partial-update))))
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-and-run-uploader</span> (uploader-file remote export-dir history-dir publish-dir partial-update)
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-generate-and-run-uploader</span> (uploader-file remote export-dir history-dir publish-dir partial-update)
   <span style="color: #FBDE2D;">"Generate shell script UPLOADER-FILE then RUN it, the uploader is used to upload html files</span>
-<span style="color: #FBDE2D;">generated by org-webpage to REMOTE."</span>
+<span style="color: #FBDE2D;">generated by org2web to REMOTE."</span>
   (<span style="color: #4c83ff;">if</span> (not (<span style="color: #4c83ff;">and</span> uploader-file remote export-dir history-dir publish-dir))
-      (message <span style="color: #61CE3C;">"Can't generate org-webpage uploader file."</span>)
+      (message <span style="color: #61CE3C;">"Can't generate org2web uploader file."</span>)
     (<span style="color: #4c83ff;">let*</span> ((uploader-name (nth 0 remote))
-           (uploader-names (mapcar #'car owp/uploader-config-alist))
-           (uploader-config (cdr (assoc uploader-name owp/uploader-config-alist)))
+           (uploader-names (mapcar #'car org2web-uploaders))
+           (uploader-config (cdr (assoc uploader-name org2web-uploaders)))
            (uploader-requires (plist-get uploader-config <span style="color: #4c83ff;">:requires</span>))
            (uploader-help-info (plist-get uploader-config <span style="color: #4c83ff;">:help-info</span>))
            (uploader-template
-            (owp/file-to-string
-             (owp/get-uploader-template
+            (org2web-file-to-string
+             (org2web-get-uploader-template
               (<span style="color: #4c83ff;">or</span> (plist-get uploader-config <span style="color: #4c83ff;">:template</span>)
                   (concat (symbol-name uploader-name) <span style="color: #61CE3C;">".mustache"</span>)))))
            (uploader-template-settings
@@ -369,7 +375,7 @@ the old URI manually.</li>
                      uploader-requires)
             (message uploader-help-info)
           <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">Generate uploader file</span>
-          (owp/string-to-file
+          (org2web-string-to-file
            (mustache-render
             uploader-template
             (funcall uploader-template-settings <span style="color: #8B8989; font-style: italic;">; </span><span style="color: #8B8989; font-style: italic;">it's a function.</span>
@@ -382,19 +388,19 @@ the old URI manually.</li>
                ((string-equal system-type <span style="color: #61CE3C;">"windows-nt"</span>)
                 (w32-shell-execute <span style="color: #61CE3C;">"open"</span> (replace-regexp-in-string <span style="color: #61CE3C;">"/"</span> <span style="color: #61CE3C;">"\\"</span> uploader-file t t)))
                ((<span style="color: #4c83ff;">and</span> (string-equal system-type <span style="color: #61CE3C;">"gnu/linux"</span>)
-                     owp/terminal-emulater)
+                     org2web-terminal-emulater)
                 (start-process-shell-command
-                 <span style="color: #61CE3C;">"owp/uploader-script"</span>
+                 <span style="color: #61CE3C;">"org2web-uploader-script"</span>
                  nil
                  (format <span style="color: #61CE3C;">"%s -e 'bash %s'"</span>
-                         owp/terminal-emulater
+                         org2web-terminal-emulater
                          uploader-file))))
-            (message <span style="color: #61CE3C;">"Can't run org-webpage uploader, user should install 'bash' correctly."</span>)))))))
+            (message <span style="color: #61CE3C;">"Can't run org2web uploader, user should install 'bash' correctly."</span>)))))))
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/verify-configuration</span> ()
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-verify-configuration</span> ()
   <span style="color: #FBDE2D;">"Ensure all required configuration fields are properly configured, include:</span>
 <span style="color: #FBDE2D;">1.  `</span><span style="color: #96CBFE;">:repository-directory</span><span style="color: #FBDE2D;">': &lt;required&gt;</span>
 <span style="color: #FBDE2D;">2.  `</span><span style="color: #96CBFE;">:site-domain</span><span style="color: #FBDE2D;">': &lt;required&gt;</span>
@@ -405,11 +411,11 @@ the old URI manually.</li>
 <span style="color: #FBDE2D;">7.  `</span><span style="color: #96CBFE;">:personal-github-link</span><span style="color: #FBDE2D;">': [optional] (but customization recommended)</span>
 <span style="color: #FBDE2D;">8.  `</span><span style="color: #96CBFE;">:personal-google-analytics-id</span><span style="color: #FBDE2D;">': [optional] (but customization recommended)</span>
 <span style="color: #FBDE2D;">9.  `</span><span style="color: #96CBFE;">:theme</span><span style="color: #FBDE2D;">': [optional]"</span>
-  (<span style="color: #4c83ff;">unless</span> (member owp/current-project-name
-                  (mapcar 'car owp/project-config-alist))
-    (<span style="color: #ff69b4;">error</span> <span style="color: #61CE3C;">"Can't find project: \"%s\""</span> owp/current-project-name))
-  (<span style="color: #4c83ff;">let</span> ((repo-dir (owp/get-repository-directory))
-        (site-domain (owp/get-site-domain)))
+  (<span style="color: #4c83ff;">unless</span> (member org2web-current-project
+                  (mapcar 'car org2web-projects))
+    (<span style="color: #ff69b4;">error</span> <span style="color: #61CE3C;">"Can't find project: \"%s\""</span> org2web-current-project))
+  (<span style="color: #4c83ff;">let</span> ((repo-dir (org2web-get-repository-directory))
+        (site-domain (org2web-get-site-domain)))
     (<span style="color: #4c83ff;">unless</span> (<span style="color: #4c83ff;">and</span> repo-dir (file-directory-p repo-dir))
       (<span style="color: #ff69b4;">error</span> <span style="color: #61CE3C;">"Repository directory is not properly configured."</span>))
     (<span style="color: #4c83ff;">unless</span> site-domain
@@ -418,26 +424,26 @@ the old URI manually.</li>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-readme</span> (save-dir)
-  <span style="color: #FBDE2D;">"Generate README for `</span><span style="color: #96CBFE;">owp/new-repository</span><span style="color: #FBDE2D;">'. SAVE-DIR is the directory where to</span>
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-generate-readme</span> (save-dir)
+  <span style="color: #FBDE2D;">"Generate README for `</span><span style="color: #96CBFE;">org2web-new-repository</span><span style="color: #FBDE2D;">'. SAVE-DIR is the directory where to</span>
 <span style="color: #FBDE2D;">save generated README."</span>
-  (owp/string-to-file
+  (org2web-string-to-file
    (concat
-    (format <span style="color: #61CE3C;">"Personal site of %s, managed by emacs, org mode, git and org-webpage."</span>
+    (format <span style="color: #61CE3C;">"Personal site of %s, managed by emacs, org mode, git and org2web."</span>
             (<span style="color: #4c83ff;">or</span> user-full-name <span style="color: #61CE3C;">"[Author]"</span>))
     <span style="color: #61CE3C;">"\n\n"</span>
-    <span style="color: #61CE3C;">"This git repository is generated by org-webpage \"owp/new-repository\" \</span>
+    <span style="color: #61CE3C;">"This git repository is generated by org2web \"org2web-new-repository\" \</span>
 <span style="color: #61CE3C;">function, it is only used for demonstrating how the git branches and directory \</span>
-<span style="color: #61CE3C;">structure are organized by org-webpage."</span>)
+<span style="color: #61CE3C;">structure are organized by org2web."</span>)
    (expand-file-name <span style="color: #61CE3C;">"README"</span> save-dir)))
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-index</span> (save-dir)
-  <span style="color: #FBDE2D;">"Generate index.org for `</span><span style="color: #96CBFE;">owp/new-repository</span><span style="color: #FBDE2D;">'. SAVE-DIR is the directory where</span>
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-generate-index</span> (save-dir)
+  <span style="color: #FBDE2D;">"Generate index.org for `</span><span style="color: #96CBFE;">org2web-new-repository</span><span style="color: #FBDE2D;">'. SAVE-DIR is the directory where</span>
 <span style="color: #FBDE2D;">to save generated index.org."</span>
-  (owp/string-to-file
+  (org2web-string-to-file
    (concat <span style="color: #61CE3C;">"#+TITLE: Index"</span> <span style="color: #61CE3C;">"\n\n"</span>
            (format <span style="color: #61CE3C;">"This is the home page of %s."</span>
                    (<span style="color: #4c83ff;">or</span> user-full-name <span style="color: #61CE3C;">"[Author]"</span>)))
@@ -446,20 +452,20 @@ the old URI manually.</li>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/generate-about</span> (save-dir)
-  <span style="color: #FBDE2D;">"Generate about.org for `</span><span style="color: #96CBFE;">owp/new-repository</span><span style="color: #FBDE2D;">'. SAVE-DIR is the directory where</span>
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-generate-about</span> (save-dir)
+  <span style="color: #FBDE2D;">"Generate about.org for `</span><span style="color: #96CBFE;">org2web-new-repository</span><span style="color: #FBDE2D;">'. SAVE-DIR is the directory where</span>
 <span style="color: #FBDE2D;">to save generated about.org."</span>
-  (owp/string-to-file
+  (org2web-string-to-file
    (concat <span style="color: #61CE3C;">"#+TITLE: About"</span> <span style="color: #61CE3C;">"\n\n"</span>
            (format <span style="color: #61CE3C;">"* About %s"</span> (<span style="color: #4c83ff;">or</span> user-full-name <span style="color: #61CE3C;">"[Author]"</span>)) <span style="color: #61CE3C;">"\n\n"</span>
-           <span style="color: #61CE3C;">"  This file is automatically generated by org-webpage."</span>)
+           <span style="color: #61CE3C;">"  This file is automatically generated by org2web."</span>)
    (expand-file-name <span style="color: #61CE3C;">"about.org"</span> save-dir)))
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/insert-options-template</span> (<span style="color: #afd8af;">&amp;optional</span> title uri
-                                              keywords tags description)
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-insert-options-template</span> (<span style="color: #afd8af;">&amp;optional</span> title uri
+                                                  keywords tags description)
   <span style="color: #FBDE2D;">"Insert a template into current buffer with information for exporting.</span>
 
 <span style="color: #FBDE2D;">TITLE: the title of this post</span>
@@ -479,11 +485,11 @@ the old URI manually.</li>
           (u (read-string <span style="color: #61CE3C;">"URI(%y, %m and %d can be used to represent year, \</span>
 <span style="color: #61CE3C;">month and day): "</span> (<span style="color: #4c83ff;">unless</span> (string= i <span style="color: #61CE3C;">""</span>)
                     (format-spec <span style="color: #61CE3C;">"/%c/%y/%m/%d/%t"</span>
-                                 `((?c . ,(owp/get-config-option <span style="color: #4c83ff;">:default-category</span>))
+                                 `((?c . ,(org2web-get-config-option <span style="color: #4c83ff;">:default-category</span>))
                                    (?y . <span style="color: #61CE3C;">"%y"</span>)
                                    (?m . <span style="color: #61CE3C;">"%m"</span>)
                                    (?d . <span style="color: #61CE3C;">"%d"</span>)
-                                   (?t . ,(owp/encode-string-to-url i)))))))
+                                   (?t . ,(org2web-encode-string-to-url i)))))))
           (k (read-string <span style="color: #61CE3C;">"Keywords(separated by comma and space [, ]): "</span>))
           (a (read-string <span style="color: #61CE3C;">"Tags(separated by comma and space [, ]): "</span>))
           (d (read-string <span style="color: #61CE3C;">"Description: "</span>)))
@@ -535,7 +541,7 @@ the old URI manually.</li>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">owp/new-post</span> (<span style="color: #afd8af;">&amp;optional</span> project-name category filename insert-fallback-template)
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">defun</span> <span style="color: #ff1493;">org2web-new-post</span> (<span style="color: #afd8af;">&amp;optional</span> project-name category filename insert-fallback-template)
   <span style="color: #FBDE2D;">"Setup a new post.</span>
 
 <span style="color: #FBDE2D;">PROJECT-NAME: which project do you want to export</span>
@@ -545,19 +551,19 @@ the old URI manually.</li>
 <span style="color: #FBDE2D;">Note that this function does not verify the category and filename, it is users'</span>
 <span style="color: #FBDE2D;">responsibility to guarantee the two parameters are valid."</span>
   (<span style="color: #4c83ff;">interactive</span>
-   (<span style="color: #4c83ff;">let*</span> ((p (owp/select-project-name <span style="color: #61CE3C;">"Which project do you want post? "</span>))
+   (<span style="color: #4c83ff;">let*</span> ((p (org2web-select-project <span style="color: #61CE3C;">"Which project do you want post? "</span>))
           (c (read-string (format <span style="color: #61CE3C;">"Category of \"%s\" project: "</span> p)
-                          (owp/get-config-option <span style="color: #4c83ff;">:default-category</span>)))
+                          (org2web-get-config-option <span style="color: #4c83ff;">:default-category</span>)))
           (f (read-string (format <span style="color: #61CE3C;">"Filename of \"%s\" project: "</span> p) <span style="color: #61CE3C;">"new-post.org"</span> p))
           (d (yes-or-no-p <span style="color: #61CE3C;">"Insert fallback template? "</span>)))
      (list p c f d)))
   (<span style="color: #4c83ff;">if</span> (string= category <span style="color: #61CE3C;">""</span>)
-      (<span style="color: #4c83ff;">setq</span> category (owp/get-config-option <span style="color: #4c83ff;">:default-category</span>)))
+      (<span style="color: #4c83ff;">setq</span> category (org2web-get-config-option <span style="color: #4c83ff;">:default-category</span>)))
   (<span style="color: #4c83ff;">if</span> (string= filename <span style="color: #61CE3C;">""</span>)
       (<span style="color: #4c83ff;">setq</span> filename <span style="color: #61CE3C;">"new-post.org"</span>))
-  (<span style="color: #4c83ff;">unless</span> (owp/string-suffix-p <span style="color: #61CE3C;">".org"</span> filename)
+  (<span style="color: #4c83ff;">unless</span> (org2web-string-suffix-p <span style="color: #61CE3C;">".org"</span> filename)
     (<span style="color: #4c83ff;">setq</span> filename (concat filename <span style="color: #61CE3C;">".org"</span>)))
-  (<span style="color: #4c83ff;">let*</span> ((repo-dir (owp/get-repository-directory))
+  (<span style="color: #4c83ff;">let*</span> ((repo-dir (org2web-get-repository-directory))
          (dir (concat (file-name-as-directory repo-dir)
                       (file-name-as-directory category)))
          (path (concat dir filename)))
@@ -568,13 +574,13 @@ the old URI manually.</li>
     (switch-to-buffer (find-file path))
     (<span style="color: #4c83ff;">if</span> (<span style="color: #4c83ff;">and</span> (not insert-fallback-template)
              (called-interactively-p 'any))
-        (call-interactively 'owp/insert-options-template)
-      (owp/insert-options-template <span style="color: #61CE3C;">"&lt;Insert Your Title Here&gt;"</span>
-                                   (format <span style="color: #61CE3C;">"/%s/%%y/%%m/%%d/%%t/ Or /%s/%%t/"</span>
-                                           category category)
-                                   <span style="color: #61CE3C;">"keyword1, keyword2, keyword3"</span>
-                                   <span style="color: #61CE3C;">"tag1, tag2, tag3"</span>
-                                   <span style="color: #61CE3C;">"&lt;Add description here&gt;"</span>))
+        (call-interactively 'org2web-insert-options-template)
+      (org2web-insert-options-template <span style="color: #61CE3C;">"&lt;Insert Your Title Here&gt;"</span>
+                                       (format <span style="color: #61CE3C;">"/%s/%%y/%%m/%%d/%%t/ Or /%s/%%t/"</span>
+                                               category category)
+                                       <span style="color: #61CE3C;">"keyword1, keyword2, keyword3"</span>
+                                       <span style="color: #61CE3C;">"tag1, tag2, tag3"</span>
+                                       <span style="color: #61CE3C;">"&lt;Add description here&gt;"</span>))
     (save-buffer)))
 </pre>
 </div>
@@ -585,15 +591,15 @@ the old URI manually.</li>
 </div>
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2017-07-27</span>
-        <span title="last modification date" class="post-info">2017-07-27</span>
+        <span title="post date" class="post-info">2017-08-09</span>
+        <span title="last modification date" class="post-info">2017-08-09</span>
         <span title="tags" class="post-info">N/A</span>
         <span title="author" class="post-info">Feng Shu</span>
       </div>
       <section>
         <h1>Comments</h1>
-        <div class="ds-thread" data-thread-key="56e34223f0458633590e1f51c9f681d5"
-                               data-title="org-webpage.el --- static site generator based on org mode" data-url="http://tumashu.github.com/org-webpage/documents/org-webpage.el-----static-site-generator-based-on-org-mode/"></div>
+        <div class="ds-thread" data-thread-key="5c00b01e9a8ba0c9f70425c55a72d84f"
+                               data-title="static site generator based on org mode" data-url="http://tumashu.github.com/org2web/documents/static-site-generator-based-on-org-mode/"></div>
         <script type="text/javascript">
         var duoshuoQuery = {short_name:"tumashu-website"};
 	    (function() {
@@ -611,7 +617,7 @@ the old URI manually.</li>
         <p>
           Copyright &copy; <span id="footerYear"></span> <a href="mailto:tumashu &lt;at&gt; 163 &lt;dot&gt; com">Feng Shu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
-          Powered by <a href="https://github.com/tumashu/org-webpage" target="_blank">org-webpage</a>
+          Powered by <a href="https://github.com/tumashu/org2web" target="_blank">org2web</a>
           <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
         </p>
       </div>

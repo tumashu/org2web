@@ -1,65 +1,65 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>Tips of org-webpage - Org-webpage</title>
+    <title>Tips of org2web - org2web</title>
     <meta charset="utf-8" />
     <meta name="author" content="Feng Shu" />
-    <link rel="stylesheet" href="http://tumashu.github.com/org-webpage/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="http://tumashu.github.com/org2web/media/css/main.css" type="text/css">
   </head>
 <body class="container">
     <div>
       <header class="masthead">
-        <h1 class="masthead-title"><a href="http://tumashu.github.com/org-webpage/">Org-webpage</a> <span class="subtitle">(Static site senerator based on org mode)</span></h1>
+        <h1 class="masthead-title"><a href="http://tumashu.github.com/org2web/">org2web</a> <span class="subtitle">(Static site senerator based on org mode)</span></h1>
         <ul>
-          <li><a href="http://tumashu.github.com/org-webpage/changelog/">Changelog</a></li>
-          <li><a href="http://tumashu.github.com/org-webpage/documents/">Documents</a></li>
-          <li><a href="http://tumashu.github.com/org-webpage/tags/">Tags</a></li>
-          <li><a href="http://tumashu.github.com/org-webpage/about/">About</a></li>
-          <li><a href="https://github.com/tumashu/org-webpage">GitHub</a></li>
-          <li><a href="http://tumashu.github.com/org-webpage/rss.xml">RSS</a></li>
+          <li><a href="http://tumashu.github.com/org2web/changelog/">Changelog</a></li>
+          <li><a href="http://tumashu.github.com/org2web/documents/">Documents</a></li>
+          <li><a href="http://tumashu.github.com/org2web/tags/">Tags</a></li>
+          <li><a href="http://tumashu.github.com/org2web/about/">About</a></li>
+          <li><a href="https://github.com/tumashu/org2web">GitHub</a></li>
+          <li><a href="http://tumashu.github.com/org2web/rss.xml">RSS</a></li>
         </ul>
         <form method="get" id="searchform" action="http://www.google.com/search">
           <input type="text" class="field" name="q" id="s" placeholder="Search">
-          <input type="hidden" name="as_sitesearch" value="tumashu.github.com/org-webpage">
+          <input type="hidden" name="as_sitesearch" value="tumashu.github.com/org2web">
         </form>
-        <img class="avatar" src="http://tumashu.github.com/org-webpage/media/img/horse.jpg" />
+        <img class="avatar" src="http://tumashu.github.com/org2web/media/img/horse.jpg" />
       </header>
     </div>
 
 <div class="content-and-footer">
 <div>
 <div class="post">
-<h1 class="post-title">Tips of org-webpage</h1>
+<h1 class="post-title">Tips of org2web</h1>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org49d9a03">1. How to install org-webpage in manual way</a></li>
-<li><a href="#org973c6fe">2. How to install org-webpage Through package management system</a></li>
-<li><a href="#org5cd6cff">3. How to quickly add a new post</a></li>
-<li><a href="#org0e4b407">4. How to quickly insert org-website post template</a></li>
-<li><a href="#org8fc11bb">5. How to configure the default slogan</a></li>
-<li><a href="#orgf860d34">6. How to add an avatar to the page?</a></li>
-<li><a href="#org51a64d5">7. How to set html git remote?</a></li>
-<li><a href="#orgf8d53c1">8. How to add a github link</a></li>
-<li><a href="#org116b854">9. How to do site traffic analytics with Google Analytics?</a></li>
-<li><a href="#orga4ca717">10. How to disable commenting for posts under certain categories?</a></li>
+<li><a href="#orgf429538">1. How to install org2web in manual way</a></li>
+<li><a href="#orgd4d6f58">2. How to install org2web Through package management system</a></li>
+<li><a href="#org416b545">3. How to quickly add a new post</a></li>
+<li><a href="#org408f7c2">4. How to quickly insert org-website post template</a></li>
+<li><a href="#org4c7c9ec">5. How to configure the default slogan</a></li>
+<li><a href="#org30fc9f5">6. How to add an avatar to the page?</a></li>
+<li><a href="#org4295af8">7. How to set html git remote?</a></li>
+<li><a href="#org0da08d7">8. How to add a github link</a></li>
+<li><a href="#org0ff50b1">9. How to do site traffic analytics with Google Analytics?</a></li>
+<li><a href="#orge66daa3">10. How to disable commenting for posts under certain categories?</a></li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-org49d9a03" class="outline-2">
-<h2 id="org49d9a03"><span class="section-number-2">1</span> How to install org-webpage in manual way</h2>
+<div id="outline-container-orgf429538" class="outline-2">
+<h2 id="orgf429538"><span class="section-number-2">1</span> How to install org2web in manual way</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-To install org-webpage manually you should first install all
+To install org2web manually you should first install all
 dependencies listed in <b>README.org</b>. Once this has been completed,
 clone the repo:
 </p>
 
 <pre class="example">
-git clone https://github.com/tumashu/org-webpage.git
+git clone https://github.com/tumashu/org2web.git
 </pre>
 
 <p>
@@ -68,8 +68,8 @@ After that, please remember to add this location to your emacs'
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #61CE3C;">"/path/to/org-webpage"</span>)
-(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">org-webpage</span>)
+<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #61CE3C;">"/path/to/org2web"</span>)
+(<span style="color: #4c83ff;">require</span> '<span style="color: #96CBFE;">org2web</span>)
 </pre>
 </div>
 
@@ -79,8 +79,8 @@ NOTE: This is NOT recommended way for emacs beginner.
 </div>
 </div>
 
-<div id="outline-container-org973c6fe" class="outline-2">
-<h2 id="org973c6fe"><span class="section-number-2">2</span> How to install org-webpage Through package management system</h2>
+<div id="outline-container-orgd4d6f58" class="outline-2">
+<h2 id="orgd4d6f58"><span class="section-number-2">2</span> How to install org2web Through package management system</h2>
 <div class="outline-text-2" id="text-2">
 <ol class="org-ol">
 <li>Setting melpa repository, see: <a href="http://melpa.org/#/getting-started">http://melpa.org/#/getting-started</a></li>
@@ -94,17 +94,17 @@ M-x package-install RET org-website RET
 Add the following to your <code>~/.emacs</code> file:
 </p>
 <pre class="example">
-(require 'org-webpage)
+(require 'org2web)
 </pre></li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-org5cd6cff" class="outline-2">
-<h2 id="org5cd6cff"><span class="section-number-2">3</span> How to quickly add a new post</h2>
+<div id="outline-container-org416b545" class="outline-2">
+<h2 id="org416b545"><span class="section-number-2">3</span> How to quickly add a new post</h2>
 <div class="outline-text-2" id="text-3">
 <pre class="example">
-M-x owp/new-post
+M-x org2web-new-post
 </pre>
 
 <p>
@@ -118,17 +118,17 @@ This command will ask you the follow question:
 </div>
 </div>
 
-<div id="outline-container-org0e4b407" class="outline-2">
-<h2 id="org0e4b407"><span class="section-number-2">4</span> How to quickly insert org-website post template</h2>
+<div id="outline-container-org408f7c2" class="outline-2">
+<h2 id="org408f7c2"><span class="section-number-2">4</span> How to quickly insert org-website post template</h2>
 <div class="outline-text-2" id="text-4">
 <pre class="example">
-M-x owp/insert-options-template
+M-x org2web-insert-options-template
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org8fc11bb" class="outline-2">
-<h2 id="org8fc11bb"><span class="section-number-2">5</span> How to configure the default slogan</h2>
+<div id="outline-container-org4c7c9ec" class="outline-2">
+<h2 id="org4c7c9ec"><span class="section-number-2">5</span> How to configure the default slogan</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Add the follow two lines to you config alist.
@@ -141,8 +141,8 @@ Add the follow two lines to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgf860d34" class="outline-2">
-<h2 id="orgf860d34"><span class="section-number-2">6</span> How to add an avatar to the page?</h2>
+<div id="outline-container-org30fc9f5" class="outline-2">
+<h2 id="org30fc9f5"><span class="section-number-2">6</span> How to add an avatar to the page?</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Add the follow line to you config alist.
@@ -163,8 +163,8 @@ Image URL example:
 </div>
 </div>
 
-<div id="outline-container-org51a64d5" class="outline-2">
-<h2 id="org51a64d5"><span class="section-number-2">7</span> How to set html git remote?</h2>
+<div id="outline-container-org4295af8" class="outline-2">
+<h2 id="org4295af8"><span class="section-number-2">7</span> How to set html git remote?</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Add the follow line to you config alist.
@@ -176,8 +176,8 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgf8d53c1" class="outline-2">
-<h2 id="orgf8d53c1"><span class="section-number-2">8</span> How to add a github link</h2>
+<div id="outline-container-org0da08d7" class="outline-2">
+<h2 id="org0da08d7"><span class="section-number-2">8</span> How to add a github link</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Add the follow line to you config alist.
@@ -189,8 +189,8 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-org116b854" class="outline-2">
-<h2 id="org116b854"><span class="section-number-2">9</span> How to do site traffic analytics with Google Analytics?</h2>
+<div id="outline-container-org0ff50b1" class="outline-2">
+<h2 id="org0ff50b1"><span class="section-number-2">9</span> How to do site traffic analytics with Google Analytics?</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 Add the follow line to you config alist.
@@ -202,14 +202,14 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orga4ca717" class="outline-2">
-<h2 id="orga4ca717"><span class="section-number-2">10</span> How to disable commenting for posts under certain categories?</h2>
+<div id="outline-container-orge66daa3" class="outline-2">
+<h2 id="orge66daa3"><span class="section-number-2">10</span> How to disable commenting for posts under certain categories?</h2>
 <div class="outline-text-2" id="text-10">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">setq</span> owp/category-config-alist
+<pre class="src src-emacs-lisp">(<span style="color: #4c83ff;">setq</span> org2web-category-config-alist
       (cons '(<span style="color: #61CE3C;">"photography"</span> <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">category name goes here</span>
               <span style="color: #4c83ff;">:show-comment</span> nil)
-            owp/category-config-alist))
+            org2web-category-config-alist))
 </pre>
 </div>
 
@@ -235,14 +235,14 @@ customize except you are an expert)</li>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2015-04-01</span>
-        <span title="last modification date" class="post-info">2015-08-22</span>
+        <span title="last modification date" class="post-info">2017-07-30</span>
         <span title="tags" class="post-info">N/A</span>
         <span title="author" class="post-info">Feng Shu</span>
       </div>
       <section>
         <h1>Comments</h1>
-        <div class="ds-thread" data-thread-key="0c2a2a4666ccb2a853a3e7e9ca793df4"
-                               data-title="Tips of org-webpage" data-url="http://tumashu.github.com/org-webpage/documents/tips-of-org-webpage/"></div>
+        <div class="ds-thread" data-thread-key="35136dd0a8a623e1e72ae0a3f25ec6a6"
+                               data-title="Tips of org2web" data-url="http://tumashu.github.com/org2web/documents/tips-of-org2web/"></div>
         <script type="text/javascript">
         var duoshuoQuery = {short_name:"tumashu-website"};
 	    (function() {
@@ -260,7 +260,7 @@ customize except you are an expert)</li>
         <p>
           Copyright &copy; <span id="footerYear"></span> <a href="mailto:tumashu &lt;at&gt; 163 &lt;dot&gt; com">Feng Shu</a>
           &nbsp;&nbsp;-&nbsp;&nbsp;
-          Powered by <a href="https://github.com/tumashu/org-webpage" target="_blank">org-webpage</a>
+          Powered by <a href="https://github.com/tumashu/org2web" target="_blank">org2web</a>
           <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
         </p>
       </div>
