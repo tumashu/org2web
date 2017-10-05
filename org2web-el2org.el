@@ -24,7 +24,7 @@
 ;; * 说明文档                                                           :README:
 
 ;; #+BEGIN_EXAMPLE
-;; (require 'org2web-el2org) ;; You need install el2org and gfm
+;; (require 'org2web-el2org)
 ;; #+END_EXAMPLE
 
 ;;; Code:
@@ -33,7 +33,6 @@
 
 ;; ** Require
 (require 'el2org)
-(require 'ox-gfm)
 
 (defun org2web-el2org-generate-readme (&optional project-name)
   (interactive)
@@ -45,7 +44,9 @@
                    (car (org2web-get-config-option :el2org-readme-sources))))
          (readme-file (concat (file-name-as-repo-directory repo-dir) "README.md"))
          (tags (org2web-get-config-option :el2org-readme-tags)))
-    (el2org-generate-file el-file tags 'gfm readme-file)))
+    (if (featurep 'ox-gfm)
+        (el2org-generate-file el-file tags 'gfm readme-file)
+      (el2org-generate-file el-file tags 'md readme-file))))
 
 (defun org2web-el2org-generate-index (&optional project-name)
   (interactive)
@@ -93,7 +94,9 @@
                  (concat (file-name-as-directory repo-dir) filename)))
          (readme-file (concat (file-name-as-directory repo-dir) "README.md"))
          (tags (org2web-get-config-option :el2org-readme-tags)))
-    (el2org-generate-file file tags 'gfm readme-file))
+    (if (featurep 'ox-gfm)
+        (el2org-generate-file file tags 'gfm readme-file)
+      (el2org-generate-file file tags 'md readme-file)))
 
   ;; Generate index.org if necessary
   (let* ((repo-dir (org2web-get-repository-directory))
