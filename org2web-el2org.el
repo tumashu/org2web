@@ -107,8 +107,8 @@
          (tags (org2web-get-config-option :el2org-index-tags)))
     (el2org-generate-file file tags 'org index-file)))
 
-(define-obsolete-function-alias 'owp/el2org-preparation-function 'org2web-el2org-preparation-function)
-(define-obsolete-function-alias 'owp/el2org-org-export-function 'org2web-el2org-org-export-function)
+(define-obsolete-function-alias 'owp/el2org-preparation-function 'org2web-el2org-preparation-function "0.1")
+(define-obsolete-function-alias 'owp/el2org-org-export-function 'org2web-el2org-org-export-function "0.1")
 
 ;; * Footer
 
