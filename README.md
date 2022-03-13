@@ -107,6 +107,7 @@ You can find more config options and theirs default values by commands:
 8.  [dash.el](https://github.com/magnars/dash.el): a modern list library for Emacs
 9.  [ht.el](https://github.com/Wilfred/ht.el): a modern hash-table library for Emacs
 10. [simple-httpd](https://github.com/skeeto/emacs-web-server): Extensible Emacs HTTP 1.1 server
+11. [html](https://github.com/skeeto/emacs-web-serve/): Mark-up language
 
 
 <a id="org60e1ee1"></a>
