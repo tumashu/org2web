@@ -10,6 +10,7 @@
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;; Keywords: org-mode, convenience, beautify
 ;; Homepage: https://github.com/tumashu/org2web
+;; Package-Requires: ((cl-lib "1.0") (ht "1.5") (mustache "0.22") (htmlize "1.47") (org "8.0") (dash "2.0.0") (el2org "0.10") (simple-httpd "0.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
